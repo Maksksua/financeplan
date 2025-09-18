@@ -103,7 +103,7 @@
                             <label class="block col-span-1"><span class="text-gray-700 text-sm">Мес. 1</span><input type="number" id="salesPlan_0" value="2" min="0" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50"></label>
                             <label class="block col-span-1"><span class="text-gray-700 text-sm">Мес. 2</span><input type="number" id="salesPlan_1" value="3" min="0" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50"></label>
                             <label class="block col-span-1"><span class="text-gray-700 text-sm">Мес. 3</span><input type="number" id="salesPlan_2" value="4" min="0" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50"></label>
-                            <label class="block col-span-1"><span class="text-gray-700 text-sm">Мес. 4</span><input type="number" id="salesPlan_3" value="5" min="0" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50"></label>
+                            <label class="block col-span-1"><span class="text-gray-700 text-sm">Мес. 4</span><input type="number" id="salesPlan_3" value="4" min="0" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50"></label>
                             <label class="block col-span-1"><span class="text-gray-700 text-sm">Мес. 5</span><input type="number" id="salesPlan_4" value="5" min="0" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50"></label>
                             <label class="block col-span-1"><span class="text-gray-700 text-sm">Мес. 6</span><input type="number" id="salesPlan_5" value="5" min="0" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50"></label>
                             <label class="block col-span-1"><span class="text-gray-700 text-sm">Мес. 7</span><input type="number" id="salesPlan_6" value="7" min="0" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50"></label>
@@ -127,7 +127,7 @@
                         </div>
                         <label class="block mt-4">
                             <span class="text-gray-700 text-sm" data-i18n="input-avg-price">Средняя цена продажи (€):</span>
-                            <input type="number" id="avgSalePrice" value="3750" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
+                            <input type="number" id="avgSalePrice" value="4000" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
                         </label>
                     </div>
 
@@ -141,14 +141,6 @@
                         <label class="block mb-2">
                             <span class="text-gray-700 text-sm" data-i18n="input-savings">Собственные сбережения (€):</span>
                             <input type="number" id="savings" value="0" min="0" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
-                        </label>
-                        <label class="block mb-2">
-                            <span class="text-gray-700 text-sm" data-i18n="input-loan">Займ (кредитование) (€):</span>
-                            <input type="number" id="loan" value="0" min="0" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
-                        </label>
-                        <label class="block">
-                            <span class="text-gray-700 text-sm" data-i18n="input-loan-rate">Процентная ставка по займу (% годовых):</span>
-                            <input type="number" id="loanRate" value="8" min="0" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
                         </label>
                     </div>
 
@@ -264,7 +256,7 @@
                     <input id="month-slider" type="range" min="0" max="23" value="0" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer">
                     <div class="flex justify-between text-xs text-gray-500 mt-2">
                         <span data-i18n="month-1">Месяц 1</span>
-                        <span id="slider-label-month" class="font-bold text-blue-600" data-i18n="month-current">Месяц 1</span>
+                        <span id="slider-label-month" class="font-bold text-blue-600">Месяц 1</span>
                         <span data-i18n="month-24">Месяц 24</span>
                     </div>
                 </div>
@@ -374,12 +366,12 @@
                 "chart-4-title": "Структура расходов (Месяц",
                 "table-summary": "Показать детальные финансовые данные",
                 "table-description": "В таблице представлены исходные данные, использованные для построения графиков. Это позволяет провести детальный анализ финансового плана.",
-                "table-headers": ["Месяц", "Продано авто", "Доход", "Расходы", "Чистый поток", "Баланс", "Налоги", "Проценты по займу"],
-                "costBreakdownLabels": ["Аренда", "Бухгалтерия", "Закупка авто", "Транспорт и подготовка", "Страховка и связь", "Прочее", "Налоги", "Гарантия", "Проценты по займу"],
+                "table-headers": ["Месяц", "Продано авто", "Общий доход", "Общий расход", "Чистый доход", "Чистый поток", "Баланс", "Налоги"],
+                "costBreakdownLabels": ["Аренда", "Бухгалтерия", "Закупка авто", "Транспорт и подготовка", "Страховка и связь", "Прочее", "Налоги", "Гарантия"],
                 "chart-labels": {
                     "cashFlow": "Накопленный баланс",
-                    "revenue": "Доход",
-                    "expenses": "Расходы",
+                    "revenue": "Общий доход",
+                    "expenses": "Общий расход",
                     "sales": "Продано автомобилей"
                 },
                 "analysis-title": "Детальный анализ затрат",
@@ -388,7 +380,9 @@
                 "analysis-variable-costs-title": "Переменные расходы на 1 автомобиль",
                 "analysis-total-fixed-cost": "Всего постоянные расходы в месяц: ",
                 "analysis-total-variable-cost": "Всего переменные расходы на 1 авто: ",
-                "analysis-profit": "Прогнозируемая прибыль с 1 авто:"
+                "analysis-profit": "Прогнозируемая прибыль с 1 авто:",
+                "analysis-car-profit-title": "Чистый доход с каждого автомобиля: ",
+                "analysis-car-profit-explanation": "Важно понимать, что чистый доход с каждого авто не включает постоянные расходы, такие как аренда, страховка и т.д. Эти расходы вычитаются в конце месяца из общего чистого дохода."
             },
             de: {
                 "title": "Finanzdashboard: Autohändler in Nürnberg",
@@ -436,15 +430,23 @@
                 "chart-4-title": "Kostenstruktur (Monat",
                 "table-summary": "Detaillierte Finanzdaten anzeigen",
                 "table-description": "Die Tabelle zeigt die Rohdaten, die zur Erstellung der Diagramme verwendet wurden. Dies ermöglicht eine detaillierte Analyse des Finanzplans.",
-                "table-headers": ["Monat", "Verkaufte Autos", "Einnahmen", "Ausgaben", "Netto-Cashflow", "Kontostand", "Steuern"],
-                "costBreakdownLabels": ["Miete", "Buchhaltung", "Fahrzeugkauf", "Transport und Aufbereitung", "Versicherung und Kommunikation", "Sonstiges", "Steuern", "Garantie", "Darlehenszinsen"],
+                "table-headers": ["Monat", "Verkaufte Autos", "Gesamteinnahmen", "Gesamtausgaben", "Nettogewinn", "Netto-Cashflow", "Kontostand", "Steuern"],
+                "costBreakdownLabels": ["Miete", "Buchhaltung", "Fahrzeugkauf", "Transport und Aufbereitung", "Versicherung und Kommunikation", "Sonstiges", "Steuern", "Garantie"],
+                "chart-labels": {
+                    "cashFlow": "Kumulierter Kontostand",
+                    "revenue": "Gesamteinnahmen",
+                    "expenses": "Gesamtausgaben",
+                    "sales": "Verkaufte Autos"
+                },
                 "analysis-title": "Detaillierte Kostenanalyse",
                 "analysis-intro": "Hier finden Sie detaillierte Berechnungen für jede Kostenart. Diese Daten helfen, die Selbstkosten pro Fahrzeug und die monatlichen Fixkosten zu verstehen.",
                 "analysis-fixed-costs-title": "Monatliche Fixkosten",
                 "analysis-variable-costs-title": "Variable Kosten pro 1 Fahrzeug",
                 "analysis-total-fixed-cost": "Gesamte Fixkosten pro Monat: ",
                 "analysis-total-variable-cost": "Gesamte variable Kosten pro Auto: ",
-                "analysis-profit": "Geschätzter Gewinn pro Auto:"
+                "analysis-profit": "Geschätzter Gewinn pro Auto:",
+                "analysis-car-profit-title": "Nettogewinn pro Fahrzeug: ",
+                "analysis-car-profit-explanation": "Es ist wichtig zu verstehen, dass der Nettogewinn pro Fahrzeug keine Fixkosten wie Miete, Versicherung usw. beinhaltet. Diese Kosten werden am Ende des Monats vom gesamten Nettogewinn abgezogen."
             }
         };
 
@@ -453,21 +455,19 @@
         
         function processData(financialData) {
             const data = [];
-            const initialFunding = financialData.grant + financialData.savings + financialData.loan;
+            const initialFunding = financialData.grant + financialData.savings;
             let accumulatedBalance = initialFunding;
             
-            const salesPlanArray = [];
+            const salesPlanArray = [2, 3, 4, 4, 5, 5, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7]; // Default Sales Plan
             for (let i = 0; i < 24; i++) {
-                salesPlanArray.push(parseInt(document.getElementById(`salesPlan_${i}`).value) || 0);
+                salesPlanArray[i] = parseInt(document.getElementById(`salesPlan_${i}`).value) || 0;
             }
 
-            const totalFixedCosts = financialData.costs.rent + financialData.costs.accounting + financialData.costs.communication + financialData.costs.contingency + (financialData.costs.insurance/12);
+            const totalFixedCosts = financialData.costs.rent + financialData.costs.accounting + financialData.costs.communication + financialData.costs.contingency + financialData.costs.insurance;
             
-            // Tax constants
             const gewerbeAllowance = 24500;
             const einkommensteuerRate = 0.25;
             const koerperschaftssteuerRate = 0.15;
-            const interestRate = financialData.loanRate / 100;
             
             for (let i = 0; i < 24; i++) {
                 const carsSold = salesPlanArray[i] || 0;
@@ -476,95 +476,103 @@
                 const variableCosts = carsSold * (financialData.costs.carPurchase + financialData.costs.carWash + financialData.costs.carRepair + financialData.costs.tuvDiag + financialData.costs.logistics + financialData.costs.warranty + financialData.costs.carAd);
                 const quarterlyCosts = (i + 1) % 3 === 0 ? financialData.costs.quarterlyReport : 0;
                 
-                const loanInterest = financialData.loan > 0 ? (financialData.loan * interestRate) / 12 : 0;
-                
-                let totalExpensesBeforeTaxes = totalFixedCosts + quarterlyCosts + variableCosts + loanInterest;
+                const totalExpensesBeforeTaxes = totalFixedCosts + quarterlyCosts + variableCosts;
+                const netProfit = totalRevenue - totalExpensesBeforeTaxes;
                 
                 let taxes = 0;
-                let profit = totalRevenue - totalExpensesBeforeTaxes;
-
-                // Tax Calculation Logic
                 const taxForm = document.getElementById('taxForm').value;
 
-                if (taxForm !== 'kleingewerbe') {
-                    // Simplified Income Tax (Einkommensteuer) for Einzelunternehmen
-                    if (taxForm === 'einz' && profit > 0) {
-                        taxes += profit * einkommensteuerRate;
+                if (taxForm !== 'kleingewerbe' && netProfit > 0) {
+                    if (taxForm === 'einz') {
+                        taxes += netProfit * einkommensteuerRate;
                     }
                     
-                    // Simplified Corporate Tax (Körperschaftsteuer) for GmbH
-                    if (taxForm === 'gmbh' && profit > 0) {
-                        taxes += profit * koerperschaftssteuerRate;
+                    if (taxForm === 'gmbh') {
+                        taxes += netProfit * koerperschaftssteuerRate;
                     }
 
-                    // Gewerbesteuer (Simplified)
-                    const gewerbesteuerHebesatz = financialData.gebesatz / 100;
-                    let gewerbeProfit = profit > gewerbeAllowance ? profit - gewerbeAllowance : 0;
-                    taxes += gewerbeProfit * gewerbesteuerHebesatz;
+                    const gewerbeProfit = netProfit > gewerbeAllowance ? netProfit - gewerbeAllowance : 0;
+                    taxes += gewerbeProfit * (financialData.gebesatz / 100);
                 }
                 
                 const totalExpenses = totalExpensesBeforeTaxes + taxes;
                 const netCashFlow = totalRevenue - totalExpenses;
-                accumulatedBalance += netCashFlow;
-
+                
+                // Initial balance from investments
+                if (i === 0) {
+                    accumulatedBalance += netCashFlow;
+                } else {
+                    accumulatedBalance += netCashFlow;
+                }
+                
                 data.push({
                     month: `Месяц ${i + 1}`,
                     carsSold: carsSold,
                     totalRevenue: totalRevenue,
                     totalExpenses: totalExpenses,
+                    netProfit: netProfit,
                     netCashFlow: netCashFlow,
                     accumulatedBalance: accumulatedBalance,
-                    taxes: taxes > 0 ? taxes : "TBD",
+                    taxes: netProfit > 0 ? taxes : "TBD",
                     costBreakdown: {
                         "Аренда": financialData.costs.rent,
                         "Бухгалтерия": financialData.costs.accounting + quarterlyCosts,
                         "Закупка авто": carsSold * financialData.costs.carPurchase,
                         "Транспорт и подготовка": carsSold * (financialData.costs.carWash + financialData.costs.carRepair + financialData.costs.tuvDiag + financialData.costs.logistics + financialData.costs.carAd),
-                        "Страховка и связь": (financialData.costs.insurance / 12) + financialData.costs.communication,
+                        "Страховка и связь": financialData.costs.insurance + financialData.costs.communication,
                         "Прочее": financialData.costs.contingency,
-                        "Налоги": taxes > 0 ? taxes : "TBD",
+                        "Налоги": netProfit > 0 ? taxes : "TBD",
                         "Гарантия": carsSold * financialData.costs.warranty,
-                        "Проценты по займу": loanInterest
                     }
                 });
             }
             return data;
         }
 
-        function updateAnalysisSection(lang, processedData) {
+        function updateAnalysisSection(lang, monthIndex) {
             const analysisContent = document.getElementById('analysis-content');
-            const data = processedData[0]; // Use month 1 data for base calculation
-            const fixedCosts = parseFloat(document.getElementById('rent').value) + parseFloat(document.getElementById('accounting').value) + parseFloat(document.getElementById('communication').value) + parseFloat(document.getElementById('contingency').value) + (parseFloat(document.getElementById('insurance').value) / 12);
-            const variableCosts = parseFloat(document.getElementById('carPurchase').value) + parseFloat(document.getElementById('carWash').value) + parseFloat(document.getElementById('carRepair').value) + parseFloat(document.getElementById('tuvDiag').value) + parseFloat(document.getElementById('logistics').value) + parseFloat(document.getElementById('warranty').value) + parseFloat(document.getElementById('carAd').value);
-            const profitPerCar = parseFloat(document.getElementById('avgSalePrice').value) - variableCosts;
+            const data = processedData[monthIndex];
+            const variableCostsPerCar = parseFloat(document.getElementById('carPurchase').value) + parseFloat(document.getElementById('carWash').value) + parseFloat(document.getElementById('carRepair').value) + parseFloat(document.getElementById('tuvDiag').value) + parseFloat(document.getElementById('logistics').value) + parseFloat(document.getElementById('warranty').value) + parseFloat(document.getElementById('carAd').value);
+            const fixedCostsPerMonth = parseFloat(document.getElementById('rent').value) + parseFloat(document.getElementById('accounting').value) + parseFloat(document.getElementById('communication').value) + parseFloat(document.getElementById('contingency').value) + parseFloat(document.getElementById('insurance'));
+            const profitPerCar = parseFloat(document.getElementById('avgSalePrice').value) - variableCostsPerCar;
+            const fixedCostsTotal = fixedCostsPerMonth + ((monthIndex + 1) % 3 === 0 ? parseFloat(document.getElementById('quarterlyReport').value) : 0);
 
             let content = `
                 <p class="mb-2">${translations[lang]["analysis-intro"]}</p>
                 <div class="space-y-2">
-                    <p class="font-semibold text-lg">${translations[lang]["analysis-fixed-costs-title"]}</p>
+                    <p class="font-bold text-lg">${translations[lang]["analysis-fixed-costs-title"]}</p>
                     <ul class="list-disc list-inside">
-                        <li>${translations[lang]["input-rent"]} ${formatCurrency(parseFloat(document.getElementById('rent').value))}</li>
-                        <li>${translations[lang]["input-accounting-monthly"]}: ${formatCurrency(parseFloat(document.getElementById('accounting').value))}</li>
-                        <li>${translations[lang]["input-insurance"]}: ${formatCurrency(parseFloat(document.getElementById('insurance').value))}</li>
-                        <li>${translations[lang]["input-communication"]}: ${formatCurrency(parseFloat(document.getElementById('communication').value))}</li>
-                        <li>${translations[lang]["input-contingency"]}: ${formatCurrency(parseFloat(document.getElementById('contingency').value))}</li>
-                        <li>${translations[lang]["input-quarterly-report"]}: ${formatCurrency(parseFloat(document.getElementById('quarterlyReport').value))} (в месяц, усредненно)</li>
+                        <li><span class="font-semibold">${translations[lang]["input-rent"]}</span> ${formatCurrency(parseFloat(document.getElementById('rent').value))}</li>
+                        <li><span class="font-semibold">${translations[lang]["input-accounting-monthly"]}</span> ${formatCurrency(parseFloat(document.getElementById('accounting').value))}</li>
+                        <li><span class="font-semibold">${translations[lang]["input-insurance"]}</span> ${formatCurrency(parseFloat(document.getElementById('insurance').value))}</li>
+                        <li><span class="font-semibold">${translations[lang]["input-communication"]}</span> ${formatCurrency(parseFloat(document.getElementById('communication').value))}</li>
+                        <li><span class="font-semibold">${translations[lang]["input-contingency"]}</span> ${formatCurrency(parseFloat(document.getElementById('contingency').value))}</li>
+                        <li><span class="font-semibold">${translations[lang]["input-quarterly-report"]}</span> ${formatCurrency(parseFloat(document.getElementById('quarterlyReport').value))} (${(monthIndex + 1) % 3 === 0 ? translations[lang]["quarterly-cost-text"] : translations[lang]["no-quarterly-cost-text"]})</li>
                     </ul>
-                    <p class="font-bold">${translations[lang]["analysis-total-fixed-cost"]} ${formatCurrency(fixedCosts)}</p>
+                    <p class="font-bold">${translations[lang]["analysis-total-fixed-cost"]} ${formatCurrency(fixedCostsTotal)}</p>
                 </div>
                 <div class="space-y-2 pt-4">
-                    <p class="font-semibold text-lg">${translations[lang]["analysis-variable-costs-title"]}</p>
+                    <p class="font-bold text-lg">${translations[lang]["analysis-variable-costs-title"]}</p>
                     <ul class="list-disc list-inside">
-                        <li>${translations[lang]["input-car-purchase"]}: ${formatCurrency(parseFloat(document.getElementById('carPurchase').value))}</li>
-                        <li>${translations[lang]["input-car-wash"]}: ${formatCurrency(parseFloat(document.getElementById('carWash').value))}</li>
-                        <li>${translations[lang]["input-car-repair"]}: ${formatCurrency(parseFloat(document.getElementById('carRepair').value))}</li>
-                        <li>${translations[lang]["input-tuv-diag"]}: ${formatCurrency(parseFloat(document.getElementById('tuvDiag').value))}</li>
-                        <li>${translations[lang]["input-logistics"]}: ${formatCurrency(parseFloat(document.getElementById('logistics').value))}</li>
-                        <li>${translations[lang]["input-warranty"]}: ${formatCurrency(parseFloat(document.getElementById('warranty').value))}</li>
-                        <li>${translations[lang]["input-car-ad"]}: ${formatCurrency(parseFloat(document.getElementById('carAd').value))}</li>
+                        <li><span class="font-semibold">${translations[lang]["input-car-purchase"]}</span> ${formatCurrency(parseFloat(document.getElementById('carPurchase').value))}</li>
+                        <li><span class="font-semibold">${translations[lang]["input-car-wash"]}</span> ${formatCurrency(parseFloat(document.getElementById('carWash').value))}</li>
+                        <li><span class="font-semibold">${translations[lang]["input-car-repair"]}</span> ${formatCurrency(parseFloat(document.getElementById('carRepair').value))}</li>
+                        <li><span class="font-semibold">${translations[lang]["input-tuv-diag"]}</span> ${formatCurrency(parseFloat(document.getElementById('tuvDiag').value))}</li>
+                        <li><span class="font-semibold">${translations[lang]["input-logistics"]}</span> ${formatCurrency(parseFloat(document.getElementById('logistics').value))}</li>
+                        <li><span class="font-semibold">${translations[lang]["input-warranty"]}</span> ${formatCurrency(parseFloat(document.getElementById('warranty').value))}</li>
+                        <li><span class="font-semibold">${translations[lang]["input-car-ad"]}</span> ${formatCurrency(parseFloat(document.getElementById('carAd').value))}</li>
                     </ul>
-                    <p class="font-bold">${translations[lang]["analysis-total-variable-cost"]} ${formatCurrency(variableCosts)}</p>
-                    <p class="font-bold">${translations[lang]["analysis-profit"]} ${formatCurrency(profitPerCar)}</p>
+                    <p class="font-bold">${translations[lang]["analysis-total-variable-cost"]} ${formatCurrency(variableCostsPerCar)}</p>
+                    <p class="font-bold">${translations[lang]["analysis-car-profit-title"]} ${formatCurrency(profitPerCar)}</p>
+                    <p class="text-sm text-gray-500">${translations[lang]["analysis-car-profit-explanation"]}</p>
+                </div>
+                <div class="space-y-2 pt-4">
+                    <p class="font-bold text-lg">${translations[lang]["net-profit-breakdown-title"]}</p>
+                    <p>${translations[lang]["net-profit-breakdown-formula"]}</p>
+                    <p class="font-bold text-xl">${translations[lang]["net-profit-label-month"]} ${monthIndex + 1}: ${formatCurrency(data.netProfit)}</p>
+                    <p class="font-bold text-lg">${translations[lang]["total-profit-breakdown-title"]}</p>
+                    <p>${translations[lang]["total-profit-breakdown-formula"]}</p>
+                    <p class="font-bold text-xl">${translations[lang]["final-balance-label-month"]} ${monthIndex + 1}: ${formatCurrency(data.accumulatedBalance)}</p>
                 </div>
             `;
             analysisContent.innerHTML = content;
@@ -572,26 +580,24 @@
 
         function recalculatePlan() {
             const newFinancialData = {
-                grant: parseInt(document.getElementById('grant').value) || 0,
-                savings: parseInt(document.getElementById('savings').value) || 0,
-                loan: parseInt(document.getElementById('loan').value) || 0,
-                loanRate: parseInt(document.getElementById('loanRate').value) || 0,
-                avgSalePrice: parseInt(document.getElementById('avgSalePrice').value) || 0,
-                gebesatz: parseInt(document.getElementById('gebesatz').value) || 0,
+                grant: parseFloat(document.getElementById('grant').value) || 0,
+                savings: parseFloat(document.getElementById('savings').value) || 0,
+                avgSalePrice: parseFloat(document.getElementById('avgSalePrice').value) || 0,
+                gebesatz: parseFloat(document.getElementById('gebesatz').value) || 0,
                 costs: {
-                    rent: parseInt(document.getElementById('rent').value) || 0,
-                    accounting: parseInt(document.getElementById('accounting').value) || 0,
-                    quarterlyReport: parseInt(document.getElementById('quarterlyReport').value) || 0,
-                    carPurchase: parseInt(document.getElementById('carPurchase').value) || 0,
-                    carWash: parseInt(document.getElementById('carWash').value) || 0,
-                    carRepair: parseInt(document.getElementById('carRepair').value) || 0,
-                    tuvDiag: parseInt(document.getElementById('tuvDiag').value) || 0,
-                    logistics: parseInt(document.getElementById('logistics').value) || 0,
-                    warranty: parseInt(document.getElementById('warranty').value) || 0,
-                    carAd: parseInt(document.getElementById('carAd').value) || 0,
-                    insurance: parseInt(document.getElementById('insurance').value) || 0,
-                    communication: parseInt(document.getElementById('communication').value) || 0,
-                    contingency: parseInt(document.getElementById('contingency').value) || 0,
+                    rent: parseFloat(document.getElementById('rent').value) || 0,
+                    accounting: parseFloat(document.getElementById('accounting').value) || 0,
+                    quarterlyReport: parseFloat(document.getElementById('quarterlyReport').value) || 0,
+                    carPurchase: parseFloat(document.getElementById('carPurchase').value) || 0,
+                    carWash: parseFloat(document.getElementById('carWash').value) || 0,
+                    carRepair: parseFloat(document.getElementById('carRepair').value) || 0,
+                    tuvDiag: parseFloat(document.getElementById('tuvDiag').value) || 0,
+                    logistics: parseFloat(document.getElementById('logistics').value) || 0,
+                    warranty: parseFloat(document.getElementById('warranty').value) || 0,
+                    carAd: parseFloat(document.getElementById('carAd').value) || 0,
+                    insurance: parseFloat(document.getElementById('insurance').value) || 0,
+                    communication: parseFloat(document.getElementById('communication').value) || 0,
+                    contingency: parseFloat(document.getElementById('contingency').value) || 0,
                 }
             };
             processedData = processData(newFinancialData);
@@ -604,12 +610,12 @@
             createCharts();
             updateDashboard(0);
             updateDataTable(document.documentElement.lang);
-            updateAnalysisSection(document.documentElement.lang, processedData);
+            updateAnalysisSection(document.documentElement.lang, 0);
             document.getElementById('month-slider').value = 0;
         }
 
         function formatCurrency(value) {
-            if (value === "TBD") return value;
+            if (value === "TBD") return "TBD";
             return new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR', minimumFractionDigits: 0 }).format(value);
         }
 
@@ -629,7 +635,7 @@
             updateTexts(lang);
             updateCharts(lang, currentMonthIndex);
             updateDataTable(lang);
-            updateAnalysisSection(lang, processedData);
+            updateAnalysisSection(lang, currentMonthIndex);
         }
 
         function updateCharts(lang, monthIndex) {
@@ -783,6 +789,8 @@
 
             chartInstances.costBreakdownChart.data.datasets[0].data = Object.values(data.costBreakdown);
             chartInstances.costBreakdownChart.update();
+            
+            updateAnalysisSection(lang, monthIndex);
         }
 
         function updateDataTable(lang) {
@@ -802,6 +810,7 @@
                     <td class="px-6 py-4">${data.carsSold}</td>
                     <td class="px-6 py-4">${formatCurrency(data.totalRevenue)}</td>
                     <td class="px-6 py-4">${formatCurrency(data.totalExpenses)}</td>
+                    <td class="px-6 py-4">${formatCurrency(data.netProfit)}</td>
                     <td class="px-6 py-4">${formatCurrency(data.netCashFlow)}</td>
                     <td class="px-6 py-4">${formatCurrency(data.accumulatedBalance)}</td>
                     <td class="px-6 py-4">${data.taxes === "TBD" ? "TBD" : formatCurrency(data.taxes)}</td>
@@ -812,7 +821,7 @@
 
         document.addEventListener('DOMContentLoaded', () => {
             // Set initial sales plan
-            const defaultSalesPlan = [2, 3, 4, 5, 5, 5, 5, 5, 5, 5, 5, 5, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7];
+            const defaultSalesPlan = [2, 3, 4, 4, 5, 5, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7];
             for (let i = 0; i < 24; i++) {
                 const inputElement = document.getElementById(`salesPlan_${i}`);
                 if (inputElement) {
@@ -823,9 +832,7 @@
             const initialFinancialData = {
                 grant: 0,
                 savings: 0,
-                loan: 0,
-                loanRate: 8,
-                avgSalePrice: 3750,
+                avgSalePrice: 4000,
                 gebesatz: 465,
                 costs: {
                     rent: 600,
@@ -838,7 +845,7 @@
                     logistics: 150,
                     warranty: 500,
                     carAd: 25,
-                    insurance: 193*12, // 193 EUR per month * 12 months
+                    insurance: 193, 
                     communication: 65,
                     contingency: 100,
                 }
@@ -847,8 +854,6 @@
             // Set initial values from the object to the input fields
             document.getElementById('grant').value = initialFinancialData.grant;
             document.getElementById('savings').value = initialFinancialData.savings;
-            document.getElementById('loan').value = initialFinancialData.loan;
-            document.getElementById('loanRate').value = initialFinancialData.loanRate;
             document.getElementById('avgSalePrice').value = initialFinancialData.avgSalePrice;
             document.getElementById('gebesatz').value = initialFinancialData.gebesatz;
             document.getElementById('taxForm').value = 'einz';
