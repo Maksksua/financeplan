@@ -22,7 +22,7 @@
     <style>
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #f8f9fa;
+            background-color: #f0f4f8;
         }
         .chart-container {
             position: relative;
@@ -45,7 +45,7 @@
         .kpi-value {
             font-size: 2rem;
             font-weight: 700;
-            color: #111827;
+            color: #1f2937;
         }
         .kpi-label {
             font-size: 0.875rem;
@@ -69,6 +69,11 @@
             background: #e5e7eb;
             border-radius: 9999px;
         }
+        .input-group {
+            background-color: #e5e7eb;
+            border-radius: 0.5rem;
+            padding: 1rem;
+        }
     </style>
 </head>
 <body class="antialiased text-gray-800">
@@ -91,117 +96,43 @@
                 <h3 class="text-lg font-semibold mb-4" data-i18n="input-data-title">Ввод данных для моделирования</h3>
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     <!-- Revenue and Sales -->
-                    <div class="p-4 bg-gray-50 rounded-lg">
+                    <div class="input-group">
                         <h4 class="font-semibold text-gray-800 mb-2" data-i18n="input-group-sales">План продаж и доход</h4>
-                        <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+                        <div class="grid grid-cols-6 gap-4">
                             <!-- Sale Inputs (Month 1-24) -->
-                            <div class="col-span-2 md:col-span-3 grid grid-cols-6 gap-4">
-                                <label class="block col-span-1" data-i18n="month-1-label">
-                                    <span class="text-gray-700 text-sm">Мес. 1</span>
-                                    <input type="number" id="salesPlan_0" value="2" min="0" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
-                                </label>
-                                <label class="block col-span-1" data-i18n="month-2-label">
-                                    <span class="text-gray-700 text-sm">Мес. 2</span>
-                                    <input type="number" id="salesPlan_1" value="3" min="0" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
-                                </label>
-                                <label class="block col-span-1" data-i18n="month-3-label">
-                                    <span class="text-gray-700 text-sm">Мес. 3</span>
-                                    <input type="number" id="salesPlan_2" value="4" min="0" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
-                                </label>
-                                <label class="block col-span-1" data-i18n="month-4-label">
-                                    <span class="text-gray-700 text-sm">Мес. 4</span>
-                                    <input type="number" id="salesPlan_3" value="5" min="0" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
-                                </label>
-                                <label class="block col-span-1" data-i18n="month-5-label">
-                                    <span class="text-gray-700 text-sm">Мес. 5</span>
-                                    <input type="number" id="salesPlan_4" value="5" min="0" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
-                                </label>
-                                <label class="block col-span-1" data-i18n="month-6-label">
-                                    <span class="text-gray-700 text-sm">Мес. 6</span>
-                                    <input type="number" id="salesPlan_5" value="5" min="0" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
-                                </label>
-                                <label class="block col-span-1" data-i18n="month-7-label">
-                                    <span class="text-gray-700 text-sm">Мес. 7</span>
-                                    <input type="number" id="salesPlan_6" value="7" min="0" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
-                                </label>
-                                <label class="block col-span-1" data-i18n="month-8-label">
-                                    <span class="text-gray-700 text-sm">Мес. 8</span>
-                                    <input type="number" id="salesPlan_7" value="7" min="0" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
-                                </label>
-                                <label class="block col-span-1" data-i18n="month-9-label">
-                                    <span class="text-gray-700 text-sm">Мес. 9</span>
-                                    <input type="number" id="salesPlan_8" value="7" min="0" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
-                                </label>
-                                <label class="block col-span-1" data-i18n="month-10-label">
-                                    <span class="text-gray-700 text-sm">Мес. 10</span>
-                                    <input type="number" id="salesPlan_9" value="7" min="0" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
-                                </label>
-                                <label class="block col-span-1" data-i18n="month-11-label">
-                                    <span class="text-gray-700 text-sm">Мес. 11</span>
-                                    <input type="number" id="salesPlan_10" value="7" min="0" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
-                                </label>
-                                <label class="block col-span-1" data-i18n="month-12-label">
-                                    <span class="text-gray-700 text-sm">Мес. 12</span>
-                                    <input type="number" id="salesPlan_11" value="7" min="0" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
-                                </label>
-                                <label class="block col-span-1" data-i18n="month-13-label">
-                                    <span class="text-gray-700 text-sm">Мес. 13</span>
-                                    <input type="number" id="salesPlan_12" value="7" min="0" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
-                                </label>
-                                <label class="block col-span-1" data-i18n="month-14-label">
-                                    <span class="text-gray-700 text-sm">Мес. 14</span>
-                                    <input type="number" id="salesPlan_13" value="7" min="0" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
-                                </label>
-                                <label class="block col-span-1" data-i18n="month-15-label">
-                                    <span class="text-gray-700 text-sm">Мес. 15</span>
-                                    <input type="number" id="salesPlan_14" value="7" min="0" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
-                                </label>
-                                <label class="block col-span-1" data-i18n="month-16-label">
-                                    <span class="text-gray-700 text-sm">Мес. 16</span>
-                                    <input type="number" id="salesPlan_15" value="7" min="0" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
-                                </label>
-                                <label class="block col-span-1" data-i18n="month-17-label">
-                                    <span class="text-gray-700 text-sm">Мес. 17</span>
-                                    <input type="number" id="salesPlan_16" value="7" min="0" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
-                                </label>
-                                <label class="block col-span-1" data-i18n="month-18-label">
-                                    <span class="text-gray-700 text-sm">Мес. 18</span>
-                                    <input type="number" id="salesPlan_17" value="7" min="0" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
-                                </label>
-                                <label class="block col-span-1" data-i18n="month-19-label">
-                                    <span class="text-gray-700 text-sm">Мес. 19</span>
-                                    <input type="number" id="salesPlan_18" value="7" min="0" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
-                                </label>
-                                <label class="block col-span-1" data-i18n="month-20-label">
-                                    <span class="text-gray-700 text-sm">Мес. 20</span>
-                                    <input type="number" id="salesPlan_19" value="7" min="0" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
-                                </label>
-                                <label class="block col-span-1" data-i18n="month-21-label">
-                                    <span class="text-gray-700 text-sm">Мес. 21</span>
-                                    <input type="number" id="salesPlan_20" value="7" min="0" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
-                                </label>
-                                <label class="block col-span-1" data-i18n="month-22-label">
-                                    <span class="text-gray-700 text-sm">Мес. 22</span>
-                                    <input type="number" id="salesPlan_21" value="7" min="0" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
-                                </label>
-                                <label class="block col-span-1" data-i18n="month-23-label">
-                                    <span class="text-gray-700 text-sm">Мес. 23</span>
-                                    <input type="number" id="salesPlan_22" value="7" min="0" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
-                                </label>
-                                <label class="block col-span-1" data-i18n="month-24-label">
-                                    <span class="text-gray-700 text-sm">Мес. 24</span>
-                                    <input type="number" id="salesPlan_23" value="7" min="0" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
-                                </label>
-                            </div>
+                            <label class="block col-span-1"><span class="text-gray-700 text-sm">Мес. 1</span><input type="number" id="salesPlan_0" value="2" min="0" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50"></label>
+                            <label class="block col-span-1"><span class="text-gray-700 text-sm">Мес. 2</span><input type="number" id="salesPlan_1" value="3" min="0" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50"></label>
+                            <label class="block col-span-1"><span class="text-gray-700 text-sm">Мес. 3</span><input type="number" id="salesPlan_2" value="4" min="0" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50"></label>
+                            <label class="block col-span-1"><span class="text-gray-700 text-sm">Мес. 4</span><input type="number" id="salesPlan_3" value="5" min="0" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50"></label>
+                            <label class="block col-span-1"><span class="text-gray-700 text-sm">Мес. 5</span><input type="number" id="salesPlan_4" value="5" min="0" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50"></label>
+                            <label class="block col-span-1"><span class="text-gray-700 text-sm">Мес. 6</span><input type="number" id="salesPlan_5" value="5" min="0" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50"></label>
+                            <label class="block col-span-1"><span class="text-gray-700 text-sm">Мес. 7</span><input type="number" id="salesPlan_6" value="7" min="0" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50"></label>
+                            <label class="block col-span-1"><span class="text-gray-700 text-sm">Мес. 8</span><input type="number" id="salesPlan_7" value="7" min="0" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50"></label>
+                            <label class="block col-span-1"><span class="text-gray-700 text-sm">Мес. 9</span><input type="number" id="salesPlan_8" value="7" min="0" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50"></label>
+                            <label class="block col-span-1"><span class="text-gray-700 text-sm">Мес. 10</span><input type="number" id="salesPlan_9" value="7" min="0" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50"></label>
+                            <label class="block col-span-1"><span class="text-gray-700 text-sm">Мес. 11</span><input type="number" id="salesPlan_10" value="7" min="0" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50"></label>
+                            <label class="block col-span-1"><span class="text-gray-700 text-sm">Мес. 12</span><input type="number" id="salesPlan_11" value="7" min="0" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50"></label>
+                            <label class="block col-span-1"><span class="text-gray-700 text-sm">Мес. 13</span><input type="number" id="salesPlan_12" value="7" min="0" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50"></label>
+                            <label class="block col-span-1"><span class="text-gray-700 text-sm">Мес. 14</span><input type="number" id="salesPlan_13" value="7" min="0" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50"></label>
+                            <label class="block col-span-1"><span class="text-gray-700 text-sm">Мес. 15</span><input type="number" id="salesPlan_14" value="7" min="0" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50"></label>
+                            <label class="block col-span-1"><span class="text-gray-700 text-sm">Мес. 16</span><input type="number" id="salesPlan_15" value="7" min="0" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50"></label>
+                            <label class="block col-span-1"><span class="text-gray-700 text-sm">Мес. 17</span><input type="number" id="salesPlan_16" value="7" min="0" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50"></label>
+                            <label class="block col-span-1"><span class="text-gray-700 text-sm">Мес. 18</span><input type="number" id="salesPlan_17" value="7" min="0" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50"></label>
+                            <label class="block col-span-1"><span class="text-gray-700 text-sm">Мес. 19</span><input type="number" id="salesPlan_18" value="7" min="0" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50"></label>
+                            <label class="block col-span-1"><span class="text-gray-700 text-sm">Мес. 20</span><input type="number" id="salesPlan_19" value="7" min="0" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50"></label>
+                            <label class="block col-span-1"><span class="text-gray-700 text-sm">Мес. 21</span><input type="number" id="salesPlan_20" value="7" min="0" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50"></label>
+                            <label class="block col-span-1"><span class="text-gray-700 text-sm">Мес. 22</span><input type="number" id="salesPlan_21" value="7" min="0" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50"></label>
+                            <label class="block col-span-1"><span class="text-gray-700 text-sm">Мес. 23</span><input type="number" id="salesPlan_22" value="7" min="0" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50"></label>
+                            <label class="block col-span-1"><span class="text-gray-700 text-sm">Мес. 24</span><input type="number" id="salesPlan_23" value="7" min="0" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50"></label>
                         </div>
                         <label class="block mt-4">
                             <span class="text-gray-700 text-sm" data-i18n="input-avg-price">Средняя цена продажи (€):</span>
-                            <input type="number" id="avgSalePrice" value="3500" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
+                            <input type="number" id="avgSalePrice" value="3750" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
                         </label>
                     </div>
 
                     <!-- Funding -->
-                    <div class="p-4 bg-gray-50 rounded-lg">
+                    <div class="input-group">
                         <h4 class="font-semibold text-gray-800 mb-2" data-i18n="input-group-funding">Начальное финансирование</h4>
                         <label class="block mb-2">
                             <span class="text-gray-700 text-sm" data-i18n="input-grant">Безвозвратный грант (€):</span>
@@ -222,7 +153,7 @@
                     </div>
 
                     <!-- Costs -->
-                    <div class="p-4 bg-gray-50 rounded-lg">
+                    <div class="input-group">
                         <h4 class="font-semibold text-gray-800 mb-2" data-i18n="input-group-costs">Расходы</h4>
                         <label class="block mb-2">
                             <span class="text-gray-700 text-sm" data-i18n="input-rent">Аренда (€/мес):</span>
@@ -230,15 +161,15 @@
                         </label>
                         <label class="block mb-2">
                             <span class="text-gray-700 text-sm" data-i18n="input-accounting-monthly">Бухгалтерия (€/мес):</span>
-                            <input type="number" id="accounting" value="100" min="0" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
+                            <input type="number" id="accounting" value="171" min="0" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
                         </label>
                         <label class="block mb-2">
                             <span class="text-gray-700 text-sm" data-i18n="input-quarterly-report">Квартальный отчёт (€/кварт):</span>
                             <input type="number" id="quarterlyReport" value="850" min="0" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
                         </label>
                         <label class="block mb-2">
-                            <span class="text-gray-700 text-sm" data-i18n="input-insurance">Страховка (€/год):</span>
-                            <input type="number" id="insurance" value="2000" min="0" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
+                            <span class="text-gray-700 text-sm" data-i18n="input-insurance">Страховка (€/мес):</span>
+                            <input type="number" id="insurance" value="193" min="0" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
                         </label>
                         <label class="block mb-2">
                             <span class="text-gray-700 text-sm" data-i18n="input-communication">Связь (€/мес):</span>
@@ -253,7 +184,7 @@
 
                 <!-- Variable Costs & Tax -->
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6 mt-6">
-                    <div class="p-4 bg-gray-50 rounded-lg">
+                    <div class="input-group">
                         <h4 class="font-semibold text-gray-800 mb-2" data-i18n="input-group-variable">Переменные расходы</h4>
                         <label class="block mb-2">
                             <span class="text-gray-700 text-sm" data-i18n="input-car-purchase">Закупка авто (€):</span>
@@ -285,7 +216,7 @@
                         </label>
                     </div>
 
-                    <div class="p-4 bg-gray-50 rounded-lg">
+                    <div class="input-group">
                         <h4 class="font-semibold text-gray-800 mb-2" data-i18n="input-group-taxes">Налоговая информация</h4>
                         <label class="block mb-2">
                             <span class="text-gray-700 text-sm" data-i18n="tax-form">Форма налогообложения:</span>
@@ -295,7 +226,7 @@
                                 <option value="gmbh" data-i18n="option-gmbh">ООО (GmbH)</option>
                             </select>
                         </label>
-                        <label class="block">
+                        <label class="block" id="gebesatz-label">
                             <span class="text-gray-700 text-sm" data-i18n="business-tax-rate">Коэффициент налога на торговлю (Gewerbesteuer-Hebesatz, %):</span>
                             <input type="number" id="gebesatz" value="465" min="0" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
                         </label>
@@ -384,6 +315,14 @@
                     </div>
                 </details>
             </div>
+            
+            <!-- Detailed Analysis -->
+            <div class="bg-white p-6 rounded-xl shadow-md mt-8">
+                <h3 class="text-lg font-semibold mb-4" data-i18n="analysis-title">Детальный анализ затрат</h3>
+                <div id="analysis-content" class="text-sm text-gray-700 space-y-4">
+                    <!-- Dynamic content will be injected here -->
+                </div>
+            </div>
         </main>
     </div>
 
@@ -404,7 +343,7 @@
                 "input-rent": "Аренда (€/мес):",
                 "input-accounting-monthly": "Бухгалтерия (€/мес):",
                 "input-quarterly-report": "Квартальный отчёт (€/кварт):",
-                "input-insurance": "Страховка (€/год):",
+                "input-insurance": "Страховка (€/мес):",
                 "input-communication": "Связь (€/мес):",
                 "input-contingency": "Прочие расходы (€/мес):",
                 "input-group-variable": "Переменные расходы",
@@ -435,14 +374,21 @@
                 "chart-4-title": "Структура расходов (Месяц",
                 "table-summary": "Показать детальные финансовые данные",
                 "table-description": "В таблице представлены исходные данные, использованные для построения графиков. Это позволяет провести детальный анализ финансового плана.",
-                "table-headers": ["Месяц", "Продано авто", "Доход", "Расходы", "Чистый поток", "Баланс", "Налоги"],
+                "table-headers": ["Месяц", "Продано авто", "Доход", "Расходы", "Чистый поток", "Баланс", "Налоги", "Проценты по займу"],
+                "costBreakdownLabels": ["Аренда", "Бухгалтерия", "Закупка авто", "Транспорт и подготовка", "Страховка и связь", "Прочее", "Налоги", "Гарантия", "Проценты по займу"],
                 "chart-labels": {
                     "cashFlow": "Накопленный баланс",
                     "revenue": "Доход",
                     "expenses": "Расходы",
                     "sales": "Продано автомобилей"
                 },
-                "costBreakdownLabels": ["Аренда", "Бухгалтерия", "Закупка авто", "Транспорт и подготовка", "Страховка и связь", "Прочее", "Налоги", "Гарантия", "Проценты по займу"]
+                "analysis-title": "Детальный анализ затрат",
+                "analysis-intro": "Здесь представлены подробные расчёты по каждому типу расходов. Эти данные помогают понять, как формируется себестоимость каждого автомобиля и каковы ежемесячные постоянные затраты.",
+                "analysis-fixed-costs-title": "Постоянные ежемесячные расходы",
+                "analysis-variable-costs-title": "Переменные расходы на 1 автомобиль",
+                "analysis-total-fixed-cost": "Всего постоянные расходы в месяц: ",
+                "analysis-total-variable-cost": "Всего переменные расходы на 1 авто: ",
+                "analysis-profit": "Прогнозируемая прибыль с 1 авто:"
             },
             de: {
                 "title": "Finanzdashboard: Autohändler in Nürnberg",
@@ -459,7 +405,7 @@
                 "input-rent": "Miete (€/Monat):",
                 "input-accounting-monthly": "Buchhaltung (€/Monat):",
                 "input-quarterly-report": "Quartalsbericht (€/Quartal):",
-                "input-insurance": "Versicherung (€/Jahr):",
+                "input-insurance": "Versicherung (€/Monat):",
                 "input-communication": "Kommunikation (€/Monat):",
                 "input-contingency": "Sonstige Kosten (€/Monat):",
                 "input-group-variable": "Variable Kosten",
@@ -491,13 +437,14 @@
                 "table-summary": "Detaillierte Finanzdaten anzeigen",
                 "table-description": "Die Tabelle zeigt die Rohdaten, die zur Erstellung der Diagramme verwendet wurden. Dies ermöglicht eine detaillierte Analyse des Finanzplans.",
                 "table-headers": ["Monat", "Verkaufte Autos", "Einnahmen", "Ausgaben", "Netto-Cashflow", "Kontostand", "Steuern"],
-                "chart-labels": {
-                    "cashFlow": "Kumulierter Kontostand",
-                    "revenue": "Einnahmen",
-                    "expenses": "Ausgaben",
-                    "sales": "Verkaufte Autos"
-                },
-                "costBreakdownLabels": ["Miete", "Buchhaltung", "Fahrzeugkauf", "Transport und Aufbereitung", "Versicherung und Kommunikation", "Sonstiges", "Steuern", "Garantie", "Darlehenszinsen"]
+                "costBreakdownLabels": ["Miete", "Buchhaltung", "Fahrzeugkauf", "Transport und Aufbereitung", "Versicherung und Kommunikation", "Sonstiges", "Steuern", "Garantie", "Darlehenszinsen"],
+                "analysis-title": "Detaillierte Kostenanalyse",
+                "analysis-intro": "Hier finden Sie detaillierte Berechnungen für jede Kostenart. Diese Daten helfen, die Selbstkosten pro Fahrzeug und die monatlichen Fixkosten zu verstehen.",
+                "analysis-fixed-costs-title": "Monatliche Fixkosten",
+                "analysis-variable-costs-title": "Variable Kosten pro 1 Fahrzeug",
+                "analysis-total-fixed-cost": "Gesamte Fixkosten pro Monat: ",
+                "analysis-total-variable-cost": "Gesamte variable Kosten pro Auto: ",
+                "analysis-profit": "Geschätzter Gewinn pro Auto:"
             }
         };
 
@@ -514,7 +461,7 @@
                 salesPlanArray.push(parseInt(document.getElementById(`salesPlan_${i}`).value) || 0);
             }
 
-            const totalFixedCosts = financialData.costs.rent + financialData.costs.accounting + financialData.costs.communication + financialData.costs.contingency;
+            const totalFixedCosts = financialData.costs.rent + financialData.costs.accounting + financialData.costs.communication + financialData.costs.contingency + (financialData.costs.insurance/12);
             
             // Tax constants
             const gewerbeAllowance = 24500;
@@ -528,10 +475,10 @@
 
                 const variableCosts = carsSold * (financialData.costs.carPurchase + financialData.costs.carWash + financialData.costs.carRepair + financialData.costs.tuvDiag + financialData.costs.logistics + financialData.costs.warranty + financialData.costs.carAd);
                 const quarterlyCosts = (i + 1) % 3 === 0 ? financialData.costs.quarterlyReport : 0;
-                const annualCosts = i === 0 || i === 12 ? financialData.costs.insurance : 0;
+                
                 const loanInterest = financialData.loan > 0 ? (financialData.loan * interestRate) / 12 : 0;
                 
-                let totalExpensesBeforeTaxes = totalFixedCosts + quarterlyCosts + annualCosts + variableCosts + loanInterest;
+                let totalExpensesBeforeTaxes = totalFixedCosts + quarterlyCosts + variableCosts + loanInterest;
                 
                 let taxes = 0;
                 let profit = totalRevenue - totalExpensesBeforeTaxes;
@@ -539,15 +486,17 @@
                 // Tax Calculation Logic
                 const taxForm = document.getElementById('taxForm').value;
 
-                if (taxForm === 'einz' && profit > 0) {
-                    taxes += profit * einkommensteuerRate;
-                }
-                
-                if (taxForm === 'gmbh' && profit > 0) {
-                    taxes += profit * koerperschaftssteuerRate;
-                }
-                
                 if (taxForm !== 'kleingewerbe') {
+                    // Simplified Income Tax (Einkommensteuer) for Einzelunternehmen
+                    if (taxForm === 'einz' && profit > 0) {
+                        taxes += profit * einkommensteuerRate;
+                    }
+                    
+                    // Simplified Corporate Tax (Körperschaftsteuer) for GmbH
+                    if (taxForm === 'gmbh' && profit > 0) {
+                        taxes += profit * koerperschaftssteuerRate;
+                    }
+
                     // Gewerbesteuer (Simplified)
                     const gewerbesteuerHebesatz = financialData.gebesatz / 100;
                     let gewerbeProfit = profit > gewerbeAllowance ? profit - gewerbeAllowance : 0;
@@ -565,21 +514,60 @@
                     totalExpenses: totalExpenses,
                     netCashFlow: netCashFlow,
                     accumulatedBalance: accumulatedBalance,
-                    taxes: taxes,
+                    taxes: taxes > 0 ? taxes : "TBD",
                     costBreakdown: {
                         "Аренда": financialData.costs.rent,
                         "Бухгалтерия": financialData.costs.accounting + quarterlyCosts,
                         "Закупка авто": carsSold * financialData.costs.carPurchase,
                         "Транспорт и подготовка": carsSold * (financialData.costs.carWash + financialData.costs.carRepair + financialData.costs.tuvDiag + financialData.costs.logistics + financialData.costs.carAd),
-                        "Страховка и связь": annualCosts + financialData.costs.communication,
+                        "Страховка и связь": (financialData.costs.insurance / 12) + financialData.costs.communication,
                         "Прочее": financialData.costs.contingency,
-                        "Налоги": taxes,
+                        "Налоги": taxes > 0 ? taxes : "TBD",
                         "Гарантия": carsSold * financialData.costs.warranty,
                         "Проценты по займу": loanInterest
                     }
                 });
             }
             return data;
+        }
+
+        function updateAnalysisSection(lang, processedData) {
+            const analysisContent = document.getElementById('analysis-content');
+            const data = processedData[0]; // Use month 1 data for base calculation
+            const fixedCosts = parseFloat(document.getElementById('rent').value) + parseFloat(document.getElementById('accounting').value) + parseFloat(document.getElementById('communication').value) + parseFloat(document.getElementById('contingency').value) + (parseFloat(document.getElementById('insurance').value) / 12);
+            const variableCosts = parseFloat(document.getElementById('carPurchase').value) + parseFloat(document.getElementById('carWash').value) + parseFloat(document.getElementById('carRepair').value) + parseFloat(document.getElementById('tuvDiag').value) + parseFloat(document.getElementById('logistics').value) + parseFloat(document.getElementById('warranty').value) + parseFloat(document.getElementById('carAd').value);
+            const profitPerCar = parseFloat(document.getElementById('avgSalePrice').value) - variableCosts;
+
+            let content = `
+                <p class="mb-2">${translations[lang]["analysis-intro"]}</p>
+                <div class="space-y-2">
+                    <p class="font-semibold text-lg">${translations[lang]["analysis-fixed-costs-title"]}</p>
+                    <ul class="list-disc list-inside">
+                        <li>${translations[lang]["input-rent"]} ${formatCurrency(parseFloat(document.getElementById('rent').value))}</li>
+                        <li>${translations[lang]["input-accounting-monthly"]}: ${formatCurrency(parseFloat(document.getElementById('accounting').value))}</li>
+                        <li>${translations[lang]["input-insurance"]}: ${formatCurrency(parseFloat(document.getElementById('insurance').value))}</li>
+                        <li>${translations[lang]["input-communication"]}: ${formatCurrency(parseFloat(document.getElementById('communication').value))}</li>
+                        <li>${translations[lang]["input-contingency"]}: ${formatCurrency(parseFloat(document.getElementById('contingency').value))}</li>
+                        <li>${translations[lang]["input-quarterly-report"]}: ${formatCurrency(parseFloat(document.getElementById('quarterlyReport').value))} (в месяц, усредненно)</li>
+                    </ul>
+                    <p class="font-bold">${translations[lang]["analysis-total-fixed-cost"]} ${formatCurrency(fixedCosts)}</p>
+                </div>
+                <div class="space-y-2 pt-4">
+                    <p class="font-semibold text-lg">${translations[lang]["analysis-variable-costs-title"]}</p>
+                    <ul class="list-disc list-inside">
+                        <li>${translations[lang]["input-car-purchase"]}: ${formatCurrency(parseFloat(document.getElementById('carPurchase').value))}</li>
+                        <li>${translations[lang]["input-car-wash"]}: ${formatCurrency(parseFloat(document.getElementById('carWash').value))}</li>
+                        <li>${translations[lang]["input-car-repair"]}: ${formatCurrency(parseFloat(document.getElementById('carRepair').value))}</li>
+                        <li>${translations[lang]["input-tuv-diag"]}: ${formatCurrency(parseFloat(document.getElementById('tuvDiag').value))}</li>
+                        <li>${translations[lang]["input-logistics"]}: ${formatCurrency(parseFloat(document.getElementById('logistics').value))}</li>
+                        <li>${translations[lang]["input-warranty"]}: ${formatCurrency(parseFloat(document.getElementById('warranty').value))}</li>
+                        <li>${translations[lang]["input-car-ad"]}: ${formatCurrency(parseFloat(document.getElementById('carAd').value))}</li>
+                    </ul>
+                    <p class="font-bold">${translations[lang]["analysis-total-variable-cost"]} ${formatCurrency(variableCosts)}</p>
+                    <p class="font-bold">${translations[lang]["analysis-profit"]} ${formatCurrency(profitPerCar)}</p>
+                </div>
+            `;
+            analysisContent.innerHTML = content;
         }
 
         function recalculatePlan() {
@@ -616,10 +604,12 @@
             createCharts();
             updateDashboard(0);
             updateDataTable(document.documentElement.lang);
+            updateAnalysisSection(document.documentElement.lang, processedData);
             document.getElementById('month-slider').value = 0;
         }
 
         function formatCurrency(value) {
+            if (value === "TBD") return value;
             return new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR', minimumFractionDigits: 0 }).format(value);
         }
 
@@ -639,6 +629,7 @@
             updateTexts(lang);
             updateCharts(lang, currentMonthIndex);
             updateDataTable(lang);
+            updateAnalysisSection(lang, processedData);
         }
 
         function updateCharts(lang, monthIndex) {
@@ -813,7 +804,7 @@
                     <td class="px-6 py-4">${formatCurrency(data.totalExpenses)}</td>
                     <td class="px-6 py-4">${formatCurrency(data.netCashFlow)}</td>
                     <td class="px-6 py-4">${formatCurrency(data.accumulatedBalance)}</td>
-                    <td class="px-6 py-4">${formatCurrency(data.taxes)}</td>
+                    <td class="px-6 py-4">${data.taxes === "TBD" ? "TBD" : formatCurrency(data.taxes)}</td>
                 </tr>`;
             });
             tableBody.innerHTML = bodyHtml;
@@ -834,11 +825,11 @@
                 savings: 0,
                 loan: 0,
                 loanRate: 8,
-                avgSalePrice: 3500,
+                avgSalePrice: 3750,
                 gebesatz: 465,
                 costs: {
                     rent: 600,
-                    accounting: 100,
+                    accounting: 171,
                     quarterlyReport: 850,
                     carPurchase: 2300,
                     carWash: 25,
@@ -847,7 +838,7 @@
                     logistics: 150,
                     warranty: 500,
                     carAd: 25,
-                    insurance: 2000,
+                    insurance: 193*12, // 193 EUR per month * 12 months
                     communication: 65,
                     contingency: 100,
                 }
@@ -874,6 +865,15 @@
 
             document.getElementById('month-slider').addEventListener('input', (e) => {
                 updateDashboard(parseInt(e.target.value));
+            });
+            
+            document.getElementById('taxForm').addEventListener('change', (e) => {
+                const gebesatzLabel = document.getElementById('gebesatz-label');
+                if (e.target.value === 'einz' || e.target.value === 'gmbh') {
+                    gebesatzLabel.style.display = 'block';
+                } else {
+                    gebesatzLabel.style.display = 'none';
+                }
             });
         });
     </script>
