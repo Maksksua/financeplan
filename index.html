@@ -250,16 +250,6 @@
                         <div class="kpi-label" data-i18n="kpi-balance-label">Накопленный баланс</div>
                     </div>
                 </div>
-
-                <div>
-                    <label for="month-slider" class="block mb-2 text-sm font-medium text-gray-900" data-i18n="slider-label">Выберите месяц для анализа:</label>
-                    <input id="month-slider" type="range" min="0" max="23" value="0" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer">
-                    <div class="flex justify-between text-xs text-gray-500 mt-2">
-                        <span data-i18n="month-1">Месяц 1</span>
-                        <span id="slider-label-month" class="font-bold text-blue-600">Месяц 1</span>
-                        <span data-i18n="month-24">Месяц 24</span>
-                    </div>
-                </div>
             </div>
 
             <!-- Charts Grid -->
@@ -291,27 +281,34 @@
             </div>
             
             <!-- Detailed Data Table -->
-            <div>
-                 <details class="bg-white rounded-xl shadow-md overflow-hidden">
-                    <summary class="p-6 cursor-pointer font-semibold text-lg" data-i18n="table-summary">Показать детальные финансовые данные</summary>
-                    <div class="p-6 border-t border-gray-200">
-                        <p class="text-sm text-gray-600 mb-4" data-i18n="table-description">В таблице представлены исходные данные, использованные для построения графиков. Это позволяет провести детальный анализ финансового плана.</p>
-                        <div class="overflow-x-auto">
-                            <table id="dataTable" class="min-w-full text-sm text-left text-gray-500">
-                                <thead class="text-xs text-gray-700 uppercase bg-gray-50">
-                                </thead>
-                                <tbody>
-                                </tbody>
-                            </table>
-                        </div>
+            <div class="bg-white p-6 rounded-xl shadow-md overflow-hidden">
+                <h3 class="p-0 font-semibold text-lg" data-i18n="table-summary">Показать детальные финансовые данные</h3>
+                <div class="p-0 border-t border-gray-200">
+                    <p class="text-sm text-gray-600 mb-4" data-i18n="table-description">В таблице представлены исходные данные, использованные для построения графиков. Это позволяет провести детальный анализ финансового плана.</p>
+                    <div class="overflow-x-auto">
+                        <table id="dataTable" class="min-w-full text-sm text-left text-gray-500">
+                            <thead class="text-xs text-gray-700 uppercase bg-gray-50">
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
                     </div>
-                </details>
+                </div>
             </div>
             
             <!-- Detailed Analysis -->
             <div class="bg-white p-6 rounded-xl shadow-md mt-8">
                 <h3 class="text-lg font-semibold mb-4" data-i18n="analysis-title">Детальный анализ затрат</h3>
-                <div id="analysis-content" class="text-sm text-gray-700 space-y-4">
+                <div>
+                    <label for="month-slider" class="block mb-2 text-sm font-medium text-gray-900" data-i18n="slider-label">Выберите месяц для анализа:</label>
+                    <input id="month-slider" type="range" min="0" max="23" value="0" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer">
+                    <div class="flex justify-between text-xs text-gray-500 mt-2">
+                        <span data-i18n="month-1">Месяц 1</span>
+                        <span id="slider-label-month" class="font-bold text-blue-600">Месяц 1</span>
+                        <span data-i18n="month-24">Месяц 24</span>
+                    </div>
+                </div>
+                <div id="analysis-content" class="text-sm text-gray-700 space-y-4 mt-6">
                     <!-- Dynamic content will be injected here -->
                 </div>
             </div>
@@ -474,7 +471,7 @@
             const initialFunding = financialData.grant + financialData.savings;
             let accumulatedBalance = initialFunding;
             
-            const salesPlanArray = [2, 3, 4, 5, 5, 5, 6, 6, 7, 7, 8, 8, 8, 8, 9, 9, 9, 9, 10, 10, 10, 10, 10, 10];
+            const salesPlanArray = [];
             for (let i = 0; i < 24; i++) {
                 salesPlanArray[i] = parseInt(document.getElementById(`salesPlan_${i}`).value) || 0;
             }
@@ -583,25 +580,10 @@
                             <ul class="list-disc list-inside">
                                 <li>${translations[lang]["kpi-sales-label"]}: ${data.carsSold}</li>
                                 <li>${translations[lang]["kpi-revenue-label"]}: ${formatCurrency(data.totalRevenue)}</li>
+                                <li><span class="font-bold">${translations[lang]["analysis-profit-per-car"]}:</span> ${formatCurrency(profitPerCar)}</li>
+                                <li><span class="font-bold">${translations[lang]["analysis-net-profit-before-fixed"]}:</span> ${formatCurrency(profitPerCar * carsSold)}</li>
                             </ul>
                         </div>
-                        <!-- Costs Breakdown -->
-                        <div class="p-4 bg-gray-50 rounded-lg">
-                            <p class="font-bold">${translations[lang]["analysis-variable-costs-title"]}</p>
-                            <ul class="list-disc list-inside">
-                                <li>${translations[lang]["input-car-purchase"]}: ${formatCurrency(carPurchaseCost * carsSold)}</li>
-                                <li>${translations[lang]["input-car-wash"]}: ${formatCurrency(carWashCost * carsSold)}</li>
-                                <li>${translations[lang]["input-car-repair"]}: ${formatCurrency(carRepairCost * carsSold)}</li>
-                                <li>${translations[lang]["input-tuv-diag"]}: ${formatCurrency(tuvDiagCost * carsSold)}</li>
-                                <li>${translations[lang]["input-logistics"]}: ${formatCurrency(logisticsCost * carsSold)}</li>
-                                <li>${translations[lang]["input-warranty"]}: ${formatCurrency(warrantyCost * carsSold)}</li>
-                                <li>${translations[lang]["input-car-ad"]}: ${formatCurrency(carAdCost * carsSold)}</li>
-                            </ul>
-                            <p class="font-bold mt-2">${translations[lang]["analysis-total-variable-cost"]} ${formatCurrency(totalVariableCostsForMonth)}</p>
-                        </div>
-                    </div>
-
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <!-- Fixed Costs -->
                         <div class="p-4 bg-gray-50 rounded-lg">
                             <p class="font-bold">${translations[lang]["analysis-fixed-costs-title"]}</p>
@@ -615,6 +597,23 @@
                             </ul>
                             <p class="font-bold mt-2">${translations[lang]["analysis-total-fixed-cost"]} ${formatCurrency(totalFixedCostsForMonth)}</p>
                         </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <!-- Variable Costs -->
+                        <div class="p-4 bg-gray-50 rounded-lg">
+                            <p class="font-bold">${translations[lang]["analysis-variable-costs-title"]}</p>
+                            <ul class="list-disc list-inside">
+                                <li>${translations[lang]["input-car-purchase"]}: ${formatCurrency(carPurchaseCost)}</li>
+                                <li>${translations[lang]["input-car-wash"]}: ${formatCurrency(carWashCost)}</li>
+                                <li>${translations[lang]["input-car-repair"]}: ${formatCurrency(carRepairCost)}</li>
+                                <li>${translations[lang]["input-tuv-diag"]}: ${formatCurrency(tuvDiagCost)}</li>
+                                <li>${translations[lang]["input-logistics"]}: ${formatCurrency(logisticsCost)}</li>
+                                <li>${translations[lang]["input-warranty"]}: ${formatCurrency(warrantyCost)}</li>
+                                <li>${translations[lang]["input-car-ad"]}: ${formatCurrency(carAdCost)}</li>
+                            </ul>
+                            <p class="font-bold mt-2">${translations[lang]["analysis-total-variable-cost"]} ${formatCurrency(totalVariableCostsPerCar)}</p>
+                        </div>
                         <!-- Final financial results -->
                         <div class="p-4 bg-gray-50 rounded-lg">
                             <p class="font-bold">${translations[lang]["analysis-summary-title"]}</p>
@@ -624,7 +623,6 @@
                                 <li><span class="font-bold">${translations[lang]["analysis-net-cashflow"]}:</span> ${formatCurrency(data.netCashFlow)}</li>
                                 <li><span class="font-bold">${translations[lang]["analysis-final-balance"]}:</span> ${formatCurrency(data.accumulatedBalance)}</li>
                             </ul>
-                            <p class="font-bold mt-2">${translations[lang]["analysis-profit-per-car"]}: ${formatCurrency(profitPerCar)}</p>
                         </div>
                     </div>
                 </div>
