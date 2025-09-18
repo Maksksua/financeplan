@@ -75,39 +75,45 @@
 
     <div class="container mx-auto p-4 md:p-8">
         <header class="text-center mb-8">
-            <h1 class="text-3xl md:text-4xl font-bold text-gray-900">Финансовая панель: Автодилер в Нюрнберге</h1>
-            <p class="text-md text-gray-600 mt-2">Интерактивный анализ финансового плана на 24 месяца</p>
+            <h1 class="text-3xl md:text-4xl font-bold text-gray-900" data-i18n="title">Финансовая панель: Автодилер в Нюрнберге</h1>
+            <p class="text-md text-gray-600 mt-2" data-i18n="subtitle">Интерактивный анализ финансового плана на 24 месяца</p>
         </header>
 
         <main>
+            <!-- Language Switcher -->
+            <div class="flex justify-center mb-6 space-x-4">
+                <button class="px-4 py-2 text-sm font-medium rounded-lg text-white bg-blue-500 hover:bg-blue-600 transition-colors" onclick="setLanguage('ru')">Русский</button>
+                <button class="px-4 py-2 text-sm font-medium rounded-lg text-white bg-gray-500 hover:bg-gray-600 transition-colors" onclick="setLanguage('de')">Deutsch</button>
+            </div>
+            
             <!-- KPI Cards & Slider -->
             <div class="bg-white p-6 rounded-xl shadow-md mb-8">
                 <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6 text-center">
                     <div class="kpi-card border-l-4 border-blue-500">
                         <div id="kpi-sales" class="kpi-value">0</div>
-                        <div class="kpi-label">Авто продано</div>
+                        <div class="kpi-label" data-i18n="kpi-sales-label">Авто продано</div>
                     </div>
                     <div class="kpi-card border-l-4 border-green-500">
                         <div id="kpi-revenue" class="kpi-value">€0</div>
-                        <div class="kpi-label">Общий доход</div>
+                        <div class="kpi-label" data-i18n="kpi-revenue-label">Общий доход</div>
                     </div>
                     <div class="kpi-card border-l-4 border-red-500">
                         <div id="kpi-profit" class="kpi-value">€0</div>
-                        <div class="kpi-label">Чистый денежный поток</div>
+                        <div class="kpi-label" data-i18n="kpi-profit-label">Чистый денежный поток</div>
                     </div>
                     <div class="kpi-card border-l-4 border-purple-500">
                         <div id="kpi-balance" class="kpi-value">€0</div>
-                        <div class="kpi-label">Накопленный баланс</div>
+                        <div class="kpi-label" data-i18n="kpi-balance-label">Накопленный баланс</div>
                     </div>
                 </div>
 
                 <div>
-                    <label for="month-slider" class="block mb-2 text-sm font-medium text-gray-900">Выберите месяц для анализа:</label>
+                    <label for="month-slider" class="block mb-2 text-sm font-medium text-gray-900" data-i18n="slider-label">Выберите месяц для анализа:</label>
                     <input id="month-slider" type="range" min="0" max="23" value="0" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer">
                     <div class="flex justify-between text-xs text-gray-500 mt-2">
-                        <span>Месяц 1</span>
-                        <span id="slider-label" class="font-bold text-blue-600">Месяц 1</span>
-                        <span>Месяц 24</span>
+                        <span data-i18n="month-1">Месяц 1</span>
+                        <span id="slider-label-month" class="font-bold text-blue-600" data-i18n="month-current">Месяц 1</span>
+                        <span data-i18n="month-24">Месяц 24</span>
                     </div>
                 </div>
             </div>
@@ -115,25 +121,25 @@
             <!-- Charts Grid -->
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
                 <div class="bg-white p-6 rounded-xl shadow-md">
-                    <h3 class="text-lg font-semibold mb-4">Прогноз ликвидности (Накопленный баланс)</h3>
+                    <h3 class="text-lg font-semibold mb-4" data-i18n="chart-1-title">Прогноз ликвидности (Накопленный баланс)</h3>
                     <div class="chart-container">
                         <canvas id="cashFlowChart"></canvas>
                     </div>
                 </div>
                 <div class="bg-white p-6 rounded-xl shadow-md">
-                    <h3 class="text-lg font-semibold mb-4">Доходы vs. Расходы</h3>
+                    <h3 class="text-lg font-semibold mb-4" data-i18n="chart-2-title">Доходы vs. Расходы</h3>
                     <div class="chart-container">
                         <canvas id="revenueVsExpensesChart"></canvas>
                     </div>
                 </div>
                 <div class="bg-white p-6 rounded-xl shadow-md">
-                    <h3 class="text-lg font-semibold mb-4">Динамика продаж (Авто, шт.)</h3>
+                    <h3 class="text-lg font-semibold mb-4" data-i18n="chart-3-title">Динамика продаж (Авто, шт.)</h3>
                     <div class="chart-container">
                         <canvas id="salesChart"></canvas>
                     </div>
                 </div>
                 <div class="bg-white p-6 rounded-xl shadow-md">
-                    <h3 class="text-lg font-semibold mb-4">Структура расходов (Месяц <span class="selected-month-label">1</span>)</h3>
+                    <h3 class="text-lg font-semibold mb-4" data-i18n="chart-4-title">Структура расходов (Месяц <span class="selected-month-label">1</span>)</h3>
                     <div class="chart-container">
                         <canvas id="costBreakdownChart"></canvas>
                     </div>
@@ -143,9 +149,9 @@
             <!-- Detailed Data Table -->
             <div>
                  <details class="bg-white rounded-xl shadow-md overflow-hidden">
-                    <summary class="p-6 cursor-pointer font-semibold text-lg">Показать детальные финансовые данные</summary>
+                    <summary class="p-6 cursor-pointer font-semibold text-lg" data-i18n="table-summary">Показать детальные финансовые данные</summary>
                     <div class="p-6 border-t border-gray-200">
-                        <p class="text-sm text-gray-600 mb-4">В таблице представлены исходные данные, использованные для построения графиков. Это позволяет провести детальный анализ финансового плана.</p>
+                        <p class="text-sm text-gray-600 mb-4" data-i18n="table-description">В таблице представлены исходные данные, использованные для построения графиков. Это позволяет провести детальный анализ финансового плана.</p>
                         <div class="overflow-x-auto">
                             <table id="dataTable" class="min-w-full text-sm text-left text-gray-500">
                                 <thead class="text-xs text-gray-700 uppercase bg-gray-50">
@@ -161,6 +167,61 @@
     </div>
 
     <script>
+        const translations = {
+            ru: {
+                "title": "Финансовая панель: Автодилер в Нюрнберге",
+                "subtitle": "Интерактивный анализ финансового плана на 24 месяца",
+                "kpi-sales-label": "Авто продано",
+                "kpi-revenue-label": "Общий доход",
+                "kpi-profit-label": "Чистый денежный поток",
+                "kpi-balance-label": "Накопленный баланс",
+                "slider-label": "Выберите месяц для анализа:",
+                "month-1": "Месяц 1",
+                "month-current": "Месяц ",
+                "month-24": "Месяц 24",
+                "chart-1-title": "Прогноз ликвидности (Накопленный баланс)",
+                "chart-2-title": "Доходы vs. Расходы",
+                "chart-3-title": "Динамика продаж (Авто, шт.)",
+                "chart-4-title": "Структура расходов (Месяц",
+                "table-summary": "Показать детальные финансовые данные",
+                "table-description": "В таблице представлены исходные данные, использованные для построения графиков. Это позволяет провести детальный анализ финансового плана.",
+                "table-headers": ["Месяц", "Продано авто", "Доход", "Расходы", "Чистый поток", "Баланс"],
+                "chart-labels": {
+                    "cashFlow": "Накопленный баланс",
+                    "revenue": "Доход",
+                    "expenses": "Расходы",
+                    "sales": "Продано автомобилей",
+                    "costBreakdown": ["Аренда", "Бухгалтерия", "Закупка и подготовка авто", "Страховка и связь", "Прочие"]
+                }
+            },
+            de: {
+                "title": "Finanzdashboard: Autohändler in Nürnberg",
+                "subtitle": "Interaktive Analyse des Finanzplans für 24 Monate",
+                "kpi-sales-label": "Verkaufte Autos",
+                "kpi-revenue-label": "Gesamteinnahmen",
+                "kpi-profit-label": "Netto-Cashflow",
+                "kpi-balance-label": "Kumulierter Kontostand",
+                "slider-label": "Wählen Sie einen Monat für die Analyse:",
+                "month-1": "Monat 1",
+                "month-current": "Monat ",
+                "month-24": "Monat 24",
+                "chart-1-title": "Liquiditätsprognose (Kumulierter Kontostand)",
+                "chart-2-title": "Einnahmen vs. Ausgaben",
+                "chart-3-title": "Verkaufsdynamik (Autos, Stk.)",
+                "chart-4-title": "Kostenstruktur (Monat",
+                "table-summary": "Detaillierte Finanzdaten anzeigen",
+                "table-description": "Die Tabelle zeigt die Rohdaten, die zur Erstellung der Diagramme verwendet wurden. Dies ermöglicht eine detaillierte Analyse des Finanzplans.",
+                "table-headers": ["Monat", "Verkaufte Autos", "Einnahmen", "Ausgaben", "Netto-Cashflow", "Kontostand"],
+                "chart-labels": {
+                    "cashFlow": "Kumulierter Kontostand",
+                    "revenue": "Einnahmen",
+                    "expenses": "Ausgaben",
+                    "sales": "Verkaufte Autos",
+                    "costBreakdown": ["Miete", "Buchhaltung", "Fahrzeugkauf und -aufbereitung", "Versicherung und Kommunikation", "Sonstiges"]
+                }
+            }
+        };
+
         const financialData = {
             months: Array.from({ length: 24 }, (_, i) => `Месяц ${i + 1}`),
             initialInvestment: 1080,
@@ -218,185 +279,209 @@
             return new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR', minimumFractionDigits: 0 }).format(value);
         }
 
-        document.addEventListener('DOMContentLoaded', () => {
-            const slider = document.getElementById('month-slider');
-            const sliderLabel = document.getElementById('slider-label');
-            const selectedMonthLabels = document.querySelectorAll('.selected-month-label');
+        const chartInstances = {};
 
-            const kpiSales = document.getElementById('kpi-sales');
-            const kpiRevenue = document.getElementById('kpi-revenue');
-            const kpiProfit = document.getElementById('kpi-profit');
-            const kpiBalance = document.getElementById('kpi-balance');
+        function updateTexts(lang) {
+            document.querySelectorAll('[data-i18n]').forEach(element => {
+                const key = element.getAttribute('data-i18n');
+                if (translations[lang] && translations[lang][key]) {
+                    element.textContent = translations[lang][key];
+                }
+            });
+            document.getElementById('slider-label-month').textContent = translations[lang]["month-current"] + (parseInt(document.getElementById('month-slider').value) + 1);
+        }
 
-            // Chart Contexts
-            const ctxCashFlow = document.getElementById('cashFlowChart').getContext('2d');
-            const ctxRevenueVsExpenses = document.getElementById('revenueVsExpensesChart').getContext('2d');
-            const ctxSales = document.getElementById('salesChart').getContext('2d');
-            const ctxCostBreakdown = document.getElementById('costBreakdownChart').getContext('2d');
+        function setLanguage(lang) {
+            const currentMonthIndex = parseInt(document.getElementById('month-slider').value);
+            updateTexts(lang);
+            updateCharts(lang, currentMonthIndex);
+            updateDataTable(lang);
+        }
+
+        function updateCharts(lang, monthIndex) {
+            const chartLabels = translations[lang]["chart-labels"];
             
-            let cashFlowChart, revenueVsExpensesChart, salesChart, costBreakdownChart;
+            // Update chart titles and labels
+            chartInstances.cashFlowChart.data.datasets[0].label = chartLabels.cashFlow;
+            chartInstances.revenueVsExpensesChart.data.datasets[0].label = chartLabels.revenue;
+            chartInstances.revenueVsExpensesChart.data.datasets[1].label = chartLabels.expenses;
+            chartInstances.salesChart.data.datasets[0].label = chartLabels.sales;
+            chartInstances.costBreakdownChart.data.labels = chartLabels.costBreakdown;
+            
+            // Re-render charts
+            chartInstances.cashFlowChart.update();
+            chartInstances.revenueVsExpensesChart.update();
+            chartInstances.salesChart.update();
 
-            function createCharts() {
-                const commonOptions = {
+            // Update doughnut chart based on selected month
+            chartInstances.costBreakdownChart.data.datasets[0].data = Object.values(processedData[monthIndex].costBreakdown);
+            chartInstances.costBreakdownChart.update();
+        }
+        
+        function createCharts() {
+            const commonOptions = {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { position: 'top' },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                return `${context.dataset.label}: ${formatCurrency(context.raw)}`;
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: false,
+                        ticks: {
+                            callback: function(value) { return formatCurrency(value); }
+                        }
+                    }
+                }
+            };
+
+            const labels = translations.ru["chart-labels"];
+
+            chartInstances.cashFlowChart = new Chart(document.getElementById('cashFlowChart').getContext('2d'), {
+                type: 'line',
+                data: {
+                    labels: financialData.months.map((_, i) => translations.ru["month-current"] + (i + 1)),
+                    datasets: [{
+                        label: labels.cashFlow,
+                        data: processedData.map(d => d.accumulatedBalance),
+                        borderColor: '#3b82f6',
+                        backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                        fill: true,
+                        tension: 0.1
+                    }]
+                },
+                options: { ...commonOptions }
+            });
+
+            chartInstances.revenueVsExpensesChart = new Chart(document.getElementById('revenueVsExpensesChart').getContext('2d'), {
+                type: 'bar',
+                data: {
+                    labels: financialData.months.map((_, i) => translations.ru["month-current"] + (i + 1)),
+                    datasets: [
+                        {
+                            label: labels.revenue,
+                            data: processedData.map(d => d.totalRevenue),
+                            backgroundColor: '#22c55e',
+                        },
+                        {
+                            label: labels.expenses,
+                            data: processedData.map(d => d.totalExpenses),
+                            type: 'line',
+                            borderColor: '#ef4444',
+                            backgroundColor: '#ef4444',
+                            fill: false,
+                            tension: 0.1
+                        }
+                    ]
+                },
+                options: { ...commonOptions, scales: { x: { stacked: false }, y: { stacked: false, beginAtZero: true } } }
+            });
+
+            chartInstances.salesChart = new Chart(document.getElementById('salesChart').getContext('2d'), {
+                type: 'bar',
+                data: {
+                    labels: financialData.months.map((_, i) => translations.ru["month-current"] + (i + 1)),
+                    datasets: [{
+                        label: labels.sales,
+                        data: processedData.map(d => d.carsSold),
+                        backgroundColor: '#8b5cf6',
+                    }]
+                },
+                options: { ...commonOptions, plugins: {
+                    legend: { display: false },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) { return `${context.dataset.label}: ${context.raw}`; }
+                        }
+                    }
+                }, scales: { y: { beginAtZero: true } } }
+            });
+
+            chartInstances.costBreakdownChart = new Chart(document.getElementById('costBreakdownChart').getContext('2d'), {
+                type: 'doughnut',
+                data: {
+                    labels: labels.costBreakdown,
+                    datasets: [{
+                        data: Object.values(processedData[0].costBreakdown),
+                        backgroundColor: ['#3b82f6', '#f97316', '#22c55e', '#ef4444', '#6b7280'],
+                    }]
+                },
+                options: {
                     responsive: true,
                     maintainAspectRatio: false,
                     plugins: {
-                        legend: { position: 'top' },
+                        legend: { position: 'bottom' },
                         tooltip: {
                             callbacks: {
                                 label: function(context) {
-                                    return `${context.dataset.label}: ${formatCurrency(context.raw)}`;
-                                }
-                            }
-                        }
-                    },
-                    scales: {
-                        y: {
-                            beginAtZero: false,
-                            ticks: {
-                                callback: function(value) { return formatCurrency(value); }
-                            }
-                        }
-                    }
-                };
-
-                cashFlowChart = new Chart(ctxCashFlow, {
-                    type: 'line',
-                    data: {
-                        labels: financialData.months,
-                        datasets: [{
-                            label: 'Накопленный баланс',
-                            data: processedData.map(d => d.accumulatedBalance),
-                            borderColor: '#3b82f6',
-                            backgroundColor: 'rgba(59, 130, 246, 0.1)',
-                            fill: true,
-                            tension: 0.1
-                        }]
-                    },
-                    options: { ...commonOptions }
-                });
-
-                revenueVsExpensesChart = new Chart(ctxRevenueVsExpenses, {
-                    type: 'bar',
-                    data: {
-                        labels: financialData.months,
-                        datasets: [
-                            {
-                                label: 'Доход',
-                                data: processedData.map(d => d.totalRevenue),
-                                backgroundColor: '#22c55e',
-                            },
-                            {
-                                label: 'Расходы',
-                                data: processedData.map(d => d.totalExpenses),
-                                type: 'line',
-                                borderColor: '#ef4444',
-                                backgroundColor: '#ef4444',
-                                fill: false,
-                                tension: 0.1
-                            }
-                        ]
-                    },
-                    options: { ...commonOptions, scales: { x: { stacked: false }, y: { stacked: false, beginAtZero: true } } }
-                });
-
-                salesChart = new Chart(ctxSales, {
-                    type: 'bar',
-                    data: {
-                        labels: financialData.months,
-                        datasets: [{
-                            label: 'Продано автомобилей',
-                            data: processedData.map(d => d.carsSold),
-                            backgroundColor: '#8b5cf6',
-                        }]
-                    },
-                    options: { ...commonOptions, plugins: {
-                        legend: { display: false },
-                        tooltip: {
-                            callbacks: {
-                                label: function(context) { return `${context.dataset.label}: ${context.raw}`; }
-                            }
-                        }
-                    }, scales: { y: { beginAtZero: true } } }
-                });
-
-                costBreakdownChart = new Chart(ctxCostBreakdown, {
-                    type: 'doughnut',
-                    data: {
-                        labels: Object.keys(processedData[0].costBreakdown),
-                        datasets: [{
-                            data: Object.values(processedData[0].costBreakdown),
-                            backgroundColor: ['#3b82f6', '#f97316', '#22c55e', '#ef4444', '#6b7280'],
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        plugins: {
-                            legend: { position: 'bottom' },
-                            tooltip: {
-                                callbacks: {
-                                    label: function(context) {
-                                        let label = context.label || '';
-                                        if (label) {
-                                            label += ': ';
-                                        }
-                                        if (context.parsed !== null) {
-                                            label += formatCurrency(context.parsed);
-                                        }
-                                        return label;
+                                    let label = context.label || '';
+                                    if (label) {
+                                        label += ': ';
                                     }
+                                    if (context.parsed !== null) {
+                                        label += formatCurrency(context.parsed);
+                                    }
+                                    return label;
                                 }
                             }
                         }
                     }
-                });
-            }
+                }
+            });
+        }
+        
+        function updateDashboard(monthIndex) {
+            const data = processedData[monthIndex];
+            const lang = document.documentElement.lang;
+            
+            document.getElementById('slider-label-month').textContent = translations[lang]["month-current"] + (monthIndex + 1);
+            document.querySelectorAll('.selected-month-label').forEach(label => label.textContent = monthIndex + 1);
 
-            function updateDashboard(monthIndex) {
-                const data = processedData[monthIndex];
-                
-                sliderLabel.textContent = `Месяц ${monthIndex + 1}`;
-                selectedMonthLabels.forEach(label => label.textContent = monthIndex + 1);
+            document.getElementById('kpi-sales').textContent = data.carsSold;
+            document.getElementById('kpi-revenue').textContent = formatCurrency(data.totalRevenue);
+            document.getElementById('kpi-profit').textContent = formatCurrency(data.netCashFlow);
+            document.getElementById('kpi-balance').textContent = formatCurrency(data.accumulatedBalance);
 
-                kpiSales.textContent = data.carsSold;
-                kpiRevenue.textContent = formatCurrency(data.totalRevenue);
-                kpiProfit.textContent = formatCurrency(data.netCashFlow);
-                kpiBalance.textContent = formatCurrency(data.accumulatedBalance);
+            chartInstances.costBreakdownChart.data.datasets[0].data = Object.values(data.costBreakdown);
+            chartInstances.costBreakdownChart.update();
+        }
 
-                costBreakdownChart.data.datasets[0].data = Object.values(data.costBreakdown);
-                costBreakdownChart.update();
-            }
+        function updateDataTable(lang) {
+            const tableHead = document.querySelector('#dataTable thead');
+            const tableBody = document.querySelector('#dataTable tbody');
+            const headers = translations[lang]["table-headers"];
+            
+            let headRow = '<tr>';
+            headers.forEach(header => headRow += `<th scope="col" class="px-6 py-3">${header}</th>`);
+            headRow += '</tr>';
+            tableHead.innerHTML = headRow;
 
-            function createDataTable() {
-                const tableHead = document.querySelector('#dataTable thead');
-                const tableBody = document.querySelector('#dataTable tbody');
-                const headers = ['Месяц', 'Продано авто', 'Доход', 'Расходы', 'Чистый поток', 'Баланс'];
-                
-                let headRow = '<tr>';
-                headers.forEach(header => headRow += `<th scope="col" class="px-6 py-3">${header}</th>`);
-                headRow += '</tr>';
-                tableHead.innerHTML = headRow;
+            let bodyHtml = '';
+            processedData.forEach(data => {
+                bodyHtml += `<tr class="bg-white border-b">
+                    <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">${data.month.replace("Месяц", translations[lang]["month-current"])}</td>
+                    <td class="px-6 py-4">${data.carsSold}</td>
+                    <td class="px-6 py-4">${formatCurrency(data.totalRevenue)}</td>
+                    <td class="px-6 py-4">${formatCurrency(data.totalExpenses)}</td>
+                    <td class="px-6 py-4">${formatCurrency(data.netCashFlow)}</td>
+                    <td class="px-6 py-4">${formatCurrency(data.accumulatedBalance)}</td>
+                </tr>`;
+            });
+            tableBody.innerHTML = bodyHtml;
+        }
 
-                let bodyHtml = '';
-                processedData.forEach(data => {
-                    bodyHtml += `<tr class="bg-white border-b">
-                        <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">${data.month}</td>
-                        <td class="px-6 py-4">${data.carsSold}</td>
-                        <td class="px-6 py-4">${formatCurrency(data.totalRevenue)}</td>
-                        <td class="px-6 py-4">${formatCurrency(data.totalExpenses)}</td>
-                        <td class="px-6 py-4">${formatCurrency(data.netCashFlow)}</td>
-                        <td class="px-6 py-4">${formatCurrency(data.accumulatedBalance)}</td>
-                    </tr>`;
-                });
-                tableBody.innerHTML = bodyHtml;
-            }
-
+        document.addEventListener('DOMContentLoaded', () => {
             createCharts();
-            updateDashboard(0);
-            createDataTable();
+            setLanguage('ru');
 
-            slider.addEventListener('input', (e) => {
+            document.getElementById('month-slider').addEventListener('input', (e) => {
                 updateDashboard(parseInt(e.target.value));
             });
         });
