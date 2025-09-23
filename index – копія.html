@@ -1,0 +1,1025 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Интерактивная финансовая панель: Автодилер в Нюрнберге</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Chosen Palette: Warm Neutrals with Subtle Blue/Green Accents -->
+    <!-- Application Structure Plan: A dashboard-style layout is chosen for its clarity and ability to present key financial metrics at a glance. The structure includes: 1) A header with the project title. 2) A row of Key Performance Indicator (KPI) cards for a high-level summary. 3) An interactive timeline slider for selecting a specific month. 4) A main grid containing four primary charts (Cash Flow, Revenue vs. Expenses, Sales Performance, Cost Breakdown) that dynamically update. 5) A collapsible section with the detailed data table. This structure transforms the static spreadsheet into a narrative, allowing the user (e.g., a Jobcenter agent) to easily follow the business's financial story from initial investment to projected profitability and stable cash flow. The user flow is intuitive: start with the big picture, then use the slider to explore monthly details. -->
+    <!-- Visualization & Content Choices: 
+        - Cumulative Cash Flow -> Goal: Show long-term viability -> Viz: Line Chart -> Interaction: Hover tooltips -> Justification: Best for showing trends and proving the business won't run out of money. -> Library: Chart.js (Canvas).
+        - Revenue vs. Total Expenses -> Goal: Show profitability timeline -> Viz: Combo Bar/Line Chart -> Interaction: Hover tooltips -> Justification: Clearly contrasts income and costs to pinpoint the break-even point. -> Library: Chart.js (Canvas).
+        - Monthly Car Sales -> Goal: Visualize growth -> Viz: Bar Chart -> Interaction: Hover tooltips -> Justification: Simple and effective for showing monthly unit performance. -> Library: Chart.js (Canvas).
+        - Monthly Cost Structure -> Goal: Understand expense composition -> Viz: Donut Chart -> Interaction: Updates with slider -> Justification: Excellent for showing the proportion of different cost categories. -> Library: Chart.js (Canvas).
+        - All Raw Data -> Goal: Provide transparency -> Viz: HTML Table -> Interaction: Collapsible section -> Justification: Allows for deep-diving into the source numbers. -> Library: HTML/JS.
+    -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f4f8;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            height: 350px;
+            max-height: 400px;
+        }
+        @media (max-width: 768px) {
+            .chart-container {
+                height: 300px;
+            }
+        }
+        .kpi-card {
+            background-color: white;
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            transition: all 0.3s ease-in-out;
+        }
+        .kpi-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #1f2937;
+        }
+        .kpi-label {
+            font-size: 0.875rem;
+            color: #6b7280;
+        }
+        .slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            background: #3b82f6;
+            cursor: pointer;
+            border-radius: 50%;
+            border: 2px solid white;
+            box-shadow: 0 0 5px rgba(0,0,0,0.2);
+        }
+        .slider-track {
+            width: 100%;
+            height: 8px;
+            cursor: pointer;
+            background: #e5e7eb;
+            border-radius: 9999px;
+        }
+        .input-group {
+            background-color: #e5e7eb;
+            border-radius: 0.5rem;
+            padding: 1rem;
+        }
+    </style>
+</head>
+<body class="antialiased text-gray-800">
+
+    <div class="container mx-auto p-4 md:p-8">
+        <header class="text-center mb-8">
+            <h1 class="text-3xl md:text-4xl font-bold text-gray-900" data-i18n="title">Финансовая панель: Автодилер в Нюрнберге</h1>
+            <p class="text-md text-gray-600 mt-2" data-i18n="subtitle">Интерактивный анализ финансового плана на 24 месяца</p>
+        </header>
+
+        <main>
+            <!-- Language Switcher -->
+            <div class="flex justify-center mb-6 space-x-4">
+                <button class="px-4 py-2 text-sm font-medium rounded-lg text-white bg-blue-500 hover:bg-blue-600 transition-colors" onclick="setLanguage('ru')">Русский</button>
+                <button class="px-4 py-2 text-sm font-medium rounded-lg text-white bg-gray-500 hover:bg-gray-600 transition-colors" onclick="setLanguage('de')">Deutsch</button>
+            </div>
+            
+            <!-- Input Data Section -->
+            <div class="bg-white p-6 rounded-xl shadow-md mb-8">
+                <h3 class="text-lg font-semibold mb-4" data-i18n="input-data-title">Ввод данных для моделирования</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <!-- Revenue and Sales -->
+                    <div class="input-group">
+                        <h4 class="font-semibold text-gray-800 mb-2" data-i18n="input-group-sales">План продаж и доход</h4>
+                        <div class="grid grid-cols-6 gap-4">
+                            <!-- Sale Inputs (Month 1-24) -->
+                            <label class="block col-span-1"><span class="text-gray-700 text-sm">Мес. 1</span><input type="number" id="salesPlan_0" value="1" min="0" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50"></label>
+                            <label class="block col-span-1"><span class="text-gray-700 text-sm">Мес. 2</span><input type="number" id="salesPlan_1" value="1" min="0" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50"></label>
+                            <label class="block col-span-1"><span class="text-gray-700 text-sm">Мес. 3</span><input type="number" id="salesPlan_2" value="2" min="0" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50"></label>
+                            <label class="block col-span-1"><span class="text-gray-700 text-sm">Мес. 4</span><input type="number" id="salesPlan_3" value="3" min="0" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50"></label>
+                            <label class="block col-span-1"><span class="text-gray-700 text-sm">Мес. 5</span><input type="number" id="salesPlan_4" value="4" min="0" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50"></label>
+                            <label class="block col-span-1"><span class="text-gray-700 text-sm">Мес. 6</span><input type="number" id="salesPlan_5" value="4" min="0" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50"></label>
+                            <label class="block col-span-1"><span class="text-gray-700 text-sm">Мес. 7</span><input type="number" id="salesPlan_6" value="5" min="0" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50"></label>
+                            <label class="block col-span-1"><span class="text-gray-700 text-sm">Мес. 8</span><input type="number" id="salesPlan_7" value="5" min="0" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50"></label>
+                            <label class="block col-span-1"><span class="text-gray-700 text-sm">Мес. 9</span><input type="number" id="salesPlan_8" value="6" min="0" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50"></label>
+                            <label class="block col-span-1"><span class="text-gray-700 text-sm">Мес. 10</span><input type="number" id="salesPlan_9" value="6" min="0" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50"></label>
+                            <label class="block col-span-1"><span class="text-gray-700 text-sm">Мес. 11</span><input type="number" id="salesPlan_10" value="7" min="0" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50"></label>
+                            <label class="block col-span-1"><span class="text-gray-700 text-sm">Мес. 12</span><input type="number" id="salesPlan_11" value="7" min="0" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50"></label>
+                            <label class="block col-span-1"><span class="text-gray-700 text-sm">Мес. 13</span><input type="number" id="salesPlan_12" value="8" min="0" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50"></label>
+                            <label class="block col-span-1"><span class="text-gray-700 text-sm">Мес. 14</span><input type="number" id="salesPlan_13" value="8" min="0" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50"></label>
+                            <label class="block col-span-1"><span class="text-gray-700 text-sm">Мес. 15</span><input type="number" id="salesPlan_14" value="9" min="0" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50"></label>
+                            <label class="block col-span-1"><span class="text-gray-700 text-sm">Мес. 16</span><input type="number" id="salesPlan_15" value="9" min="0" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50"></label>
+                            <label class="block col-span-1"><span class="text-gray-700 text-sm">Мес. 17</span><input type="number" id="salesPlan_16" value="10" min="0" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50"></label>
+                            <label class="block col-span-1"><span class="text-gray-700 text-sm">Мес. 18</span><input type="number" id="salesPlan_17" value="10" min="0" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50"></label>
+                            <label class="block col-span-1"><span class="text-gray-700 text-sm">Мес. 19</span><input type="number" id="salesPlan_18" value="10" min="0" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50"></label>
+                            <label class="block col-span-1"><span class="text-gray-700 text-sm">Мес. 20</span><input type="number" id="salesPlan_19" value="10" min="0" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50"></label>
+                            <label class="block col-span-1"><span class="text-gray-700 text-sm">Мес. 21</span><input type="number" id="salesPlan_20" value="10" min="0" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50"></label>
+                            <label class="block col-span-1"><span class="text-gray-700 text-sm">Мес. 22</span><input type="number" id="salesPlan_21" value="10" min="0" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50"></label>
+                            <label class="block col-span-1"><span class="text-gray-700 text-sm">Мес. 23</span><input type="number" id="salesPlan_22" value="10" min="0" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50"></label>
+                            <label class="block col-span-1"><span class="text-gray-700 text-sm">Мес. 24</span><input type="number" id="salesPlan_23" value="10" min="0" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50"></label>
+                        </div>
+                        <label class="block mt-4">
+                            <span class="text-gray-700 text-sm" data-i18n="input-avg-price">Средняя цена продажи (€):</span>
+                            <input type="number" id="avgSalePrice" value="3850" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
+                        </label>
+                    </div>
+
+                    <!-- Funding -->
+                    <div class="input-group">
+                        <h4 class="font-semibold text-gray-800 mb-2" data-i18n="input-group-funding">Начальное финансирование</h4>
+                        <label class="block mb-2">
+                            <span class="text-gray-700 text-sm" data-i18n="input-grant">Безвозвратный грант (€):</span>
+                            <input type="number" id="grant" value="0" min="0" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
+                        </label>
+                        <label class="block mb-2">
+                            <span class="text-gray-700 text-sm" data-i18n="input-savings">Инвестиции, сбережения (€):</span>
+                            <input type="number" id="savings" value="0" min="0" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
+                        </label>
+                    </div>
+
+                    <!-- Costs -->
+                    <div class="input-group">
+                        <h4 class="font-semibold text-gray-800 mb-2" data-i18n="input-group-costs">Расходы</h4>
+                        <label class="block mb-2">
+                            <span class="text-gray-700 text-sm" data-i18n="input-rent">Аренда (€/мес):</span>
+                            <input type="number" id="rent" value="600" min="0" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
+                        </label>
+                        <label class="block mb-2">
+                            <span class="text-gray-700 text-sm" data-i18n="input-accounting-monthly">Бухгалтерия (€/мес):</span>
+                            <input type="number" id="accounting" value="171" min="0" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
+                        </label>
+                        <label class="block mb-2">
+                            <span class="text-gray-700 text-sm" data-i18n="input-insurance">Страховка (€/мес):</span>
+                            <input type="number" id="insurance" value="193" min="0" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
+                        </label>
+                        <label class="block mb-2">
+                            <span class="text-gray-700 text-sm" data-i18n="input-communication">Связь (€/мес):</span>
+                            <input type="number" id="communication" value="65" min="0" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
+                        </label>
+                        <label class="block mb-2">
+                            <span class="text-gray-700 text-sm" data-i18n="input-contingency">Прочие расходы (€/мес):</span>
+                            <input type="number" id="contingency" value="100" min="0" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
+                        </label>
+                        <label class="block mb-2">
+                            <span class="text-gray-700 text-sm" data-i18n="input-software">ПО (€/мес):</span>
+                            <input type="number" id="software" value="37.33" min="0" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
+                        </label>
+                        <label class="block mb-2">
+                            <span class="text-gray-700 text-sm" data-i18n="input-office-supplies">Материалы для бюро, кофе для клиентов (€/мес):</span>
+                            <input type="number" id="officeSupplies" value="40" min="0" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
+                        </label>
+                        <label class="block mb-2">
+                            <span class="text-gray-700 text-sm" data-i18n="input-working-materials">Рабочие материалы (€/мес):</span>
+                            <input type="number" id="workingMaterials" value="23.75" min="0" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
+                        </label>
+                        <label class="block mb-2">
+                            <span class="text-gray-700 text-sm" data-i18n="input-transport-costs">Личные транспортные расходы (€/мес):</span>
+                            <input type="number" id="transportCosts" value="166" min="0" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
+                        </label>
+                        <label class="block mb-2">
+                            <span class="text-gray-700 text-sm" data-i18n="input-ad-costs">Дополнительная общая реклама (€/мес):</span>
+                            <input type="number" id="adCosts" value="30.83" min="0" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
+                        </label>
+                        <label class="block mb-2">
+                            <span class="text-gray-700 text-sm" data-i18n="input-bank-fees">Банковские расходы (€/мес):</span>
+                            <input type="number" id="bankFees" value="17" min="0" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
+                        </label>
+                        <label class="block">
+                            <span class="text-gray-700 text-sm" data-i18n="input-repair-costs">Текущий ремонт помещения (€/мес):</span>
+                            <input type="number" id="repairCosts" value="5.83" min="0" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Variable Costs & Tax -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6 mt-6">
+                    <div class="input-group">
+                        <h4 class="font-semibold text-gray-800 mb-2" data-i18n="input-group-variable">Переменные расходы</h4>
+                        <label class="block mb-2">
+                            <span class="text-gray-700 text-sm" data-i18n="input-car-purchase">Закупка авто (€):</span>
+                            <input type="number" id="carPurchase" value="2300" min="0" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
+                        </label>
+                        <label class="block mb-2">
+                            <span class="text-gray-700 text-sm" data-i18n="input-car-wash">Мойка и детейлинг (€/авто):</span>
+                            <input type="number" id="carWash" value="25" min="0" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
+                        </label>
+                         <label class="block mb-2">
+                            <span class="text-gray-700 text-sm" data-i18n="input-car-repair">Диагностика и устранение недостатков (€/авто):</span>
+                            <input type="number" id="carRepair" value="350" min="0" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
+                        </label>
+                         <label class="block mb-2">
+                            <span class="text-gray-700 text-sm" data-i18n="input-tuv-diag">TÜV (отдельно) (€/авто):</span>
+                            <input type="number" id="tuvDiag" value="75" min="0" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
+                        </label>
+                         <label class="block mb-2">
+                            <span class="text-gray-700 text-sm" data-i18n="input-logistics">Логистика (€/авто):</span>
+                            <input type="number" id="logistics" value="150" min="0" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
+                        </label>
+                         <label class="block mb-2">
+                            <span class="text-gray-700 text-sm" data-i18n="input-warranty">Гарантия (€/авто):</span>
+                            <input type="number" id="warranty" value="500" min="0" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
+                        </label>
+                         <label class="block mb-2">
+                            <span class="text-gray-700 text-sm" data-i18n="input-car-ad">Реклама авто (€/авто):</span>
+                            <input type="number" id="carAd" value="25" min="0" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
+                        </label>
+                    </div>
+
+                    <div class="input-group">
+                        <h4 class="font-semibold text-gray-800 mb-2" data-i18n="input-group-taxes">Налоговая информация</h4>
+                        <label class="block mb-2">
+                            <span class="text-gray-700 text-sm" data-i18n="tax-form">Форма налогообложения:</span>
+                            <select id="taxForm" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
+                                <option value="einz" data-i18n="option-einz">ИП (Einzelunternehmen)</option>
+                                <option value="kleingewerbe" data-i18n="option-kleingewerbe">Малый бизнес (Kleingewerbe)</option>
+                                <option value="gmbh" data-i18n="option-gmbh">ООО (GmbH)</option>
+                            </select>
+                        </label>
+                        <label class="block" id="gebesatz-label">
+                            <span class="text-gray-700 text-sm" data-i18n="business-tax-rate">Коэффициент налога на торговлю (Gewerbesteuer-Hebesatz, %):</span>
+                            <input type="number" id="gebesatz" value="465" min="0" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
+                        </label>
+                    </div>
+                </div>
+
+                <div class="mt-6 flex justify-center">
+                    <button class="px-6 py-3 text-lg font-semibold rounded-lg text-white bg-green-500 hover:bg-green-600 transition-colors" onclick="recalculatePlan()" data-i18n="calculate-button">Рассчитать</button>
+                </div>
+            </div>
+
+            <!-- KPI Cards & Slider -->
+            <div class="bg-white p-6 rounded-xl shadow-md mb-8">
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6 text-center">
+                    <div class="kpi-card border-l-4 border-blue-500">
+                        <div id="kpi-sales" class="kpi-value">0</div>
+                        <div class="kpi-label" data-i18n="kpi-sales-label">Авто продано</div>
+                    </div>
+                    <div class="kpi-card border-l-4 border-green-500">
+                        <div id="kpi-revenue" class="kpi-value">€0</div>
+                        <div class="kpi-label" data-i18n="kpi-revenue-label">Общий доход</div>
+                    </div>
+                    <div class="kpi-card border-l-4 border-red-500">
+                        <div id="kpi-profit" class="kpi-value">€0</div>
+                        <div class="kpi-label" data-i18n="kpi-profit-label">Чистый денежный поток</div>
+                    </div>
+                    <div class="kpi-card border-l-4 border-purple-500">
+                        <div id="kpi-balance" class="kpi-value">€0</div>
+                        <div class="kpi-label" data-i18n="kpi-balance-label">Накопленный баланс</div>
+                    </div>
+                </div>
+                <div>
+                    <label for="month-slider" class="block mb-2 text-sm font-medium text-gray-900" data-i18n="slider-label">Выберите месяц для анализа:</label>
+                    <input id="month-slider" type="range" min="0" max="23" value="0" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer">
+                    <div class="flex justify-between text-xs text-gray-500 mt-2">
+                        <span data-i18n="month-1">Месяц 1</span>
+                        <span id="slider-label-month" class="font-bold text-blue-600">Месяц 1</span>
+                        <span data-i18n="month-24">Месяц 24</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Charts Grid -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+                <div class="bg-white p-6 rounded-xl shadow-md">
+                    <h3 class="text-lg font-semibold mb-4" data-i18n="chart-1-title">Прогноз ликвидности (Накопленный баланс)</h3>
+                    <div class="chart-container">
+                        <canvas id="cashFlowChart"></canvas>
+                    </div>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-md">
+                    <h3 class="text-lg font-semibold mb-4" data-i18n="chart-2-title">Доходы vs. Расходы</h3>
+                    <div class="chart-container">
+                        <canvas id="revenueVsExpensesChart"></canvas>
+                    </div>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-md">
+                    <h3 class="text-lg font-semibold mb-4" data-i18n="chart-3-title">Динамика продаж (Авто, шт.)</h3>
+                    <div class="chart-container">
+                        <canvas id="salesChart"></canvas>
+                    </div>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-md">
+                    <h3 class="text-lg font-semibold mb-4" data-i18n="chart-4-title">Структура расходов (Месяц <span class="selected-month-label">1</span>)</h3>
+                    <div class="chart-container">
+                        <canvas id="costBreakdownChart"></canvas>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Detailed Data Table -->
+            <div class="bg-white p-6 rounded-xl shadow-md overflow-hidden">
+                <h3 class="p-0 font-semibold text-lg" data-i18n="table-summary">Показать детальные финансовые данные</h3>
+                <div class="p-0 border-t border-gray-200">
+                    <p class="text-sm text-gray-600 mb-4" data-i18n="table-description">В таблице представлены исходные данные, использованные для построения графиков. Это позволяет провести детальный анализ финансового плана.</p>
+                    <div class="overflow-x-auto">
+                        <table id="dataTable" class="min-w-full text-sm text-left text-gray-500">
+                            <thead class="text-xs text-gray-700 uppercase bg-gray-50">
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Detailed Analysis -->
+            <div class="bg-white p-6 rounded-xl shadow-md mt-8">
+                <h3 class="text-lg font-semibold mb-4" data-i18n="analysis-title">Детальный анализ затрат</h3>
+                <div>
+                    <label for="analysis-slider" class="block mb-2 text-sm font-medium text-gray-900" data-i18n="slider-label-analysis">Выберите месяц для детального анализа:</label>
+                    <input id="analysis-slider" type="range" min="0" max="23" value="0" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer">
+                    <div class="flex justify-between text-xs text-gray-500 mt-2">
+                        <span data-i18n="month-1">Месяц 1</span>
+                        <span id="slider-label-analysis-month" class="font-bold text-blue-600">Месяц 1</span>
+                        <span data-i18n="month-24">Месяц 24</span>
+                    </div>
+                </div>
+                <div id="analysis-content" class="text-sm text-gray-700 space-y-4 mt-6">
+                    <!-- Dynamic content will be injected here -->
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        const translations = {
+            ru: {
+                "title": "Финансовая панель: Автодилер в Нюрнберге",
+                "subtitle": "Интерактивный анализ финансового плана на 24 месяца",
+                "input-data-title": "Ввод данных для моделирования",
+                "input-group-sales": "План продаж и доход",
+                "input-avg-price": "Средняя цена продажи (€):",
+                "input-group-funding": "Начальное финансирование",
+                "input-grant": "Безвозвратный грант (€):",
+                "input-savings": "Инвестиции, сбережения (€):",
+                "input-loan": "Займ (кредитование) (€):",
+                "input-loan-rate": "Процентная ставка по займу (% годовых):",
+                "input-group-costs": "Расходы",
+                "input-rent": "Аренда (€/мес):",
+                "input-accounting-monthly": "Бухгалтерия (€/мес):",
+                "input-quarterly-report": "Квартальный отчёт (€/кварт):",
+                "input-insurance": "Страховка (€/мес):",
+                "input-communication": "Связь (€/мес):",
+                "input-contingency": "Прочие расходы (€/мес):",
+                "input-software": "ПО (€/мес):",
+                "input-office-supplies": "Материалы для бюро, кофе для клиентов (€/мес):",
+                "input-working-materials": "Рабочие материалы (€/мес):",
+                "input-transport-costs": "Личные транспортные расходы (€/мес):",
+                "input-ad-costs": "Дополнительная общая реклама (€/мес):",
+                "input-bank-fees": "Банковские расходы (€/мес):",
+                "input-repair-costs": "Текущий ремонт помещения (€/мес):",
+                "input-group-variable": "Переменные расходы",
+                "input-car-purchase": "Закупка авто (€):",
+                "input-car-wash": "Мойка и детейлинг (€/авто):",
+                "input-car-repair": "Диагностика и устранение недостатков (€/авто):",
+                "input-tuv-diag": "TÜV (отдельно) (€/авто):",
+                "input-logistics": "Логистика (€/авто):",
+                "input-warranty": "Гарантия (€/авто):",
+                "input-car-ad": "Реклама авто (€/авто):",
+                "input-group-taxes": "Налоговая информация",
+                "tax-form": "Форма налогообложения:",
+                "option-einz": "ИП (Einzelunternehmen)",
+                "option-kleingewerbe": "Малый бизнес (Kleingewerbe)",
+                "option-gmbh": "ООО (GmbH)",
+                "calculate-button": "Рассчитать",
+                "kpi-sales-label": "Авто продано",
+                "kpi-revenue-label": "Общий доход",
+                "kpi-profit-label": "Чистый денежный поток",
+                "kpi-balance-label": "Накопленный баланс",
+                "slider-label": "Выберите месяц для анализа:",
+                "month-1": "Месяц 1",
+                "month-current": "Месяц ",
+                "month-24": "Месяц 24",
+                "chart-1-title": "Прогноз ликвидности (Накопленный баланс)",
+                "chart-2-title": "Доходы vs. Расходы",
+                "chart-3-title": "Динамика продаж (Авто, шт.)",
+                "chart-4-title": "Структура расходов (Месяц",
+                "table-summary": "Показать детальные финансовые данные",
+                "table-description": "В таблице представлены исходные данные, использованные для построения графиков. Это позволяет провести детальный анализ финансового плана.",
+                "table-headers": ["Месяц", "Продано авто", "Общий доход", "Общий расход", "Чистый доход", "Чистый поток", "Баланс", "Налоги"],
+                "costBreakdownLabels": ["Аренда", "Бухгалтерия", "Закупка авто", "Транспорт и подготовка", "Страховка и связь", "Прочее", "Налоги", "Гарантия", "ПО", "Материалы для бюро", "Рабочие материалы", "Личный транспорт", "Реклама", "Банковские расходы", "Ремонт помещения"],
+                "chart-labels": {
+                    "cashFlow": "Накопленный баланс",
+                    "revenue": "Общий доход",
+                    "expenses": "Общий расход",
+                    "sales": "Продано автомобилей"
+                },
+                "analysis-title": "Детальный анализ",
+                "analysis-month-title": "Финансовый отчёт за ",
+                "analysis-revenue-title": "Доходы",
+                "analysis-variable-costs-title": "Переменные расходы",
+                "analysis-fixed-costs-title": "Постоянные расходы",
+                "analysis-total-revenue": "Общий доход:",
+                "analysis-total-variable-cost": "Всего переменные расходы:",
+                "analysis-total-fixed-cost": "Всего постоянные расходы:",
+                "analysis-net-profit": "Чистый доход:",
+                "analysis-taxes": "Налоги:",
+                "analysis-net-cashflow": "Чистый денежный поток:",
+                "analysis-final-balance": "Накопленный баланс:",
+                "fixed-costs-note": "Включает аренду, бухгалтерию, страховку, связь и другие постоянные расходы.",
+                "quarterly-cost-text": "В этом месяце включены расходы на квартальный отчёт.",
+                "no-quarterly-cost-text": "В этом месяце нет расходов на квартальный отчёт.",
+                "analysis-summary-title": "Итоги месяца",
+                "analysis-profit-per-car": "Чистый доход с 1 авто до вычета постоянных расходов"
+            },
+            de: {
+                "title": "Finanzdashboard: Autohändler in Nürnberg",
+                "subtitle": "Interaktive Analyse des Finanzplans für 24 Monate",
+                "input-data-title": "Dateneingabe für die Modellierung",
+                "input-group-sales": "Verkaufsplan und Einnahmen",
+                "input-avg-price": "Durchschnittlicher Verkaufspreis (€):",
+                "input-group-funding": "Startfinanzierung",
+                "input-grant": "Nicht rückzahlbarer Zuschuss (€):",
+                "input-savings": "Investitionen, Ersparnisse (€):",
+                "input-loan": "Darlehen (€):",
+                "input-loan-rate": "Darlehenszins (% p.a.):",
+                "input-group-costs": "Fixkosten",
+                "input-rent": "Miete (€/Monat):",
+                "input-accounting-monthly": "Buchhaltung (€/Monat):",
+                "input-quarterly-report": "Quartalsbericht (€/Quartal):",
+                "input-insurance": "Versicherung (€/Monat):",
+                "input-communication": "Kommunikation (€/Monat):",
+                "input-contingency": "Sonstige Kosten (€/Monat):",
+                "input-software": "Software (€/Monat):",
+                "input-office-supplies": "Büromaterial, Kaffee für Kunden (€/Monat):",
+                "input-working-materials": "Arbeitsmaterialien (€/Monat):",
+                "input-transport-costs": "Persönliche Transportkosten (€/Monat):",
+                "input-ad-costs": "Zusätzliche allgemeine Werbung (€/Monat):",
+                "input-bank-fees": "Bankgebühren (€/Monat):",
+                "input-repair-costs": "Laufende Raumreparaturen (€/Monat):",
+                "input-group-variable": "Variable Kosten",
+                "input-car-purchase": "Fahrzeugkauf (€):",
+                "input-car-wash": "Reinigung und Detailaufbereitung (€/Auto):",
+                "input-car-repair": "Diagnose und Mängelbehebung (€/Auto):",
+                "input-tuv-diag": "TÜV (separat) (€/Auto):",
+                "input-logistics": "Logistik (€/Auto):",
+                "input-warranty": "Garantie (€/Auto):",
+                "input-car-ad": "Werbung pro Fahrzeug (€/Auto):",
+                "input-group-taxes": "Steuerinformationen",
+                "tax-form": "Steuerform:",
+                "option-einz": "Einzelunternehmen (Einzelunternehmen)",
+                "option-kleingewerbe": "Kleinunternehmen (Kleingewerbe)",
+                "option-gmbh": "GmbH (GmbH)",
+                "calculate-button": "Berechnen",
+                "kpi-sales-label": "Verkaufte Autos",
+                "kpi-revenue-label": "Gesamteinnahmen",
+                "kpi-profit-label": "Netto-Cashflow",
+                "kpi-balance-label": "Kumulierter Kontostand",
+                "slider-label": "Wählen Sie einen Monat für die Analyse:",
+                "month-1": "Monat 1",
+                "month-current": "Monat ",
+                "month-24": "Monat 24",
+                "chart-1-title": "Liquiditätsprognose (Kumulierter Kontostand)",
+                "chart-2-title": "Einnahmen vs. Ausgaben",
+                "chart-3-title": "Verkaufsdynamik (Autos, Stk.)",
+                "chart-4-title": "Kostenstruktur (Monat",
+                "table-summary": "Detaillierte Finanzdaten anzeigen",
+                "table-description": "Die Tabelle zeigt die Rohdaten, die zur Erstellung der Diagramme verwendet wurden. Dies ermöglicht eine detaillierte Analyse des Finanzplans.",
+                "table-headers": ["Monat", "Verkaufte Autos", "Gesamteinnahmen", "Gesamtausgaben", "Nettogewinn", "Netto-Cashflow", "Kontostand", "Steuern"],
+                "costBreakdownLabels": ["Miete", "Buchhaltung", "Fahrzeugkauf", "Transport und Aufbereitung", "Versicherung und Kommunikation", "Sonstiges", "Steuern", "Garantie", "Software", "Büromaterial", "Arbeitsmaterialien", "Persönlicher Transport", "Werbung", "Bankgebühren", "Raumreparaturen"],
+                "chart-labels": {
+                    "cashFlow": "Kumulierter Kontostand",
+                    "revenue": "Gesamteinnahmen",
+                    "expenses": "Gesamtausgaben",
+                    "sales": "Verkaufte Autos"
+                },
+                "analysis-title": "Detaillierte Analyse",
+                "analysis-month-title": "Finanzbericht für ",
+                "analysis-revenue-title": "Einnahmen",
+                "analysis-variable-costs-title": "Variable Kosten",
+                "analysis-fixed-costs-title": "Fixkosten",
+                "analysis-total-revenue": "Gesamteinnahmen:",
+                "analysis-total-variable-cost": "Gesamte variable Kosten:",
+                "analysis-total-fixed-cost": "Gesamte Fixkosten:",
+                "analysis-net-profit": "Nettogewinn:",
+                "analysis-taxes": "Steuern:",
+                "analysis-net-cashflow": "Netto-Cashflow:",
+                "analysis-final-balance": "Kumulierter Kontostand:",
+                "fixed-costs-note": "Beinhaltet Miete, Buchhaltung, Versicherung, Kommunikation und sonstige Fixkosten.",
+                "quarterly-cost-text": "In diesem Monat sind die Kosten für den Quartalsbericht enthalten.",
+                "no-quarterly-cost-text": "In diesem Monat fallen keine Kosten für den Quartalsbericht an.",
+                "analysis-summary-title": "Monatszusammenfassung",
+                "analysis-profit-per-car": "Nettogewinn pro Auto vor Abzug der Fixkosten"
+            }
+        };
+
+        let processedData;
+        let chartInstances = {};
+        
+        function processData(financialData) {
+            const data = [];
+            const initialFunding = financialData.grant + financialData.savings;
+            let accumulatedBalance = initialFunding;
+            
+            const salesPlanArray = [];
+            for (let i = 0; i < 24; i++) {
+                salesPlanArray[i] = parseInt(document.getElementById(`salesPlan_${i}`).value) || 0;
+            }
+
+            const totalFixedCosts = financialData.costs.rent + financialData.costs.accounting + financialData.costs.communication + financialData.costs.contingency + financialData.costs.insurance + financialData.costs.software + financialData.costs.officeSupplies + financialData.costs.workingMaterials + financialData.costs.transportCosts + financialData.costs.adCosts + financialData.costs.bankFees + financialData.costs.repairCosts;
+            
+            const gewerbeAllowance = 24500;
+            const einkommensteuerRate = 0.25;
+            const koerperschaftssteuerRate = 0.15;
+            
+            for (let i = 0; i < 24; i++) {
+                const carsSold = salesPlanArray[i] || 0;
+                let totalRevenue = carsSold * financialData.avgSalePrice;
+                
+                const variableCosts = carsSold * (financialData.costs.carPurchase + financialData.costs.carWash + financialData.costs.carRepair + financialData.costs.tuvDiag + financialData.costs.logistics + financialData.costs.warranty + financialData.costs.carAd);
+                
+                const totalExpensesBeforeTaxes = totalFixedCosts + variableCosts;
+                const netProfit = totalRevenue - totalExpensesBeforeTaxes;
+                
+                let taxes = 0;
+                const taxForm = document.getElementById('taxForm').value;
+
+                if (taxForm !== 'kleingewerbe' && netProfit > 0) {
+                    if (taxForm === 'einz') {
+                        taxes += netProfit * einkommensteuerRate;
+                    }
+                    
+                    if (taxForm === 'gmbh') {
+                        taxes += netProfit * koerperschaftssteuerRate;
+                    }
+
+                    const gewerbeProfit = netProfit > gewerbeAllowance ? netProfit - gewerbeAllowance : 0;
+                    taxes += gewerbeProfit * (financialData.gebesatz / 100);
+                }
+                
+                const totalExpenses = totalExpensesBeforeTaxes + taxes;
+                const netCashFlow = totalRevenue - totalExpenses;
+                
+                // Initial balance from investments
+                if (i === 0) {
+                    accumulatedBalance += netCashFlow;
+                } else {
+                    accumulatedBalance += netCashFlow;
+                }
+                
+                data.push({
+                    month: `Месяц ${i + 1}`,
+                    carsSold: carsSold,
+                    totalRevenue: totalRevenue,
+                    totalExpensesBeforeTaxes: totalExpensesBeforeTaxes, // Stored for analysis
+                    totalExpenses: totalExpenses,
+                    netProfit: netProfit,
+                    netCashFlow: netCashFlow,
+                    accumulatedBalance: accumulatedBalance,
+                    taxes: netProfit > 0 ? taxes : "TBD",
+                    costBreakdown: {
+                        "Аренда": financialData.costs.rent,
+                        "Бухгалтерия": financialData.costs.accounting,
+                        "Закупка авто": carsSold * financialData.costs.carPurchase,
+                        "Транспорт и подготовка": carsSold * (financialData.costs.carWash + financialData.costs.carRepair + financialData.costs.tuvDiag + financialData.costs.logistics + financialData.costs.carAd),
+                        "Страховка и связь": financialData.costs.insurance + financialData.costs.communication,
+                        "Прочее": financialData.costs.contingency,
+                        "Налоги": netProfit > 0 ? taxes : "TBD",
+                        "Гарантия": carsSold * financialData.costs.warranty,
+                        "ПО": financialData.costs.software,
+                        "Материалы для бюро": financialData.costs.officeSupplies,
+                        "Рабочие материалы": financialData.costs.workingMaterials,
+                        "Личный транспорт": financialData.costs.transportCosts,
+                        "Реклама": financialData.costs.adCosts,
+                        "Банковские расходы": financialData.costs.bankFees,
+                        "Ремонт помещения": financialData.costs.repairCosts
+                    }
+                });
+            }
+            return data;
+        }
+
+        function updateAnalysisSection(lang, monthIndex) {
+            const analysisContent = document.getElementById('analysis-content');
+            const data = processedData[monthIndex];
+            
+            const carPurchaseCost = parseFloat(document.getElementById('carPurchase').value) || 0;
+            const carWashCost = parseFloat(document.getElementById('carWash').value) || 0;
+            const carRepairCost = parseFloat(document.getElementById('carRepair').value) || 0;
+            const tuvDiagCost = parseFloat(document.getElementById('tuvDiag').value) || 0;
+            const logisticsCost = parseFloat(document.getElementById('logistics').value) || 0;
+            const warrantyCost = parseFloat(document.getElementById('warranty').value) || 0;
+            const carAdCost = parseFloat(document.getElementById('carAd').value) || 0;
+            const avgSalePrice = parseFloat(document.getElementById('avgSalePrice').value) || 0;
+            const carsSold = data.carsSold;
+            
+            const totalVariableCostsPerCar = carPurchaseCost + carWashCost + carRepairCost + tuvDiagCost + logisticsCost + warrantyCost + carAdCost;
+            const totalVariableCostsForMonth = totalVariableCostsPerCar * carsSold;
+            
+            const rentCost = parseFloat(document.getElementById('rent').value) || 0;
+            const accountingCost = parseFloat(document.getElementById('accounting').value) || 0;
+            const insuranceCost = parseFloat(document.getElementById('insurance').value) || 0;
+            const communicationCost = parseFloat(document.getElementById('communication').value) || 0;
+            const contingencyCost = parseFloat(document.getElementById('contingency').value) || 0;
+            const softwareCost = parseFloat(document.getElementById('software').value) || 0;
+            const officeSuppliesCost = parseFloat(document.getElementById('officeSupplies').value) || 0;
+            const workingMaterialsCost = parseFloat(document.getElementById('workingMaterials').value) || 0;
+            const transportCostsCost = parseFloat(document.getElementById('transportCosts').value) || 0;
+            const adCostsCost = parseFloat(document.getElementById('adCosts').value) || 0;
+            const bankFeesCost = parseFloat(document.getElementById('bankFees').value) || 0;
+            const repairCostsCost = parseFloat(document.getElementById('repairCosts').value) || 0;
+            
+            const totalFixedCostsForMonth = rentCost + accountingCost + insuranceCost + communicationCost + contingencyCost + softwareCost + officeSuppliesCost + workingMaterialsCost + transportCostsCost + adCostsCost + bankFeesCost + repairCostsCost;
+
+            const profitPerCar = avgSalePrice - totalVariableCostsPerCar;
+
+            let content = `
+                <div class="space-y-4">
+                    <p class="font-bold text-lg">${translations[lang]["analysis-month-title"]}${monthIndex + 1}</p>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <!-- Revenue and Profit Breakdown -->
+                        <div class="p-4 bg-gray-50 rounded-lg">
+                            <p class="font-bold">${translations[lang]["analysis-revenue-title"]}</p>
+                            <ul class="list-disc list-inside">
+                                <li>${translations[lang]["kpi-sales-label"]}: ${data.carsSold}</li>
+                                <li>${translations[lang]["kpi-revenue-label"]}: ${formatCurrency(data.totalRevenue)}</li>
+                                <li><span class="font-bold">${translations[lang]["analysis-profit-per-car"]}:</span> ${formatCurrency(profitPerCar)}</li>
+                                <li><span class="font-bold">Чистый доход до вычета постоянных расходов:</span> ${formatCurrency(profitPerCar * carsSold)}</li>
+                            </ul>
+                        </div>
+                        <!-- Fixed Costs -->
+                        <div class="p-4 bg-gray-50 rounded-lg">
+                            <p class="font-bold">${translations[lang]["analysis-fixed-costs-title"]}</p>
+                            <ul class="list-disc list-inside">
+                                <li><span class="font-semibold">${translations[lang]["input-rent"]}</span> ${formatCurrency(rentCost)}</li>
+                                <li><span class="font-semibold">${translations[lang]["input-accounting-monthly"]}</span> ${formatCurrency(accountingCost)}</li>
+                                <li><span class="font-semibold">${translations[lang]["input-insurance"]}</span> ${formatCurrency(insuranceCost)}</li>
+                                <li><span class="font-semibold">${translations[lang]["input-communication"]}</span> ${formatCurrency(communicationCost)}</li>
+                                <li><span class="font-semibold">${translations[lang]["input-contingency"]}</span> ${formatCurrency(contingencyCost)}</li>
+                                <li><span class="font-semibold">${translations[lang]["input-software"]}</span> ${formatCurrency(softwareCost)}</li>
+                                <li><span class="font-semibold">${translations[lang]["input-office-supplies"]}</span> ${formatCurrency(officeSuppliesCost)}</li>
+                                <li><span class="font-semibold">${translations[lang]["input-working-materials"]}</span> ${formatCurrency(workingMaterialsCost)}</li>
+                                <li><span class="font-semibold">${translations[lang]["input-transport-costs"]}</span> ${formatCurrency(transportCostsCost)}</li>
+                                <li><span class="font-semibold">${translations[lang]["input-ad-costs"]}</span> ${formatCurrency(adCostsCost)}</li>
+                                <li><span class="font-semibold">${translations[lang]["input-bank-fees"]}</span> ${formatCurrency(bankFeesCost)}</li>
+                                <li><span class="font-semibold">${translations[lang]["input-repair-costs"]}</span> ${formatCurrency(repairCostsCost)}</li>
+                            </ul>
+                            <p class="font-bold mt-2">${translations[lang]["analysis-total-fixed-cost"]} ${formatCurrency(totalFixedCostsForMonth)}</p>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <!-- Variable Costs -->
+                        <div class="p-4 bg-gray-50 rounded-lg">
+                            <p class="font-bold">${translations[lang]["analysis-variable-costs-title"]}</p>
+                            <ul class="list-disc list-inside">
+                                <li>${translations[lang]["input-car-purchase"]}: ${formatCurrency(carPurchaseCost)}</li>
+                                <li>${translations[lang]["input-car-wash"]}: ${formatCurrency(carWashCost)}</li>
+                                <li>${translations[lang]["input-car-repair"]}: ${formatCurrency(carRepairCost)}</li>
+                                <li>${translations[lang]["input-tuv-diag"]}: ${formatCurrency(tuvDiagCost)}</li>
+                                <li>${translations[lang]["input-logistics"]}: ${formatCurrency(logisticsCost)}</li>
+                                <li>${translations[lang]["input-warranty"]}: ${formatCurrency(warrantyCost)}</li>
+                                <li>${translations[lang]["input-car-ad"]}: ${formatCurrency(carAdCost)}</li>
+                            </ul>
+                            <p class="font-bold mt-2">${translations[lang]["analysis-total-variable-cost"]} ${formatCurrency(totalVariableCostsPerCar)}</p>
+                        </div>
+                        <!-- Final financial results -->
+                        <div class="p-4 bg-gray-50 rounded-lg">
+                            <p class="font-bold">${translations[lang]["analysis-summary-title"]}</p>
+                            <ul class="list-disc list-inside">
+                                <li><span class="font-bold">${translations[lang]["analysis-net-profit"]}:</span> ${formatCurrency(data.netProfit)}</li>
+                                <li><span class="font-bold">${translations[lang]["analysis-taxes"]}:</span> ${data.taxes === "TBD" ? "TBD" : formatCurrency(data.taxes)}</li>
+                                <li><span class="font-bold">${translations[lang]["analysis-net-cashflow"]}:</span> ${formatCurrency(data.netCashFlow)}</li>
+                                <li><span class="font-bold">${translations[lang]["analysis-final-balance"]}:</span> ${formatCurrency(data.accumulatedBalance)}</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            `;
+            analysisContent.innerHTML = content;
+        }
+
+        function recalculatePlan() {
+            const newFinancialData = {
+                grant: parseFloat(document.getElementById('grant').value) || 0,
+                savings: parseFloat(document.getElementById('savings').value) || 0,
+                avgSalePrice: parseFloat(document.getElementById('avgSalePrice').value) || 0,
+                gebesatz: parseFloat(document.getElementById('gebesatz').value) || 0,
+                costs: {
+                    rent: parseFloat(document.getElementById('rent').value) || 0,
+                    accounting: parseFloat(document.getElementById('accounting').value) || 0,
+                    quarterlyReport: 0,
+                    carPurchase: parseFloat(document.getElementById('carPurchase').value) || 0,
+                    carWash: parseFloat(document.getElementById('carWash').value) || 0,
+                    carRepair: parseFloat(document.getElementById('carRepair').value) || 0,
+                    tuvDiag: parseFloat(document.getElementById('tuvDiag').value) || 0,
+                    logistics: parseFloat(document.getElementById('logistics').value) || 0,
+                    warranty: parseFloat(document.getElementById('warranty').value) || 0,
+                    carAd: parseFloat(document.getElementById('carAd').value) || 0,
+                    insurance: parseFloat(document.getElementById('insurance').value) || 0,
+                    communication: parseFloat(document.getElementById('communication').value) || 0,
+                    contingency: parseFloat(document.getElementById('contingency').value) || 0,
+                    software: parseFloat(document.getElementById('software').value) || 0,
+                    officeSupplies: parseFloat(document.getElementById('officeSupplies').value) || 0,
+                    workingMaterials: parseFloat(document.getElementById('workingMaterials').value) || 0,
+                    transportCosts: parseFloat(document.getElementById('transportCosts').value) || 0,
+                    adCosts: parseFloat(document.getElementById('adCosts').value) || 0,
+                    bankFees: parseFloat(document.getElementById('bankFees').value) || 0,
+                    repairCosts: parseFloat(document.getElementById('repairCosts').value) || 0,
+                }
+            };
+            processedData = processData(newFinancialData);
+            
+            if (chartInstances.cashFlowChart) chartInstances.cashFlowChart.destroy();
+            if (chartInstances.revenueVsExpensesChart) chartInstances.revenueVsExpensesChart.destroy();
+            if (chartInstances.salesChart) chartInstances.salesChart.destroy();
+            if (chartInstances.costBreakdownChart) chartInstances.costBreakdownChart.destroy();
+            
+            createCharts();
+            updateDashboard(0);
+            updateDataTable(document.documentElement.lang);
+            document.getElementById('month-slider').value = 0;
+            document.getElementById('analysis-slider').value = 0;
+        }
+
+        function formatCurrency(value) {
+            if (value === "TBD") return "TBD";
+            return new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR', minimumFractionDigits: 0 }).format(value);
+        }
+
+        function updateTexts(lang) {
+            document.querySelectorAll('[data-i18n]').forEach(element => {
+                const key = element.getAttribute('data-i18n');
+                if (translations[lang] && translations[lang][key]) {
+                    element.textContent = translations[lang][key];
+                }
+            });
+            document.getElementById('slider-label-month').textContent = translations[lang]["month-current"] + (parseInt(document.getElementById('month-slider').value) + 1);
+            document.getElementById('slider-label-analysis-month').textContent = translations[lang]["month-current"] + (parseInt(document.getElementById('analysis-slider').value) + 1);
+        }
+
+        function setLanguage(lang) {
+            document.documentElement.lang = lang;
+            const currentMonthIndex = parseInt(document.getElementById('month-slider').value);
+            const currentAnalysisMonthIndex = parseInt(document.getElementById('analysis-slider').value);
+            updateTexts(lang);
+            updateCharts(lang, currentMonthIndex);
+            updateDataTable(lang);
+            updateAnalysisSection(lang, currentAnalysisMonthIndex);
+        }
+
+        function updateCharts(lang, monthIndex) {
+            const chartLabels = translations[lang]["chart-labels"];
+            
+            chartInstances.cashFlowChart.data.datasets[0].label = chartLabels.cashFlow;
+            chartInstances.cashFlowChart.update();
+
+            chartInstances.revenueVsExpensesChart.data.datasets[0].label = chartLabels.revenue;
+            chartInstances.revenueVsExpensesChart.data.datasets[1].label = chartLabels.expenses;
+            chartInstances.revenueVsExpensesChart.update();
+
+            chartInstances.salesChart.data.datasets[0].label = chartLabels.sales;
+            chartInstances.salesChart.update();
+
+            chartInstances.costBreakdownChart.data.labels = translations[lang]["costBreakdownLabels"];
+            chartInstances.costBreakdownChart.data.datasets[0].data = Object.values(processedData[monthIndex].costBreakdown);
+            chartInstances.costBreakdownChart.update();
+        }
+        
+        function createCharts() {
+            const commonOptions = {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { position: 'top' },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                return `${context.dataset.label}: ${formatCurrency(context.raw)}`;
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: false,
+                        ticks: {
+                            callback: function(value) { return formatCurrency(value); }
+                        }
+                    }
+                }
+            };
+
+            const labels = translations[document.documentElement.lang]["chart-labels"];
+
+            chartInstances.cashFlowChart = new Chart(document.getElementById('cashFlowChart').getContext('2d'), {
+                type: 'line',
+                data: {
+                    labels: Array.from({ length: 24 }, (_, i) => translations[document.documentElement.lang]["month-current"] + (i + 1)),
+                    datasets: [{
+                        label: labels.cashFlow,
+                        data: processedData.map(d => d.accumulatedBalance),
+                        borderColor: '#3b82f6',
+                        backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                        fill: true,
+                        tension: 0.1
+                    }]
+                },
+                options: { ...commonOptions }
+            });
+
+            chartInstances.revenueVsExpensesChart = new Chart(document.getElementById('revenueVsExpensesChart').getContext('2d'), {
+                type: 'bar',
+                data: {
+                    labels: Array.from({ length: 24 }, (_, i) => translations[document.documentElement.lang]["month-current"] + (i + 1)),
+                    datasets: [
+                        {
+                            label: labels.revenue,
+                            data: processedData.map(d => d.totalRevenue),
+                            backgroundColor: '#22c55e',
+                        },
+                        {
+                            label: labels.expenses,
+                            data: processedData.map(d => d.totalExpenses),
+                            type: 'line',
+                            borderColor: '#ef4444',
+                            backgroundColor: '#ef4444',
+                            fill: false,
+                            tension: 0.1
+                        }
+                    ]
+                },
+                options: { ...commonOptions, scales: { x: { stacked: false }, y: { stacked: false, beginAtZero: true } } }
+            });
+
+            chartInstances.salesChart = new Chart(document.getElementById('salesChart').getContext('2d'), {
+                type: 'bar',
+                data: {
+                    labels: Array.from({ length: 24 }, (_, i) => translations[document.documentElement.lang]["month-current"] + (i + 1)),
+                    datasets: [{
+                        label: labels.sales,
+                        data: processedData.map(d => d.carsSold),
+                        backgroundColor: '#8b5cf6',
+                    }]
+                },
+                options: { ...commonOptions, plugins: {
+                    legend: { display: false },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) { return `${context.dataset.label}: ${context.raw}`; }
+                        }
+                    }
+                }, scales: { y: { beginAtZero: true } } }
+            });
+
+            chartInstances.costBreakdownChart = new Chart(document.getElementById('costBreakdownChart').getContext('2d'), {
+                type: 'doughnut',
+                data: {
+                    labels: translations[document.documentElement.lang]["costBreakdownLabels"],
+                    datasets: [{
+                        data: Object.values(processedData[0].costBreakdown),
+                        backgroundColor: ['#3b82f6', '#f97316', '#22c55e', '#ef4444', '#6b7280'],
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'bottom' },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    let label = context.label || '';
+                                    if (label) {
+                                        label += ': ';
+                                    }
+                                    if (context.parsed !== null) {
+                                        label += formatCurrency(context.parsed);
+                                    }
+                                    return label;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+        
+        function updateDashboard(monthIndex) {
+            const data = processedData[monthIndex];
+            const lang = document.documentElement.lang;
+            
+            document.getElementById('slider-label-month').textContent = translations[lang]["month-current"] + (monthIndex + 1);
+            document.querySelectorAll('.selected-month-label').forEach(label => label.textContent = monthIndex + 1);
+
+            document.getElementById('kpi-sales').textContent = data.carsSold;
+            document.getElementById('kpi-revenue').textContent = formatCurrency(data.totalRevenue);
+            document.getElementById('kpi-profit').textContent = formatCurrency(data.netCashFlow);
+            document.getElementById('kpi-balance').textContent = formatCurrency(data.accumulatedBalance);
+
+            chartInstances.costBreakdownChart.data.datasets[0].data = Object.values(data.costBreakdown);
+            chartInstances.costBreakdownChart.update();
+            
+            // updateAnalysisSection(lang, monthIndex); // This is now handled by the second slider
+        }
+
+        function updateDataTable(lang) {
+            const tableHead = document.querySelector('#dataTable thead');
+            const tableBody = document.querySelector('#dataTable tbody');
+            const headers = translations[lang]["table-headers"];
+            
+            let headRow = '<tr>';
+            headers.forEach(header => headRow += `<th scope="col" class="px-6 py-3">${header}</th>`);
+            headRow += '</tr>';
+            tableHead.innerHTML = headRow;
+
+            let bodyHtml = '';
+            processedData.forEach(data => {
+                bodyHtml += `<tr class="bg-white border-b">
+                    <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">${translations[lang]["month-current"]}${data.month.split(" ")[1]}</td>
+                    <td class="px-6 py-4">${data.carsSold}</td>
+                    <td class="px-6 py-4">${formatCurrency(data.totalRevenue)}</td>
+                    <td class="px-6 py-4">${formatCurrency(data.totalExpenses)}</td>
+                    <td class="px-6 py-4">${formatCurrency(data.netProfit)}</td>
+                    <td class="px-6 py-4">${formatCurrency(data.netCashFlow)}</td>
+                    <td class="px-6 py-4">${formatCurrency(data.accumulatedBalance)}</td>
+                    <td class="px-6 py-4">${data.taxes === "TBD" ? "TBD" : formatCurrency(data.taxes)}</td>
+                </tr>`;
+            });
+            tableBody.innerHTML = bodyHtml;
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const defaultSalesPlan = [1, 1, 2, 3, 4, 4, 5, 5, 6, 6, 7, 7, 8, 8, 9, 9, 10, 10, 10, 10, 10, 10, 10, 10];
+            for (let i = 0; i < 24; i++) {
+                const inputElement = document.getElementById(`salesPlan_${i}`);
+                if (inputElement) {
+                    inputElement.value = defaultSalesPlan[i];
+                }
+            }
+
+            const initialFinancialData = {
+                grant: 0,
+                savings: 0,
+                avgSalePrice: 3850,
+                gebesatz: 465,
+                costs: {
+                    rent: 600,
+                    accounting: 171,
+                    quarterlyReport: 0,
+                    carPurchase: 2300,
+                    carWash: 25,
+                    carRepair: 350,
+                    tuvDiag: 75,
+                    logistics: 150,
+                    warranty: 500,
+                    carAd: 25,
+                    insurance: 193, 
+                    communication: 65,
+                    contingency: 100,
+                    software: 37.33,
+                    officeSupplies: 40,
+                    workingMaterials: 23.75,
+                    transportCosts: 166,
+                    adCosts: 30.83,
+                    bankFees: 17,
+                    repairCosts: 5.83,
+                }
+            };
+            
+            document.getElementById('grant').value = initialFinancialData.grant;
+            document.getElementById('savings').value = initialFinancialData.savings;
+            document.getElementById('avgSalePrice').value = initialFinancialData.avgSalePrice;
+            document.getElementById('gebesatz').value = initialFinancialData.gebesatz;
+            document.getElementById('taxForm').value = 'einz';
+            
+            for (const cost in initialFinancialData.costs) {
+                if (document.getElementById(cost)) {
+                    document.getElementById(cost).value = initialFinancialData.costs[cost];
+                }
+            }
+            
+            processedData = processData(initialFinancialData);
+            createCharts();
+            setLanguage('ru');
+
+            document.getElementById('month-slider').addEventListener('input', (e) => {
+                updateDashboard(parseInt(e.target.value));
+            });
+            
+            document.getElementById('analysis-slider').addEventListener('input', (e) => {
+                updateAnalysisSection(document.documentElement.lang, parseInt(e.target.value));
+            });
+            
+            document.getElementById('taxForm').addEventListener('change', (e) => {
+                const gebesatzLabel = document.getElementById('gebesatz-label');
+                if (e.target.value === 'einz' || e.target.value === 'gmbh') {
+                    gebesatzLabel.style.display = 'block';
+                } else {
+                    gebesatzLabel.style.display = 'none';
+                }
+            });
+            
+            updateAnalysisSection('ru', 0); // Initial call for the analysis section
+        });
+    </script>
+
+</body>
+</html>
