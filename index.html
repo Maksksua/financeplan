@@ -1,24 +1,14 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="uk">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Интерактивная финансовая панель: Автодилер в Нюрнберге</title>
+    <title>Професійна фінансова панель: Автодилер, Нюрнберг</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <!-- Chosen Palette: Warm Neutrals with Subtle Blue/Green Accents -->
-    <!-- Application Structure Plan: A dashboard-style layout is chosen for its clarity and ability to present key financial metrics at a glance. The structure includes: 1) A header with the project title. 2) A row of Key Performance Indicator (KPI) cards for a high-level summary. 3) An interactive timeline slider for selecting a specific month. 4) A main grid containing four primary charts (Cash Flow, Revenue vs. Expenses, Sales Performance, Cost Breakdown) that dynamically update. 5) A collapsible section with the detailed data table. This structure transforms the static spreadsheet into a narrative, allowing the user (e.g., a Jobcenter agent) to easily follow the business's financial story from initial investment to projected profitability and stable cash flow. The user flow is intuitive: start with the big picture, then use the slider to explore monthly details. -->
-    <!-- Visualization & Content Choices: 
-        - Cumulative Cash Flow -> Goal: Show long-term viability -> Viz: Line Chart -> Interaction: Hover tooltips -> Justification: Best for showing trends and proving the business won't run out of money. -> Library: Chart.js (Canvas).
-        - Revenue vs. Total Expenses -> Goal: Show profitability timeline -> Viz: Combo Bar/Line Chart -> Interaction: Hover tooltips -> Justification: Clearly contrasts income and costs to pinpoint the break-even point. -> Library: Chart.js (Canvas).
-        - Monthly Car Sales -> Goal: Visualize growth -> Viz: Bar Chart -> Interaction: Hover tooltips -> Justification: Simple and effective for showing monthly unit performance. -> Library: Chart.js (Canvas).
-        - Monthly Cost Structure -> Goal: Understand expense composition -> Viz: Donut Chart -> Interaction: Updates with slider -> Justification: Excellent for showing the proportion of different cost categories. -> Library: Chart.js (Canvas).
-        - All Raw Data -> Goal: Provide transparency -> Viz: HTML Table -> Interaction: Collapsible section -> Justification: Allows for deep-diving into the source numbers. -> Library: HTML/JS.
-    -->
-    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
     <style>
         body {
             font-family: 'Inter', sans-serif;
@@ -80,44 +70,45 @@
 
     <div class="container mx-auto p-4 md:p-8">
         <header class="text-center mb-8">
-            <h1 class="text-3xl md:text-4xl font-bold text-gray-900" data-i18n="title">Финансовая панель: Автодилер в Нюрнберге</h1>
-            <p class="text-md text-gray-600 mt-2" data-i18n="subtitle">Интерактивный анализ финансового плана на 24 месяца</p>
+            <h1 class="text-3xl md:text-4xl font-bold text-gray-900" data-i18n="title">Професійна фінансова панель</h1>
+            <p class="text-md text-gray-600 mt-2" data-i18n="subtitle">Аналіз фінансового плану автодилера в Нюрнберзі</p>
         </header>
 
         <main>
             <!-- Language Switcher -->
             <div class="flex justify-center mb-6 space-x-4">
+                <button class="px-4 py-2 text-sm font-medium rounded-lg text-white bg-blue-500 hover:bg-blue-600 transition-colors" onclick="setLanguage('uk')">Українська</button>
                 <button class="px-4 py-2 text-sm font-medium rounded-lg text-white bg-blue-500 hover:bg-blue-600 transition-colors" onclick="setLanguage('ru')">Русский</button>
                 <button class="px-4 py-2 text-sm font-medium rounded-lg text-white bg-gray-500 hover:bg-gray-600 transition-colors" onclick="setLanguage('de')">Deutsch</button>
             </div>
             
             <!-- Input Data Section -->
             <div class="bg-white p-6 rounded-xl shadow-md mb-8">
-                <h3 class="text-lg font-semibold mb-4" data-i18n="input-data-title">Ввод данных для моделирования</h3>
+                <h3 class="text-lg font-semibold mb-4" data-i18n="input-data-title">Введення даних для моделювання</h3>
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     <!-- Revenue and Sales -->
                     <div class="input-group">
-                        <h4 class="font-semibold text-gray-800 mb-2" data-i18n="input-group-sales">План продаж и доход</h4>
+                        <h4 class="font-semibold text-gray-800 mb-2" data-i18n="input-group-sales">План продажів та дохід</h4>
                         <div class="grid grid-cols-6 gap-4">
                             <!-- Sale Inputs (Month 1-24) -->
-                            <label class="block col-span-1"><span class="text-gray-700 text-sm">Мес. 1</span><input type="number" id="salesPlan_0" value="1" min="0" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50"></label>
-                            <label class="block col-span-1"><span class="text-gray-700 text-sm">Мес. 2</span><input type="number" id="salesPlan_1" value="1" min="0" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50"></label>
-                            <label class="block col-span-1"><span class="text-gray-700 text-sm">Мес. 3</span><input type="number" id="salesPlan_2" value="2" min="0" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50"></label>
-                            <label class="block col-span-1"><span class="text-gray-700 text-sm">Мес. 4</span><input type="number" id="salesPlan_3" value="3" min="0" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50"></label>
-                            <label class="block col-span-1"><span class="text-gray-700 text-sm">Мес. 5</span><input type="number" id="salesPlan_4" value="4" min="0" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50"></label>
-                            <label class="block col-span-1"><span class="text-gray-700 text-sm">Мес. 6</span><input type="number" id="salesPlan_5" value="4" min="0" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50"></label>
-                            <label class="block col-span-1"><span class="text-gray-700 text-sm">Мес. 7</span><input type="number" id="salesPlan_6" value="5" min="0" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50"></label>
-                            <label class="block col-span-1"><span class="text-gray-700 text-sm">Мес. 8</span><input type="number" id="salesPlan_7" value="5" min="0" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50"></label>
-                            <label class="block col-span-1"><span class="text-gray-700 text-sm">Мес. 9</span><input type="number" id="salesPlan_8" value="6" min="0" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50"></label>
-                            <label class="block col-span-1"><span class="text-gray-700 text-sm">Мес. 10</span><input type="number" id="salesPlan_9" value="6" min="0" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50"></label>
-                            <label class="block col-span-1"><span class="text-gray-700 text-sm">Мес. 11</span><input type="number" id="salesPlan_10" value="7" min="0" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50"></label>
-                            <label class="block col-span-1"><span class="text-gray-700 text-sm">Мес. 12</span><input type="number" id="salesPlan_11" value="7" min="0" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50"></label>
-                            <label class="block col-span-1"><span class="text-gray-700 text-sm">Мес. 13</span><input type="number" id="salesPlan_12" value="8" min="0" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50"></label>
-                            <label class="block col-span-1"><span class="text-gray-700 text-sm">Мес. 14</span><input type="number" id="salesPlan_13" value="8" min="0" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50"></label>
-                            <label class="block col-span-1"><span class="text-gray-700 text-sm">Мес. 15</span><input type="number" id="salesPlan_14" value="9" min="0" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50"></label>
-                            <label class="block col-span-1"><span class="text-gray-700 text-sm">Мес. 16</span><input type="number" id="salesPlan_15" value="9" min="0" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50"></label>
-                            <label class="block col-span-1"><span class="text-gray-700 text-sm">Мес. 17</span><input type="number" id="salesPlan_16" value="10" min="0" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50"></label>
-                            <label class="block col-span-1"><span class="text-gray-700 text-sm">Мес. 18</span><input type="number" id="salesPlan_17" value="10" min="0" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50"></label>
+                            <label class="block col-span-1"><span class="text-gray-700 text-sm">Міс. 1</span><input type="number" id="salesPlan_0" value="1" min="0" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50"></label>
+                            <label class="block col-span-1"><span class="text-gray-700 text-sm">Міс. 2</span><input type="number" id="salesPlan_1" value="1" min="0" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50"></label>
+                            <label class="block col-span-1"><span class="text-gray-700 text-sm">Міс. 3</span><input type="number" id="salesPlan_2" value="2" min="0" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50"></label>
+                            <label class="block col-span-1"><span class="text-gray-700 text-sm">Міс. 4</span><input type="number" id="salesPlan_3" value="3" min="0" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50"></label>
+                            <label class="block col-span-1"><span class="text-gray-700 text-sm">Міс. 5</span><input type="number" id="salesPlan_4" value="4" min="0" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50"></label>
+                            <label class="block col-span-1"><span class="text-gray-700 text-sm">Міс. 6</span><input type="number" id="salesPlan_5" value="4" min="0" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50"></label>
+                            <label class="block col-span-1"><span class="text-gray-700 text-sm">Міс. 7</span><input type="number" id="salesPlan_6" value="5" min="0" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50"></label>
+                            <label class="block col-span-1"><span class="text-gray-700 text-sm">Міс. 8</span><input type="number" id="salesPlan_7" value="5" min="0" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50"></label>
+                            <label class="block col-span-1"><span class="text-gray-700 text-sm">Міс. 9</span><input type="number" id="salesPlan_8" value="6" min="0" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50"></label>
+                            <label class="block col-span-1"><span class="text-gray-700 text-sm">Міс. 10</span><input type="number" id="salesPlan_9" value="6" min="0" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50"></label>
+                            <label class="block col-span-1"><span class="text-gray-700 text-sm">Міс. 11</span><input type="number" id="salesPlan_10" value="7" min="0" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50"></label>
+                            <label class="block col-span-1"><span class="text-gray-700 text-sm">Міс. 12</span><input type="number" id="salesPlan_11" value="7" min="0" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50"></label>
+                            <label class="block col-span-1"><span class="text-gray-700 text-sm">Міс. 13</span><input type="number" id="salesPlan_12" value="8" min="0" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50"></label>
+                            <label class="block col-span-1"><span class="text-gray-700 text-sm">Міс. 14</span><input type="number" id="salesPlan_13" value="8" min="0" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50"></label>
+                            <label class="block col-span-1"><span class="text-gray-700 text-sm">Міс. 15</span><input type="number" id="salesPlan_14" value="9" min="0" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50"></label>
+                            <label class="block col-span-1"><span class="text-gray-700 text-sm">Міс. 16</span><input type="number" id="salesPlan_15" value="9" min="0" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50"></label>
+                            <label class="block col-span-1"><span class="text-gray-700 text-sm">Міс. 17</span><input type="number" id="salesPlan_16" value="10" min="0" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50"></label>
+                            <label class="block col-span-1"><span class="text-gray-700 text-sm">Міс. 18</span><input type="number" id="salesPlan_17" value="10" min="0" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50"></label>
                             <label class="block col-span-1"><span class="text-gray-700 text-sm">Мес. 19</span><input type="number" id="salesPlan_18" value="10" min="0" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50"></label>
                             <label class="block col-span-1"><span class="text-gray-700 text-sm">Мес. 20</span><input type="number" id="salesPlan_19" value="10" min="0" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50"></label>
                             <label class="block col-span-1"><span class="text-gray-700 text-sm">Мес. 21</span><input type="number" id="salesPlan_20" value="10" min="0" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50"></label>
@@ -126,73 +117,86 @@
                             <label class="block col-span-1"><span class="text-gray-700 text-sm">Мес. 24</span><input type="number" id="salesPlan_23" value="10" min="0" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50"></label>
                         </div>
                         <label class="block mt-4">
-                            <span class="text-gray-700 text-sm" data-i18n="input-avg-price">Средняя цена продажи (€):</span>
-                            <input type="number" id="avgSalePrice" value="3850" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
+                            <span class="text-gray-700 text-sm" data-i18n="input-avg-price">Середня ціна продажу (€):</span>
+                            <input type="number" id="avgSalePrice" value="4200" min="0" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
+                        </label>
+                         <label class="block mt-4">
+                            <span class="text-gray-700 text-sm" data-i18n="input-car-purchase">Закупка авто (€/авто):</span>
+                            <input type="number" id="carPurchase" value="2300" min="0" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
                         </label>
                     </div>
 
                     <!-- Funding -->
                     <div class="input-group">
-                        <h4 class="font-semibold text-gray-800 mb-2" data-i18n="input-group-funding">Начальное финансирование</h4>
+                        <h4 class="font-semibold text-gray-800 mb-2" data-i18n="input-group-funding">Початкове фінансування</h4>
                         <label class="block mb-2">
-                            <span class="text-gray-700 text-sm" data-i18n="input-grant">Безвозвратный грант (€):</span>
+                            <span class="text-gray-700 text-sm" data-i18n="input-grant">Безповоротний грант (€):</span>
                             <input type="number" id="grant" value="0" min="0" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
                         </label>
                         <label class="block mb-2">
-                            <span class="text-gray-700 text-sm" data-i18n="input-savings">Инвестиции, сбережения (€):</span>
+                            <span class="text-gray-700 text-sm" data-i18n="input-savings">Інвестиції, заощадження (€):</span>
                             <input type="number" id="savings" value="0" min="0" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
+                        </label>
+                         <h4 class="font-semibold text-gray-800 mb-2 mt-4" data-i18n="input-group-private">Особисті витрати</h4>
+                        <label class="block mb-2">
+                            <span class="text-gray-700 text-sm" data-i18n="input-health-insurance">Мед. страховка/Пенсія (€/міс):</span>
+                            <input type="number" id="healthInsurance" value="400" min="0" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
+                        </label>
+                        <label class="block mb-2">
+                            <span class="text-gray-700 text-sm" data-i18n="input-personal-costs">Особисті витрати (€/міс):</span>
+                            <input type="number" id="personalCosts" value="1000" min="0" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
                         </label>
                     </div>
 
                     <!-- Costs -->
                     <div class="input-group">
-                        <h4 class="font-semibold text-gray-800 mb-2" data-i18n="input-group-costs">Расходы</h4>
+                        <h4 class="font-semibold text-gray-800 mb-2" data-i18n="input-group-costs">Постійні витрати</h4>
                         <label class="block mb-2">
-                            <span class="text-gray-700 text-sm" data-i18n="input-rent">Аренда (€/мес):</span>
+                            <span class="text-gray-700 text-sm" data-i18n="input-rent">Оренда (€/міс):</span>
                             <input type="number" id="rent" value="600" min="0" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
                         </label>
                         <label class="block mb-2">
-                            <span class="text-gray-700 text-sm" data-i18n="input-accounting-monthly">Бухгалтерия (€/мес):</span>
+                            <span class="text-gray-700 text-sm" data-i18n="input-accounting-monthly">Бухгалтерія (€/міс):</span>
                             <input type="number" id="accounting" value="171" min="0" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
                         </label>
                         <label class="block mb-2">
-                            <span class="text-gray-700 text-sm" data-i18n="input-insurance">Страховка (€/мес):</span>
+                            <span class="text-gray-700 text-sm" data-i18n="input-insurance">Страхування бізнесу (€/міс):</span>
                             <input type="number" id="insurance" value="193" min="0" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
                         </label>
                         <label class="block mb-2">
-                            <span class="text-gray-700 text-sm" data-i18n="input-communication">Связь (€/мес):</span>
+                            <span class="text-gray-700 text-sm" data-i18n="input-communication">Зв'язок (€/міс):</span>
                             <input type="number" id="communication" value="65" min="0" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
                         </label>
                         <label class="block mb-2">
-                            <span class="text-gray-700 text-sm" data-i18n="input-contingency">Прочие расходы (€/мес):</span>
+                            <span class="text-gray-700 text-sm" data-i18n="input-contingency">Інші фіксовані витрати (€/міс):</span>
                             <input type="number" id="contingency" value="100" min="0" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
                         </label>
                         <label class="block mb-2">
-                            <span class="text-gray-700 text-sm" data-i18n="input-software">ПО (€/мес):</span>
+                            <span class="text-gray-700 text-sm" data-i18n="input-software">ПЗ (€/міс):</span>
                             <input type="number" id="software" value="37.33" min="0" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
                         </label>
                         <label class="block mb-2">
-                            <span class="text-gray-700 text-sm" data-i18n="input-office-supplies">Материалы для бюро, кофе для клиентов (€/мес):</span>
+                            <span class="text-gray-700 text-sm" data-i18n="input-office-supplies">Бюро/Кава (€/міс):</span>
                             <input type="number" id="officeSupplies" value="40" min="0" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
                         </label>
                         <label class="block mb-2">
-                            <span class="text-gray-700 text-sm" data-i18n="input-working-materials">Рабочие материалы (€/мес):</span>
+                            <span class="text-gray-700 text-sm" data-i18n="input-working-materials">Раб. матеріали (€/міс):</span>
                             <input type="number" id="workingMaterials" value="23.75" min="0" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
                         </label>
                         <label class="block mb-2">
-                            <span class="text-gray-700 text-sm" data-i18n="input-transport-costs">Личные транспортные расходы (€/мес):</span>
+                            <span class="text-gray-700 text-sm" data-i18n="input-transport-costs">Трансп. витрати (€/міс):</span>
                             <input type="number" id="transportCosts" value="166" min="0" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
                         </label>
                         <label class="block mb-2">
-                            <span class="text-gray-700 text-sm" data-i18n="input-ad-costs">Дополнительная общая реклама (€/мес):</span>
+                            <span class="text-gray-700 text-sm" data-i18n="input-ad-costs">Реклама загальна (€/міс):</span>
                             <input type="number" id="adCosts" value="30.83" min="0" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
                         </label>
                         <label class="block mb-2">
-                            <span class="text-gray-700 text-sm" data-i18n="input-bank-fees">Банковские расходы (€/мес):</span>
+                            <span class="text-gray-700 text-sm" data-i18n="input-bank-fees">Банківські збори (€/міс):</span>
                             <input type="number" id="bankFees" value="17" min="0" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
                         </label>
                         <label class="block">
-                            <span class="text-gray-700 text-sm" data-i18n="input-repair-costs">Текущий ремонт помещения (€/мес):</span>
+                            <span class="text-gray-700 text-sm" data-i18n="input-repair-costs">Ремонт приміщення (€/міс):</span>
                             <input type="number" id="repairCosts" value="5.83" min="0" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
                         </label>
                     </div>
@@ -201,29 +205,25 @@
                 <!-- Variable Costs & Tax -->
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6 mt-6">
                     <div class="input-group">
-                        <h4 class="font-semibold text-gray-800 mb-2" data-i18n="input-group-variable">Переменные расходы</h4>
-                        <label class="block mb-2">
-                            <span class="text-gray-700 text-sm" data-i18n="input-car-purchase">Закупка авто (€):</span>
-                            <input type="number" id="carPurchase" value="2300" min="0" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
-                        </label>
-                        <label class="block mb-2">
-                            <span class="text-gray-700 text-sm" data-i18n="input-car-wash">Мойка и детейлинг (€/авто):</span>
+                        <h4 class="font-semibold text-gray-800 mb-2" data-i18n="input-group-variable">Змінні витрати (на авто)</h4>
+                         <label class="block mb-2">
+                            <span class="text-gray-700 text-sm" data-i18n="input-car-wash">Миття/детейлінг (€/авто):</span>
                             <input type="number" id="carWash" value="25" min="0" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
                         </label>
                          <label class="block mb-2">
-                            <span class="text-gray-700 text-sm" data-i18n="input-car-repair">Диагностика и устранение недостатков (€/авто):</span>
+                            <span class="text-gray-700 text-sm" data-i18n="input-car-repair">Діагностика/ремонт (€/авто):</span>
                             <input type="number" id="carRepair" value="350" min="0" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
                         </label>
                          <label class="block mb-2">
-                            <span class="text-gray-700 text-sm" data-i18n="input-tuv-diag">TÜV (отдельно) (€/авто):</span>
+                            <span class="text-gray-700 text-sm" data-i18n="input-tuv-diag">TÜV/діагн. (€/авто):</span>
                             <input type="number" id="tuvDiag" value="75" min="0" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
                         </label>
                          <label class="block mb-2">
-                            <span class="text-gray-700 text-sm" data-i18n="input-logistics">Логистика (€/авто):</span>
+                            <span class="text-gray-700 text-sm" data-i18n="input-logistics">Логістика (€/авто):</span>
                             <input type="number" id="logistics" value="150" min="0" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
                         </label>
                          <label class="block mb-2">
-                            <span class="text-gray-700 text-sm" data-i18n="input-warranty">Гарантия (€/авто):</span>
+                            <span class="text-gray-700 text-sm" data-i18n="input-warranty">Гарантія (€/авто):</span>
                             <input type="number" id="warranty" value="500" min="0" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
                         </label>
                          <label class="block mb-2">
@@ -233,24 +233,40 @@
                     </div>
 
                     <div class="input-group">
-                        <h4 class="font-semibold text-gray-800 mb-2" data-i18n="input-group-taxes">Налоговая информация</h4>
+                        <h4 class="font-semibold text-gray-800 mb-2" data-i18n="input-group-taxes">Податкова інформація</h4>
                         <label class="block mb-2">
-                            <span class="text-gray-700 text-sm" data-i18n="tax-form">Форма налогообложения:</span>
+                            <span class="text-gray-700 text-sm" data-i18n="tax-form">Форма оподаткування:</span>
                             <select id="taxForm" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
-                                <option value="einz" data-i18n="option-einz">ИП (Einzelunternehmen)</option>
-                                <option value="kleingewerbe" data-i18n="option-kleingewerbe">Малый бизнес (Kleingewerbe)</option>
-                                <option value="gmbh" data-i18n="option-gmbh">ООО (GmbH)</option>
+                                <option value="einz" data-i18n="option-einz">ФОП (Einzelunternehmen)</option>
                             </select>
                         </label>
-                        <label class="block" id="gebesatz-label">
-                            <span class="text-gray-700 text-sm" data-i18n="business-tax-rate">Коэффициент налога на торговлю (Gewerbesteuer-Hebesatz, %):</span>
-                            <input type="number" id="gebesatz" value="465" min="0" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
+                        <label class="block" id="ust-regime-label">
+                            <span class="text-gray-700 text-sm" data-i18n="ust-regime">Режим ПДВ:</span>
+                            <select id="ustRegime" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
+                                <option value="regular" data-i18n="option-regular">Стандартний (Regelbesteuerung)</option>
+                                <option value="margin" data-i18n="option-margin">Differenzbesteuerung (§25a UStG)</option>
+                                <option value="kleinunternehmer" data-i18n="option-kleinunternehmer">Малий підприємець (§19 UStG)</option>
+                            </select>
                         </label>
+                        <div id="ust-frequency-block">
+                             <label class="block mt-2 mb-2">
+                                <span class="text-gray-700 text-sm" data-i18n="ust-payment-frequency">Частота сплати ПДВ:</span>
+                                <select id="ustFrequency" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
+                                    <option value="monthly" data-i18n="option-monthly">Щомісячно</option>
+                                    <option value="quarterly" data-i18n="option-quarterly">Щоквартально</option>
+                                </select>
+                            </label>
+                        </div>
+                         <label class="block" id="gebesatz-label">
+                            <span class="text-gray-700 text-sm" data-i18n="business-tax-rate">Коефіцієнт податку на торгівлю (Nuremberg):</span>
+                            <input type="number" id="gebesatz" value="467" min="0" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
+                        </label>
+                        <p class="text-xs text-red-500 mt-2" data-i18n="note-gebesatz">Офіційний Hebesatz для Нюрнберга - 467% з 2018 року.</p>
                     </div>
                 </div>
 
                 <div class="mt-6 flex justify-center">
-                    <button class="px-6 py-3 text-lg font-semibold rounded-lg text-white bg-green-500 hover:bg-green-600 transition-colors" onclick="recalculatePlan()" data-i18n="calculate-button">Рассчитать</button>
+                    <button id="calculate-button" class="px-6 py-3 text-lg font-semibold rounded-lg text-white bg-green-500 hover:bg-green-600 transition-colors" data-i18n="calculate-button">Розрахувати</button>
                 </div>
             </div>
 
@@ -263,24 +279,24 @@
                     </div>
                     <div class="kpi-card border-l-4 border-green-500">
                         <div id="kpi-revenue" class="kpi-value">€0</div>
-                        <div class="kpi-label" data-i18n="kpi-revenue-label">Общий доход</div>
+                        <div class="kpi-label" data-i18n="kpi-revenue-label">Загальний дохід (P&L)</div>
                     </div>
                     <div class="kpi-card border-l-4 border-red-500">
-                        <div id="kpi-profit" class="kpi-value">€0</div>
-                        <div class="kpi-label" data-i18n="kpi-profit-label">Чистый денежный поток</div>
+                        <div id="kpi-ebit" class="kpi-value">€0</div>
+                        <div class="kpi-label" data-i18n="kpi-ebit-label">EBIT (прибуток до податків)</div>
                     </div>
                     <div class="kpi-card border-l-4 border-purple-500">
                         <div id="kpi-balance" class="kpi-value">€0</div>
-                        <div class="kpi-label" data-i18n="kpi-balance-label">Накопленный баланс</div>
+                        <div class="kpi-label" data-i18n="kpi-balance-label">Накопичений баланс (Cash-Flow)</div>
                     </div>
                 </div>
                 <div>
-                    <label for="month-slider" class="block mb-2 text-sm font-medium text-gray-900" data-i18n="slider-label">Выберите месяц для анализа:</label>
+                    <label for="month-slider" class="block mb-2 text-sm font-medium text-gray-900" data-i18n="slider-label">Оберіть місяць для аналізу:</label>
                     <input id="month-slider" type="range" min="0" max="23" value="0" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer">
                     <div class="flex justify-between text-xs text-gray-500 mt-2">
-                        <span data-i18n="month-1">Месяц 1</span>
-                        <span id="slider-label-month" class="font-bold text-blue-600">Месяц 1</span>
-                        <span data-i18n="month-24">Месяц 24</span>
+                        <span data-i18n="month-1">Місяць 1</span>
+                        <span id="slider-label-month" class="font-bold text-blue-600">Місяць 1</span>
+                        <span data-i18n="month-24">Місяць 24</span>
                     </div>
                 </div>
             </div>
@@ -288,25 +304,25 @@
             <!-- Charts Grid -->
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
                 <div class="bg-white p-6 rounded-xl shadow-md">
-                    <h3 class="text-lg font-semibold mb-4" data-i18n="chart-1-title">Прогноз ликвидности (Накопленный баланс)</h3>
+                    <h3 class="text-lg font-semibold mb-4" data-i18n="chart-1-title">Прогноз ліквідності (Накопичений баланс)</h3>
                     <div class="chart-container">
                         <canvas id="cashFlowChart"></canvas>
                     </div>
                 </div>
                 <div class="bg-white p-6 rounded-xl shadow-md">
-                    <h3 class="text-lg font-semibold mb-4" data-i18n="chart-2-title">Доходы vs. Расходы</h3>
+                    <h3 class="text-lg font-semibold mb-4" data-i18n="chart-2-title">Доходи vs. Витрати (P&L)</h3>
                     <div class="chart-container">
                         <canvas id="revenueVsExpensesChart"></canvas>
                     </div>
                 </div>
                 <div class="bg-white p-6 rounded-xl shadow-md">
-                    <h3 class="text-lg font-semibold mb-4" data-i18n="chart-3-title">Динамика продаж (Авто, шт.)</h3>
+                    <h3 class="text-lg font-semibold mb-4" data-i18n="chart-3-title">Динаміка продажів (Авто, шт.)</h3>
                     <div class="chart-container">
                         <canvas id="salesChart"></canvas>
                     </div>
                 </div>
                 <div class="bg-white p-6 rounded-xl shadow-md">
-                    <h3 class="text-lg font-semibold mb-4" data-i18n="chart-4-title">Структура расходов (Месяц <span class="selected-month-label">1</span>)</h3>
+                    <h3 class="text-lg font-semibold mb-4" data-i18n="chart-4-title">Структура витрат (P&L) (Місяць <span class="selected-month-label">1</span>)</h3>
                     <div class="chart-container">
                         <canvas id="costBreakdownChart"></canvas>
                     </div>
@@ -315,30 +331,28 @@
             
             <!-- Detailed Data Table -->
             <div class="bg-white p-6 rounded-xl shadow-md overflow-hidden">
-                <h3 class="p-0 font-semibold text-lg" data-i18n="table-summary">Показать детальные финансовые данные</h3>
+                <h3 class="p-0 font-semibold text-lg" data-i18n="table-summary">Показати детальну фінансову інформацію</h3>
                 <div class="p-0 border-t border-gray-200">
-                    <p class="text-sm text-gray-600 mb-4" data-i18n="table-description">В таблице представлены исходные данные, использованные для построения графиков. Это позволяет провести детальный анализ финансового плана.</p>
+                    <p class="text-sm text-gray-600 mb-4" data-i18n="table-description">У таблиці представлені розгорнуті дані P&L та Cash Flow. Це дозволяє провести детальний аналіз фінансового плану.</p>
                     <div class="overflow-x-auto">
                         <table id="dataTable" class="min-w-full text-sm text-left text-gray-500">
-                            <thead class="text-xs text-gray-700 uppercase bg-gray-50">
-                            </thead>
-                            <tbody>
-                            </tbody>
+                            <thead class="text-xs text-gray-700 uppercase bg-gray-50"></thead>
+                            <tbody></tbody>
                         </table>
                     </div>
                 </div>
             </div>
-            
+
             <!-- Detailed Analysis -->
             <div class="bg-white p-6 rounded-xl shadow-md mt-8">
-                <h3 class="text-lg font-semibold mb-4" data-i18n="analysis-title">Детальный анализ затрат</h3>
+                <h3 class="text-lg font-semibold mb-4" data-i18n="analysis-title">Детальний аналіз</h3>
                 <div>
-                    <label for="analysis-slider" class="block mb-2 text-sm font-medium text-gray-900" data-i18n="slider-label-analysis">Выберите месяц для детального анализа:</label>
+                    <label for="analysis-slider" class="block mb-2 text-sm font-medium text-gray-900" data-i18n="slider-label-analysis">Оберіть місяць для детального аналізу:</label>
                     <input id="analysis-slider" type="range" min="0" max="23" value="0" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer">
                     <div class="flex justify-between text-xs text-gray-500 mt-2">
-                        <span data-i18n="month-1">Месяц 1</span>
-                        <span id="slider-label-analysis-month" class="font-bold text-blue-600">Месяц 1</span>
-                        <span data-i18n="month-24">Месяц 24</span>
+                        <span data-i18n="month-1">Місяць 1</span>
+                        <span id="slider-label-analysis-month" class="font-bold text-blue-600">Місяць 1</span>
+                        <span data-i18n="month-24">Місяць 24</span>
                     </div>
                 </div>
                 <div id="analysis-content" class="text-sm text-gray-700 space-y-4 mt-6">
@@ -349,370 +363,412 @@
     </div>
 
     <script>
-        const translations = {
+        const TRANSLATIONS = {
+            uk: {
+                "title": "Професійна фінансова панель",
+                "subtitle": "Аналіз фінансового плану автодилера в Нюрнберзі",
+                "input-data-title": "Введення даних для моделювання",
+                "input-group-sales": "План продажів та дохід",
+                "input-avg-price": "Середня ціна продажу (€):",
+                "input-car-purchase": "Закупка авто (€/авто):",
+                "input-group-funding": "Початкове фінансування",
+                "input-grant": "Безповоротний грант (€):",
+                "input-savings": "Інвестиції, заощадження (€):",
+                "input-group-private": "Особисті витрати",
+                "input-health-insurance": "Мед. страховка/Пенсія (€/міс):",
+                "input-personal-costs": "Особисті витрати (€/міс):",
+                "input-group-costs": "Постійні витрати",
+                "input-rent": "Оренда (€/міс):",
+                "input-accounting-monthly": "Бухгалтерія (€/міс):",
+                "input-insurance": "Страхування бізнесу (€/міс):",
+                "input-communication": "Зв'язок (€/міс):",
+                "input-contingency": "Інші фіксовані витрати (€/міс):",
+                "input-software": "ПЗ (€/міс):",
+                "input-office-supplies": "Бюро/Кава (€/міс):",
+                "input-working-materials": "Роб. матеріали (€/міс):",
+                "input-transport-costs": "Трансп. витрати (€/міс):",
+                "input-ad-costs": "Реклама загальна (€/міс):",
+                "input-bank-fees": "Банківські збори (€/міс):",
+                "input-repair-costs": "Ремонт приміщення (€/міс):",
+                "input-group-variable": "Змінні витрати (на авто)",
+                "input-car-wash": "Миття/детейлінг (€/авто):",
+                "input-car-repair": "Діагностика/ремонт (€/авто):",
+                "input-tuv-diag": "TÜV/діагн. (€/авто):",
+                "input-logistics": "Логістика (€/авто):",
+                "input-warranty": "Гарантія (€/авто):",
+                "input-car-ad": "Реклама авто (€/авто):",
+                "input-group-taxes": "Податкова інформація",
+                "tax-form": "Форма оподаткування:",
+                "option-einz": "ФОП (Einzelunternehmen)",
+                "ust-regime": "Режим ПДВ:",
+                "option-regular": "Стандартний (Regelbesteuerung)",
+                "option-margin": "Differenzbesteuerung (§25a UStG)",
+                "option-kleinunternehmer": "Малий підприємець (§19 UStG)",
+                "ust-payment-frequency": "Частота сплати ПДВ:",
+                "option-monthly": "Щомісячно",
+                "option-quarterly": "Щоквартально",
+                "business-tax-rate": "Коефіцієнт податку на торгівлю (Nuremberg):",
+                "note-gebesatz": "Офіційний Hebesatz для Нюрнберга - 467% з 2018 року.",
+                "calculate-button": "Розрахувати",
+                "kpi-sales-label": "Авто продано",
+                "kpi-revenue-label": "Загальний дохід (P&L)",
+                "kpi-ebit-label": "EBIT (прибуток до податків)",
+                "kpi-balance-label": "Накопичений баланс (Cash-Flow)",
+                "slider-label": "Оберіть місяць для аналізу:",
+                "month-1": "Місяць 1",
+                "month-current": "Місяць ",
+                "month-24": "Місяць 24",
+                "chart-1-title": "Прогноз ліквідності (Накопичений баланс)",
+                "chart-2-title": "Доходи vs. Витрати (P&L)",
+                "chart-3-title": "Динаміка продажів (Авто, шт.)",
+                "chart-4-title": "Структура витрат (P&L) (Місяць",
+                "table-summary": "Показати детальну фінансову інформацію",
+                "table-description": "У таблиці представлені розгорнуті дані P&L та Cash Flow. Це дозволяє провести детальний аналіз фінансового плану.",
+                "table-headers": ["Міс.", "Продажі", "P&L", "Cash Flow", "ПДВ", "Податок на торгівлю", "Податок на дохід", "Баланс"],
+                "costBreakdownLabels": ["Постійні витрати", "Змінні витрати", "Податки", "Рух ПДВ", "Закупівлі авто"],
+                "chart-labels": {
+                    "cashFlow": "Накопичений баланс",
+                    "ebit": "EBIT (P&L)",
+                    "revenue": "Загальний дохід (P&L)",
+                    "expenses": "Загальні витрати (P&L)",
+                    "sales": "Продано автомобілів",
+                    "cashInflow": "Грошовий приплив",
+                    "cashOutflow": "Грошовий відплив"
+                },
+                "analysis-title": "Детальний аналіз",
+                "analysis-summary-title": "Місячний P&L",
+                "analysis-month-title": "Фінансовий звіт за ",
+                "analysis-revenue-title": "Доходи (P&L)",
+                "analysis-variable-costs-title": "Змінні витрати (P&L)",
+                "analysis-fixed-costs-title": "Постійні витрати (P&L)",
+                "analysis-taxes-title": "Розрахунки по податках",
+                "analysis-cash-flow-title": "Рух грошових коштів (Cash Flow)",
+                "analysis-total-revenue": "Загальний дохід:",
+                "analysis-total-variable-cost": "Всього змінні витрати:",
+                "analysis-total-fixed-cost": "Всього постійні витрати:",
+                "analysis-net-profit": "Чистий дохід (EBT):",
+                "analysis-ebit": "EBIT (прибуток до податків):",
+                "analysis-after-tax-profit": "Чистий дохід після податків:",
+                "analysis-taxes": "Податки:",
+                "analysis-net-cashflow": "Чистий грошовий потік:",
+                "analysis-final-balance": "Накопичений баланс:",
+                "analysis-profit-per-car": "EBIT на 1 авто",
+                "pnl-note": "Прибуток/збиток до сплати податків (EBT).",
+                "ust-note": "Податок на додану вартість. Сплачується окремо від прибутку.",
+                "tax-payment-month": "Податок до сплати в цьому місяці",
+                "no-tax-payment": "У цьому місяці сплата податків не передбачена.",
+                "cash-balance-before-taxes": "Баланс до сплати податків",
+                "yearly-profit-for-taxes": "Податкова база за рік:",
+                "gebesatz-tax": "Податок на торгівлю:",
+                "einkommensteuer": "Податок на дохід:",
+                "koerperschaftsteuer": "Податок на прибуток корпорацій:",
+                "soli-tax": "Надбавка солідарності:",
+                "tax-credit": "Кредит податку на торгівлю по §35 EStG:",
+                "final-tax-for-year": "Разом податків за рік:",
+                "tax-paid-this-month": "Сплачено в цьому місяці:",
+                "ust-margin-calculation": "Розрахунок ПДВ по Differenzbesteuerung (§25a UStG)",
+                "cost-of-goods": "Собівартість проданих товарів:",
+                "margin": "Маржа:",
+                "ust-due": "Підлягає сплаті в цьому періоді:",
+                "car-purchase-cash-flow": "Закупка авто (відплив коштів):",
+                "ust-paid": "Сплачений ПДВ:",
+                "variable-costs-sold-cars": "Змінні витрати на продані авто:",
+                "ust-received": "Отриманий ПДВ:",
+                "investments-cash-flow": "Інвестиції/Грант:",
+                "fixed-costs-cat": "Постійні витрати",
+                "variable-costs-cat": "Змінні витрати",
+                "taxes-cat": "Податки",
+                "ust-cash-cat": "Рух ПДВ",
+                "inventory-cat": "Закупівлі авто"
+            },
             ru: {
-                "title": "Финансовая панель: Автодилер в Нюрнберге",
-                "subtitle": "Интерактивный анализ финансового плана на 24 месяца",
+                "title": "Профессиональная финансовая панель",
+                "subtitle": "Анализ финансового плана автодилера в Нюрнберге",
                 "input-data-title": "Ввод данных для моделирования",
                 "input-group-sales": "План продаж и доход",
                 "input-avg-price": "Средняя цена продажи (€):",
+                "input-car-purchase": "Закупка авто (€/авто):",
                 "input-group-funding": "Начальное финансирование",
                 "input-grant": "Безвозвратный грант (€):",
                 "input-savings": "Инвестиции, сбережения (€):",
-                "input-loan": "Займ (кредитование) (€):",
-                "input-loan-rate": "Процентная ставка по займу (% годовых):",
-                "input-group-costs": "Расходы",
+                "input-group-private": "Личные расходы",
+                "input-health-insurance": "Мед. страховка/Пенсия (€/мес):",
+                "input-personal-costs": "Личные расходы (€/мес):",
+                "input-group-costs": "Постоянные расходы",
                 "input-rent": "Аренда (€/мес):",
                 "input-accounting-monthly": "Бухгалтерия (€/мес):",
-                "input-quarterly-report": "Квартальный отчёт (€/кварт):",
-                "input-insurance": "Страховка (€/мес):",
+                "input-insurance": "Страхование бизнеса (€/мес):",
                 "input-communication": "Связь (€/мес):",
-                "input-contingency": "Прочие расходы (€/мес):",
+                "input-contingency": "Прочие фикс. расходы (€/мес):",
                 "input-software": "ПО (€/мес):",
-                "input-office-supplies": "Материалы для бюро, кофе для клиентов (€/мес):",
-                "input-working-materials": "Рабочие материалы (€/мес):",
-                "input-transport-costs": "Личные транспортные расходы (€/мес):",
-                "input-ad-costs": "Дополнительная общая реклама (€/мес):",
-                "input-bank-fees": "Банковские расходы (€/мес):",
-                "input-repair-costs": "Текущий ремонт помещения (€/мес):",
-                "input-group-variable": "Переменные расходы",
-                "input-car-purchase": "Закупка авто (€):",
-                "input-car-wash": "Мойка и детейлинг (€/авто):",
-                "input-car-repair": "Диагностика и устранение недостатков (€/авто):",
-                "input-tuv-diag": "TÜV (отдельно) (€/авто):",
+                "input-office-supplies": "Бюро/Кофе (€/мес):",
+                "input-working-materials": "Раб. материалы (€/мес):",
+                "input-transport-costs": "Трансп. расходы (€/мес):",
+                "input-ad-costs": "Реклама общая (€/мес):",
+                "input-bank-fees": "Банковские сборы (€/мес):",
+                "input-repair-costs": "Ремонт помещения (€/мес):",
+                "input-group-variable": "Переменные расходы (на авто)",
+                "input-car-wash": "Мойка/детейлинг (€/авто):",
+                "input-car-repair": "Диагностика/ремонт (€/авто):",
+                "input-tuv-diag": "TÜV/диагн. (€/авто):",
                 "input-logistics": "Логистика (€/авто):",
                 "input-warranty": "Гарантия (€/авто):",
                 "input-car-ad": "Реклама авто (€/авто):",
                 "input-group-taxes": "Налоговая информация",
                 "tax-form": "Форма налогообложения:",
                 "option-einz": "ИП (Einzelunternehmen)",
-                "option-kleingewerbe": "Малый бизнес (Kleingewerbe)",
-                "option-gmbh": "ООО (GmbH)",
+                "option-kleinunternehmer": "Kleinunternehmer (§19 UStG)",
+                "ust-regime": "Режим НДС:",
+                "option-regular": "Стандартный (Regelbesteuerung)",
+                "option-margin": "Differenzbesteuerung (§25a UStG)",
+                "option-kleinunternehmer": "Kleinunternehmer (§19 UStG)",
+                "ust-payment-frequency": "Частота уплаты НДС:",
+                "option-monthly": "Ежемесячно",
+                "option-quarterly": "Ежеквартально",
+                "business-tax-rate": "Коэффициент налога на торговлю (Nuremberg):",
+                "note-gebesatz": "Официальный Hebesatz для Нюрнберга - 467% с 2018 года.",
                 "calculate-button": "Рассчитать",
                 "kpi-sales-label": "Авто продано",
-                "kpi-revenue-label": "Общий доход",
-                "kpi-profit-label": "Чистый денежный поток",
-                "kpi-balance-label": "Накопленный баланс",
+                "kpi-revenue-label": "Общий доход (P&L)",
+                "kpi-ebit-label": "EBIT (прибыль до налогов)",
+                "kpi-balance-label": "Накопленный баланс (Cash-Flow)",
                 "slider-label": "Выберите месяц для анализа:",
                 "month-1": "Месяц 1",
                 "month-current": "Месяц ",
                 "month-24": "Месяц 24",
                 "chart-1-title": "Прогноз ликвидности (Накопленный баланс)",
-                "chart-2-title": "Доходы vs. Расходы",
+                "chart-2-title": "Доходы vs. Расходы (P&L)",
                 "chart-3-title": "Динамика продаж (Авто, шт.)",
-                "chart-4-title": "Структура расходов (Месяц",
-                "table-summary": "Показать детальные финансовые данные",
-                "table-description": "В таблице представлены исходные данные, использованные для построения графиков. Это позволяет провести детальный анализ финансового плана.",
-                "table-headers": ["Месяц", "Продано авто", "Общий доход", "Общий расход", "Чистый доход", "Чистый поток", "Баланс", "Налоги"],
-                "costBreakdownLabels": ["Аренда", "Бухгалтерия", "Закупка авто", "Транспорт и подготовка", "Страховка и связь", "Прочее", "Налоги", "Гарантия", "ПО", "Материалы для бюро", "Рабочие материалы", "Личный транспорт", "Реклама", "Банковские расходы", "Ремонт помещения"],
+                "chart-4-title": "Структура расходов (P&L) (Месяц",
+                "table-summary": "Показать подробные финансовые данные",
+                "table-description": "В таблице представлены развернутые данные P&L и Cash Flow. Это позволяет провести детальный анализ финансового плана.",
+                "table-headers": ["Мес.", "Продажи", "P&L", "Cash Flow", "USt", "GwSt", "ESt", "Баланс"],
+                "costBreakdownLabels": ["Фиксированные расходы", "Переменные расходы", "Налоги", "Движение НДС", "Закупки авто"],
                 "chart-labels": {
                     "cashFlow": "Накопленный баланс",
-                    "revenue": "Общий доход",
-                    "expenses": "Общий расход",
-                    "sales": "Продано автомобилей"
+                    "ebit": "EBIT (P&L)",
+                    "revenue": "Общий доход (P&L)",
+                    "expenses": "Общие расходы (P&L)",
+                    "sales": "Продано автомобилей",
+                    "cashInflow": "Денежный приток",
+                    "cashOutflow": "Денежный отток"
                 },
                 "analysis-title": "Детальный анализ",
+                "analysis-summary-title": "Месячный P&L",
                 "analysis-month-title": "Финансовый отчёт за ",
-                "analysis-revenue-title": "Доходы",
-                "analysis-variable-costs-title": "Переменные расходы",
-                "analysis-fixed-costs-title": "Постоянные расходы",
+                "analysis-revenue-title": "Доходы (P&L)",
+                "analysis-variable-costs-title": "Переменные расходы (P&L)",
+                "analysis-fixed-costs-title": "Постоянные расходы (P&L)",
+                "analysis-taxes-title": "Расчеты по налогам",
+                "analysis-cash-flow-title": "Движение денежных средств (Cash Flow)",
                 "analysis-total-revenue": "Общий доход:",
                 "analysis-total-variable-cost": "Всего переменные расходы:",
                 "analysis-total-fixed-cost": "Всего постоянные расходы:",
-                "analysis-net-profit": "Чистый доход:",
+                "analysis-net-profit": "Чистый доход (EBT):",
+                "analysis-ebit": "EBIT (прибыль до налогов):",
+                "analysis-after-tax-profit": "Чистый доход после налогов:",
                 "analysis-taxes": "Налоги:",
                 "analysis-net-cashflow": "Чистый денежный поток:",
                 "analysis-final-balance": "Накопленный баланс:",
-                "fixed-costs-note": "Включает аренду, бухгалтерию, страховку, связь и другие постоянные расходы.",
-                "quarterly-cost-text": "В этом месяце включены расходы на квартальный отчёт.",
-                "no-quarterly-cost-text": "В этом месяце нет расходов на квартальный отчёт.",
-                "analysis-summary-title": "Итоги месяца",
-                "analysis-profit-per-car": "Чистый доход с 1 авто до вычета постоянных расходов"
+                "analysis-profit-per-car": "EBIT на 1 авто",
+                "pnl-note": "Прибыль/убыток до уплаты налогов (EBT).",
+                "ust-note": "Налог на добавленную стоимость. Платится отдельно от прибыли.",
+                "tax-payment-month": "Налог к уплате в этом месяце",
+                "no-tax-payment": "В этом месяце уплата налогов не предусмотрена.",
+                "cash-balance-before-taxes": "Баланс до уплаты налогов",
+                "yearly-profit-for-taxes": "Налоговая база за год:",
+                "gebesatz-tax": "Gewerbesteuer:",
+                "einkommensteuer": "Einkommensteuer:",
+                "koerperschaftsteuer": "Koerperschaftsteuer:",
+                "soli-tax": "Solidaritätszuschlag:",
+                "tax-credit": "Кредит GewSt по §35 EStG:",
+                "final-tax-for-year": "Итого налоги за год:",
+                "tax-paid-this-month": "Уплачено в этом месяце:",
+                "ust-margin-calculation": "Расчет НДС по Differenzbesteuerung (§25a UStG)",
+                "cost-of-goods": "Себестоимость проданных товаров:",
+                "margin": "Маржа:",
+                "ust-due": "Подлежит уплате в этом периоде:",
+                "car-purchase-cash-flow": "Закупка авто (Cash-Out):",
+                "ust-paid": "Уплаченный НДС:",
+                "variable-costs-sold-cars": "Переменные расходы на проданные авто:",
+                "ust-received": "Полученный НДС:",
+                "investments-cash-flow": "Инвестиции/Грант:",
+                "fixed-costs-cat": "Фиксированные расходы",
+                "variable-costs-cat": "Переменные расходы",
+                "taxes-cat": "Налоги",
+                "ust-cash-cat": "Движение НДС",
+                "inventory-cat": "Закупки авто"
             },
             de: {
-                "title": "Finanzdashboard: Autohändler in Nürnberg",
-                "subtitle": "Interaktive Analyse des Finanzplans für 24 Monate",
+                "title": "Professionelles Finanzdashboard",
+                "subtitle": "Finanzplan-Analyse für Autohändler in Nürnberg",
                 "input-data-title": "Dateneingabe für die Modellierung",
-                "input-group-sales": "Verkaufsplan und Einnahmen",
+                "input-group-sales": "Verkaufsplan & Einnahmen",
                 "input-avg-price": "Durchschnittlicher Verkaufspreis (€):",
+                "input-car-purchase": "Fahrzeugkauf (€/Fahrzeug):",
                 "input-group-funding": "Startfinanzierung",
                 "input-grant": "Nicht rückzahlbarer Zuschuss (€):",
                 "input-savings": "Investitionen, Ersparnisse (€):",
-                "input-loan": "Darlehen (€):",
-                "input-loan-rate": "Darlehenszins (% p.a.):",
+                "input-group-private": "Persönliche Ausgaben",
+                "input-health-insurance": "Krankenvers./Rente (€/Monat):",
+                "input-personal-costs": "Persönliche Ausgaben (€/Monat):",
                 "input-group-costs": "Fixkosten",
                 "input-rent": "Miete (€/Monat):",
                 "input-accounting-monthly": "Buchhaltung (€/Monat):",
-                "input-quarterly-report": "Quartalsbericht (€/Quartal):",
-                "input-insurance": "Versicherung (€/Monat):",
+                "input-insurance": "Geschäftsversicherung (€/Monat):",
                 "input-communication": "Kommunikation (€/Monat):",
-                "input-contingency": "Sonstige Kosten (€/Monat):",
+                "input-contingency": "Sonstige Fixkosten (€/Monat):",
                 "input-software": "Software (€/Monat):",
-                "input-office-supplies": "Büromaterial, Kaffee für Kunden (€/Monat):",
+                "input-office-supplies": "Büromaterial/Kaffee (€/Monat):",
                 "input-working-materials": "Arbeitsmaterialien (€/Monat):",
                 "input-transport-costs": "Persönliche Transportkosten (€/Monat):",
-                "input-ad-costs": "Zusätzliche allgemeine Werbung (€/Monat):",
+                "input-ad-costs": "Allgemeine Werbung (€/Monat):",
                 "input-bank-fees": "Bankgebühren (€/Monat):",
-                "input-repair-costs": "Laufende Raumreparaturen (€/Monat):",
-                "input-group-variable": "Variable Kosten",
-                "input-car-purchase": "Fahrzeugkauf (€):",
-                "input-car-wash": "Reinigung und Detailaufbereitung (€/Auto):",
-                "input-car-repair": "Diagnose und Mängelbehebung (€/Auto):",
-                "input-tuv-diag": "TÜV (separat) (€/Auto):",
-                "input-logistics": "Logistik (€/Auto):",
-                "input-warranty": "Garantie (€/Auto):",
-                "input-car-ad": "Werbung pro Fahrzeug (€/Auto):",
+                "input-repair-costs": "Raumreparaturen (€/Monat):",
+                "input-group-variable": "Variable Kosten (pro Fahrzeug)",
+                "input-car-wash": "Reinigung/Aufbereitung (€/Fahrzeug):",
+                "input-car-repair": "Diagnose/Reparatur (€/Fahrzeug):",
+                "input-tuv-diag": "TÜV/Diagnose (€/Fahrzeug):",
+                "input-logistics": "Logistik (€/Fahrzeug):",
+                "input-warranty": "Garantie (€/Fahrzeug):",
+                "input-car-ad": "Fahrzeugwerbung (€/Fahrzeug):",
                 "input-group-taxes": "Steuerinformationen",
                 "tax-form": "Steuerform:",
-                "option-einz": "Einzelunternehmen (Einzelunternehmen)",
-                "option-kleingewerbe": "Kleinunternehmen (Kleingewerbe)",
-                "option-gmbh": "GmbH (GmbH)",
+                "option-einz": "Einzelunternehmen",
+                "ust-regime": "Umsatzsteuer-Regime:",
+                "option-regular": "Regelbesteuerung",
+                "option-margin": "Differenzbesteuerung (§25a UStG)",
+                "option-kleinunternehmer": "Kleinunternehmer (§19 UStG)",
+                "ust-payment-frequency": "Umsatzsteuer-Zahlungsfrequenz:",
+                "option-monthly": "Monatlich",
+                "option-quarterly": "Vierteljährlich",
+                "business-tax-rate": "Gewerbesteuer-Hebesatz (Nürnberg):",
+                "note-gebesatz": "Der offizielle Hebesatz für Nürnberg beträgt seit 2018 467%.",
                 "calculate-button": "Berechnen",
                 "kpi-sales-label": "Verkaufte Autos",
-                "kpi-revenue-label": "Gesamteinnahmen",
-                "kpi-profit-label": "Netto-Cashflow",
-                "kpi-balance-label": "Kumulierter Kontostand",
-                "slider-label": "Wählen Sie einen Monat für die Analyse:",
+                "kpi-revenue-label": "Gesamteinnahmen (P&L)",
+                "kpi-ebit-label": "EBIT (Gewinn vor Steuern)",
+                "kpi-balance-label": "Kumulierter Kontostand (Cash-Flow)",
+                "slider-label": "Wählen Sie einen Monat zur Analyse:",
                 "month-1": "Monat 1",
                 "month-current": "Monat ",
                 "month-24": "Monat 24",
                 "chart-1-title": "Liquiditätsprognose (Kumulierter Kontostand)",
-                "chart-2-title": "Einnahmen vs. Ausgaben",
-                "chart-3-title": "Verkaufsdynamik (Autos, Stk.)",
-                "chart-4-title": "Kostenstruktur (Monat",
+                "chart-2-title": "Einnahmen vs. Ausgaben (P&L)",
+                "chart-3-title": "Verkaufsdynamik (Fahrzeuge, Stk.)",
+                "chart-4-title": "Kostenstruktur (P&L) (Monat",
                 "table-summary": "Detaillierte Finanzdaten anzeigen",
-                "table-description": "Die Tabelle zeigt die Rohdaten, die zur Erstellung der Diagramme verwendet wurden. Dies ermöglicht eine detaillierte Analyse des Finanzplans.",
-                "table-headers": ["Monat", "Verkaufte Autos", "Gesamteinnahmen", "Gesamtausgaben", "Nettogewinn", "Netto-Cashflow", "Kontostand", "Steuern"],
-                "costBreakdownLabels": ["Miete", "Buchhaltung", "Fahrzeugkauf", "Transport und Aufbereitung", "Versicherung und Kommunikation", "Sonstiges", "Steuern", "Garantie", "Software", "Büromaterial", "Arbeitsmaterialien", "Persönlicher Transport", "Werbung", "Bankgebühren", "Raumreparaturen"],
+                "table-description": "Die Tabelle zeigt die P&L- und Cash-Flow-Daten. Dies ermöglicht eine detaillierte Analyse des Finanzplans.",
+                "table-headers": ["Monat", "Verkäufe", "P&L", "Cash Flow", "USt", "GwSt", "ESt", "Kontostand"],
+                "costBreakdownLabels": ["Fixkosten", "Variable Kosten", "Steuern", "Umsatzsteuer-Fluss", "Fahrzeugkäufe"],
                 "chart-labels": {
                     "cashFlow": "Kumulierter Kontostand",
-                    "revenue": "Gesamteinnahmen",
-                    "expenses": "Gesamtausgaben",
-                    "sales": "Verkaufte Autos"
+                    "ebit": "EBIT (P&L)",
+                    "revenue": "Gesamteinnahmen (P&L)",
+                    "expenses": "Gesamtausgaben (P&L)",
+                    "sales": "Verkaufte Autos",
+                    "cashInflow": "Geldzufluss",
+                    "cashOutflow": "Geldabfluss"
                 },
                 "analysis-title": "Detaillierte Analyse",
+                "analysis-summary-title": "Monatliche P&L",
                 "analysis-month-title": "Finanzbericht für ",
-                "analysis-revenue-title": "Einnahmen",
-                "analysis-variable-costs-title": "Variable Kosten",
-                "analysis-fixed-costs-title": "Fixkosten",
+                "analysis-revenue-title": "Einnahmen (P&L)",
+                "analysis-variable-costs-title": "Variable Kosten (P&L)",
+                "analysis-fixed-costs-title": "Fixkosten (P&L)",
+                "analysis-taxes-title": "Steuerberechnungen",
+                "analysis-cash-flow-title": "Geldflussrechnung (Cash Flow)",
                 "analysis-total-revenue": "Gesamteinnahmen:",
                 "analysis-total-variable-cost": "Gesamte variable Kosten:",
                 "analysis-total-fixed-cost": "Gesamte Fixkosten:",
-                "analysis-net-profit": "Nettogewinn:",
+                "analysis-net-profit": "Nettogewinn (EBT):",
+                "analysis-ebit": "EBIT (Gewinn vor Steuern):",
+                "analysis-after-tax-profit": "Nettogewinn nach Steuern:",
                 "analysis-taxes": "Steuern:",
                 "analysis-net-cashflow": "Netto-Cashflow:",
                 "analysis-final-balance": "Kumulierter Kontostand:",
-                "fixed-costs-note": "Beinhaltet Miete, Buchhaltung, Versicherung, Kommunikation und sonstige Fixkosten.",
-                "quarterly-cost-text": "In diesem Monat sind die Kosten für den Quartalsbericht enthalten.",
-                "no-quarterly-cost-text": "In diesem Monat fallen keine Kosten für den Quartalsbericht an.",
-                "analysis-summary-title": "Monatszusammenfassung",
-                "analysis-profit-per-car": "Nettogewinn pro Auto vor Abzug der Fixkosten"
+                "analysis-profit-per-car": "EBIT pro Fahrzeug",
+                "pnl-note": "Gewinn/Verlust vor Steuern (EBT).",
+                "ust-note": "Umsatzsteuer. Wird separat vom Gewinn bezahlt.",
+                "tax-payment-month": "Steuerzahlung in diesem Monat",
+                "no-tax-payment": "In diesem Monat sind keine Steuerzahlungen fällig.",
+                "cash-balance-before-taxes": "Kontostand vor Steuerzahlungen",
+                "yearly-profit-for-taxes": "Jährliche Steuerbemessungsgrundlage:",
+                "gebesatz-tax": "Gewerbesteuer:",
+                "einkommensteuer": "Einkommensteuer:",
+                "koerperschaftsteuer": "Koerperschaftsteuer:",
+                "soli-tax": "Solidaritätszuschlag:",
+                "tax-credit": "Gewerbesteuer-Anrechnung gemäß §35 EStG:",
+                "final-tax-for-year": "Gesamtsteuern für das Jahr:",
+                "tax-paid-this-month": "In diesem Monat gezahlt:",
+                "ust-margin-calculation": "Umsatzsteuer-Berechnung nach Differenzbesteuerung (§25a UStG)",
+                "cost-of-goods": "Kosten der verkauften Waren:",
+                "margin": "Marge:",
+                "ust-due": "In diesem Zeitraum fälliger Umsatzsteuer:",
+                "car-purchase-cash-flow": "Fahrzeugkauf (Cash-Out):",
+                "ust-paid": "Gezahlte Umsatzsteuer:",
+                "variable-costs-sold-cars": "Variable Kosten für verkaufte Fahrzeuge:",
+                "ust-received": "Erhaltener Umsatzsteuer:",
+                "investments-cash-flow": "Investitionen/Zuschuss:",
+                "fixed-costs-cat": "Fixkosten",
+                "variable-costs-cat": "Variable Kosten",
+                "taxes-cat": "Steuern",
+                "ust-cash-cat": "Umsatzsteuer-Fluss",
+                "inventory-cat": "Fahrzeugkäufe"
             }
         };
 
+        const NUM_MONTHS = 24;
+        const FREIBETRAG_GEWST = 24500;
+        const GRUNDFREIBETRAG_EST_2025 = 12096;
+        const UST_RATE = 0.19;
+        const UST_SATZ = 19;
+        const SOLI_RATE = 0.055;
+
+        function calculateESt(taxableIncome, gewStCredit = 0) {
+            let tax = 0;
+            if (taxableIncome < 0) return { tax: 0, finalTax: 0 };
+            const Y = (taxableIncome - GRUNDFREIBETRAG_EST_2025) / 10000;
+            if (taxableIncome < GRUNDFREIBETRAG_EST_2025) {
+                tax = 0;
+            } else if (taxableIncome <= 15999) {
+                tax = (980.14 * Y + 1400) * Y;
+            } else if (taxableIncome <= 62809) {
+                tax = (212.02 * (Y - 1.5) + 2397) * (Y - 1.5) + 1400;
+            } else if (taxableIncome <= 277825) {
+                tax = 0.42 * taxableIncome - 9877.94;
+            } else {
+                tax = 0.45 * taxableIncome - 17316.5;
+            }
+            const finalTax = Math.max(0, tax - gewStCredit);
+            return { tax: Math.max(0, tax), finalTax };
+        }
+
         let processedData;
         let chartInstances = {};
+
+        function formatCurrency(value) {
+            if (value === "TBD" || isNaN(value) || value === null) return "TBD";
+            const lang = document.documentElement.lang === 'de' ? 'de-DE' : (document.documentElement.lang === 'ru' ? 'ru-RU' : 'uk-UA');
+            return new Intl.NumberFormat(lang, { style: 'currency', currency: 'EUR', minimumFractionDigits: 0 }).format(value);
+        }
         
-        function processData(financialData) {
+        function processData() {
             const data = [];
-            const initialFunding = financialData.grant + financialData.savings;
-            let accumulatedBalance = initialFunding;
-            
-            const salesPlanArray = [];
-            for (let i = 0; i < 24; i++) {
-                salesPlanArray[i] = parseInt(document.getElementById(`salesPlan_${i}`).value) || 0;
-            }
+            const salesPlan = Array.from({ length: NUM_MONTHS }, (_, i) => parseInt(document.getElementById(`salesPlan_${i}`).value) || 0);
+            const lagMonths = 1;
 
-            const totalFixedCosts = financialData.costs.rent + financialData.costs.accounting + financialData.costs.communication + financialData.costs.contingency + financialData.costs.insurance + financialData.costs.software + financialData.costs.officeSupplies + financialData.costs.workingMaterials + financialData.costs.transportCosts + financialData.costs.adCosts + financialData.costs.bankFees + financialData.costs.repairCosts;
-            
-            const gewerbeAllowance = 24500;
-            const einkommensteuerRate = 0.25;
-            const koerperschaftssteuerRate = 0.15;
-            
-            for (let i = 0; i < 24; i++) {
-                const carsSold = salesPlanArray[i] || 0;
-                let totalRevenue = carsSold * financialData.avgSalePrice;
-                
-                const variableCosts = carsSold * (financialData.costs.carPurchase + financialData.costs.carWash + financialData.costs.carRepair + financialData.costs.tuvDiag + financialData.costs.logistics + financialData.costs.warranty + financialData.costs.carAd);
-                
-                const totalExpensesBeforeTaxes = totalFixedCosts + variableCosts;
-                const netProfit = totalRevenue - totalExpensesBeforeTaxes;
-                
-                let taxes = 0;
-                const taxForm = document.getElementById('taxForm').value;
-
-                if (taxForm !== 'kleingewerbe' && netProfit > 0) {
-                    if (taxForm === 'einz') {
-                        taxes += netProfit * einkommensteuerRate;
-                    }
-                    
-                    if (taxForm === 'gmbh') {
-                        taxes += netProfit * koerperschaftssteuerRate;
-                    }
-
-                    const gewerbeProfit = netProfit > gewerbeAllowance ? netProfit - gewerbeAllowance : 0;
-                    taxes += gewerbeProfit * (financialData.gebesatz / 100);
-                }
-                
-                const totalExpenses = totalExpensesBeforeTaxes + taxes;
-                const netCashFlow = totalRevenue - totalExpenses;
-                
-                // Initial balance from investments
-                if (i === 0) {
-                    accumulatedBalance += netCashFlow;
-                } else {
-                    accumulatedBalance += netCashFlow;
-                }
-                
-                data.push({
-                    month: `Месяц ${i + 1}`,
-                    carsSold: carsSold,
-                    totalRevenue: totalRevenue,
-                    totalExpensesBeforeTaxes: totalExpensesBeforeTaxes, // Stored for analysis
-                    totalExpenses: totalExpenses,
-                    netProfit: netProfit,
-                    netCashFlow: netCashFlow,
-                    accumulatedBalance: accumulatedBalance,
-                    taxes: netProfit > 0 ? taxes : "TBD",
-                    costBreakdown: {
-                        "Аренда": financialData.costs.rent,
-                        "Бухгалтерия": financialData.costs.accounting,
-                        "Закупка авто": carsSold * financialData.costs.carPurchase,
-                        "Транспорт и подготовка": carsSold * (financialData.costs.carWash + financialData.costs.carRepair + financialData.costs.tuvDiag + financialData.costs.logistics + financialData.costs.carAd),
-                        "Страховка и связь": financialData.costs.insurance + financialData.costs.communication,
-                        "Прочее": financialData.costs.contingency,
-                        "Налоги": netProfit > 0 ? taxes : "TBD",
-                        "Гарантия": carsSold * financialData.costs.warranty,
-                        "ПО": financialData.costs.software,
-                        "Материалы для бюро": financialData.costs.officeSupplies,
-                        "Рабочие материалы": financialData.costs.workingMaterials,
-                        "Личный транспорт": financialData.costs.transportCosts,
-                        "Реклама": financialData.costs.adCosts,
-                        "Банковские расходы": financialData.costs.bankFees,
-                        "Ремонт помещения": financialData.costs.repairCosts
-                    }
-                });
-            }
-            return data;
-        }
-
-        function updateAnalysisSection(lang, monthIndex) {
-            const analysisContent = document.getElementById('analysis-content');
-            const data = processedData[monthIndex];
-            
-            const carPurchaseCost = parseFloat(document.getElementById('carPurchase').value) || 0;
-            const carWashCost = parseFloat(document.getElementById('carWash').value) || 0;
-            const carRepairCost = parseFloat(document.getElementById('carRepair').value) || 0;
-            const tuvDiagCost = parseFloat(document.getElementById('tuvDiag').value) || 0;
-            const logisticsCost = parseFloat(document.getElementById('logistics').value) || 0;
-            const warrantyCost = parseFloat(document.getElementById('warranty').value) || 0;
-            const carAdCost = parseFloat(document.getElementById('carAd').value) || 0;
-            const avgSalePrice = parseFloat(document.getElementById('avgSalePrice').value) || 0;
-            const carsSold = data.carsSold;
-            
-            const totalVariableCostsPerCar = carPurchaseCost + carWashCost + carRepairCost + tuvDiagCost + logisticsCost + warrantyCost + carAdCost;
-            const totalVariableCostsForMonth = totalVariableCostsPerCar * carsSold;
-            
-            const rentCost = parseFloat(document.getElementById('rent').value) || 0;
-            const accountingCost = parseFloat(document.getElementById('accounting').value) || 0;
-            const insuranceCost = parseFloat(document.getElementById('insurance').value) || 0;
-            const communicationCost = parseFloat(document.getElementById('communication').value) || 0;
-            const contingencyCost = parseFloat(document.getElementById('contingency').value) || 0;
-            const softwareCost = parseFloat(document.getElementById('software').value) || 0;
-            const officeSuppliesCost = parseFloat(document.getElementById('officeSupplies').value) || 0;
-            const workingMaterialsCost = parseFloat(document.getElementById('workingMaterials').value) || 0;
-            const transportCostsCost = parseFloat(document.getElementById('transportCosts').value) || 0;
-            const adCostsCost = parseFloat(document.getElementById('adCosts').value) || 0;
-            const bankFeesCost = parseFloat(document.getElementById('bankFees').value) || 0;
-            const repairCostsCost = parseFloat(document.getElementById('repairCosts').value) || 0;
-            
-            const totalFixedCostsForMonth = rentCost + accountingCost + insuranceCost + communicationCost + contingencyCost + softwareCost + officeSuppliesCost + workingMaterialsCost + transportCostsCost + adCostsCost + bankFeesCost + repairCostsCost;
-
-            const profitPerCar = avgSalePrice - totalVariableCostsPerCar;
-
-            let content = `
-                <div class="space-y-4">
-                    <p class="font-bold text-lg">${translations[lang]["analysis-month-title"]}${monthIndex + 1}</p>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <!-- Revenue and Profit Breakdown -->
-                        <div class="p-4 bg-gray-50 rounded-lg">
-                            <p class="font-bold">${translations[lang]["analysis-revenue-title"]}</p>
-                            <ul class="list-disc list-inside">
-                                <li>${translations[lang]["kpi-sales-label"]}: ${data.carsSold}</li>
-                                <li>${translations[lang]["kpi-revenue-label"]}: ${formatCurrency(data.totalRevenue)}</li>
-                                <li><span class="font-bold">${translations[lang]["analysis-profit-per-car"]}:</span> ${formatCurrency(profitPerCar)}</li>
-                                <li><span class="font-bold">Чистый доход до вычета постоянных расходов:</span> ${formatCurrency(profitPerCar * carsSold)}</li>
-                            </ul>
-                        </div>
-                        <!-- Fixed Costs -->
-                        <div class="p-4 bg-gray-50 rounded-lg">
-                            <p class="font-bold">${translations[lang]["analysis-fixed-costs-title"]}</p>
-                            <ul class="list-disc list-inside">
-                                <li><span class="font-semibold">${translations[lang]["input-rent"]}</span> ${formatCurrency(rentCost)}</li>
-                                <li><span class="font-semibold">${translations[lang]["input-accounting-monthly"]}</span> ${formatCurrency(accountingCost)}</li>
-                                <li><span class="font-semibold">${translations[lang]["input-insurance"]}</span> ${formatCurrency(insuranceCost)}</li>
-                                <li><span class="font-semibold">${translations[lang]["input-communication"]}</span> ${formatCurrency(communicationCost)}</li>
-                                <li><span class="font-semibold">${translations[lang]["input-contingency"]}</span> ${formatCurrency(contingencyCost)}</li>
-                                <li><span class="font-semibold">${translations[lang]["input-software"]}</span> ${formatCurrency(softwareCost)}</li>
-                                <li><span class="font-semibold">${translations[lang]["input-office-supplies"]}</span> ${formatCurrency(officeSuppliesCost)}</li>
-                                <li><span class="font-semibold">${translations[lang]["input-working-materials"]}</span> ${formatCurrency(workingMaterialsCost)}</li>
-                                <li><span class="font-semibold">${translations[lang]["input-transport-costs"]}</span> ${formatCurrency(transportCostsCost)}</li>
-                                <li><span class="font-semibold">${translations[lang]["input-ad-costs"]}</span> ${formatCurrency(adCostsCost)}</li>
-                                <li><span class="font-semibold">${translations[lang]["input-bank-fees"]}</span> ${formatCurrency(bankFeesCost)}</li>
-                                <li><span class="font-semibold">${translations[lang]["input-repair-costs"]}</span> ${formatCurrency(repairCostsCost)}</li>
-                            </ul>
-                            <p class="font-bold mt-2">${translations[lang]["analysis-total-fixed-cost"]} ${formatCurrency(totalFixedCostsForMonth)}</p>
-                        </div>
-                    </div>
-
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <!-- Variable Costs -->
-                        <div class="p-4 bg-gray-50 rounded-lg">
-                            <p class="font-bold">${translations[lang]["analysis-variable-costs-title"]}</p>
-                            <ul class="list-disc list-inside">
-                                <li>${translations[lang]["input-car-purchase"]}: ${formatCurrency(carPurchaseCost)}</li>
-                                <li>${translations[lang]["input-car-wash"]}: ${formatCurrency(carWashCost)}</li>
-                                <li>${translations[lang]["input-car-repair"]}: ${formatCurrency(carRepairCost)}</li>
-                                <li>${translations[lang]["input-tuv-diag"]}: ${formatCurrency(tuvDiagCost)}</li>
-                                <li>${translations[lang]["input-logistics"]}: ${formatCurrency(logisticsCost)}</li>
-                                <li>${translations[lang]["input-warranty"]}: ${formatCurrency(warrantyCost)}</li>
-                                <li>${translations[lang]["input-car-ad"]}: ${formatCurrency(carAdCost)}</li>
-                            </ul>
-                            <p class="font-bold mt-2">${translations[lang]["analysis-total-variable-cost"]} ${formatCurrency(totalVariableCostsPerCar)}</p>
-                        </div>
-                        <!-- Final financial results -->
-                        <div class="p-4 bg-gray-50 rounded-lg">
-                            <p class="font-bold">${translations[lang]["analysis-summary-title"]}</p>
-                            <ul class="list-disc list-inside">
-                                <li><span class="font-bold">${translations[lang]["analysis-net-profit"]}:</span> ${formatCurrency(data.netProfit)}</li>
-                                <li><span class="font-bold">${translations[lang]["analysis-taxes"]}:</span> ${data.taxes === "TBD" ? "TBD" : formatCurrency(data.taxes)}</li>
-                                <li><span class="font-bold">${translations[lang]["analysis-net-cashflow"]}:</span> ${formatCurrency(data.netCashFlow)}</li>
-                                <li><span class="font-bold">${translations[lang]["analysis-final-balance"]}:</span> ${formatCurrency(data.accumulatedBalance)}</li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            `;
-            analysisContent.innerHTML = content;
-        }
-
-        function recalculatePlan() {
-            const newFinancialData = {
+            const financialData = {
                 grant: parseFloat(document.getElementById('grant').value) || 0,
                 savings: parseFloat(document.getElementById('savings').value) || 0,
                 avgSalePrice: parseFloat(document.getElementById('avgSalePrice').value) || 0,
+                carPurchase: parseFloat(document.getElementById('carPurchase').value) || 0,
                 gebesatz: parseFloat(document.getElementById('gebesatz').value) || 0,
-                costs: {
+                healthInsurance: parseFloat(document.getElementById('healthInsurance').value) || 0,
+                personalCosts: parseFloat(document.getElementById('personalCosts').value) || 0,
+                fixedCosts: {
                     rent: parseFloat(document.getElementById('rent').value) || 0,
                     accounting: parseFloat(document.getElementById('accounting').value) || 0,
-                    quarterlyReport: 0,
-                    carPurchase: parseFloat(document.getElementById('carPurchase').value) || 0,
-                    carWash: parseFloat(document.getElementById('carWash').value) || 0,
-                    carRepair: parseFloat(document.getElementById('carRepair').value) || 0,
-                    tuvDiag: parseFloat(document.getElementById('tuvDiag').value) || 0,
-                    logistics: parseFloat(document.getElementById('logistics').value) || 0,
-                    warranty: parseFloat(document.getElementById('warranty').value) || 0,
-                    carAd: parseFloat(document.getElementById('carAd').value) || 0,
                     insurance: parseFloat(document.getElementById('insurance').value) || 0,
                     communication: parseFloat(document.getElementById('communication').value) || 0,
                     contingency: parseFloat(document.getElementById('contingency').value) || 0,
@@ -723,9 +779,296 @@
                     adCosts: parseFloat(document.getElementById('adCosts').value) || 0,
                     bankFees: parseFloat(document.getElementById('bankFees').value) || 0,
                     repairCosts: parseFloat(document.getElementById('repairCosts').value) || 0,
-                }
+                },
+                variableCostsPerCar: {
+                    carWash: parseFloat(document.getElementById('carWash').value) || 0,
+                    carRepair: parseFloat(document.getElementById('carRepair').value) || 0,
+                    tuvDiag: parseFloat(document.getElementById('tuvDiag').value) || 0,
+                    logistics: parseFloat(document.getElementById('logistics').value) || 0,
+                    warranty: parseFloat(document.getElementById('warranty').value) || 0,
+                    carAd: parseFloat(document.getElementById('carAd').value) || 0,
+                },
+                taxForm: document.getElementById('taxForm').value,
+                ustRegime: document.getElementById('ustRegime').value,
+                ustFrequency: document.getElementById('ustFrequency').value
             };
-            processedData = processData(newFinancialData);
+            
+            const totalFixedCostsPnl = Object.values(financialData.fixedCosts).reduce((sum, val) => sum + val, 0);
+            const allVariableCostsPerCarPnl = Object.values(financialData.variableCostsPerCar).reduce((sum, val) => sum + val, 0);
+
+            let accumulatedCashBalance = financialData.grant + financialData.savings;
+            let yearlyEbit = 0;
+            let yearly_gew_ertrag = 0;
+            let ust_period_due = 0;
+            let last_yearly_tax_data = {
+                Einkommensteuer: 0,
+                Gewerbesteuer: 0,
+                Koerperschaftsteuer: 0,
+                Solidaritaetszuschlag: 0,
+                total: 0,
+                yearly_ebit: 0,
+            };
+
+            const purchasePlan = new Array(NUM_MONTHS).fill(0);
+            for (let i = 0; i < NUM_MONTHS; i++) {
+                if (i - lagMonths >= 0) {
+                    purchasePlan[i - lagMonths] = salesPlan[i];
+                }
+            }
+            if (lagMonths > 0) {
+                 for (let i = NUM_MONTHS - lagMonths; i < NUM_MONTHS; i++) {
+                    purchasePlan[i] = salesPlan[NUM_MONTHS-1];
+                 }
+            }
+            
+            for (let i = 0; i < NUM_MONTHS; i++) {
+                const carsSold = salesPlan[i];
+                const carsBought = purchasePlan[i];
+                
+                let totalFixedCostsCashFlow = Object.values(financialData.fixedCosts).reduce((sum, val) => sum + val, 0);
+                let totalVariableCostsPerCarCashFlow = Object.values(financialData.variableCostsPerCar).reduce((sum, val) => sum + val, 0);
+
+                let salesRevenuePnl = carsSold * financialData.avgSalePrice;
+                let ustDue = 0;
+                let ustPaidThisMonth = 0;
+                let ustVorsteuer = 0;
+                let ustCashFlow = 0;
+                
+                if (financialData.ustRegime === 'regular') {
+                    ustDue = salesRevenuePnl * UST_RATE;
+                    ustVorsteuer = (totalFixedCostsPnl + carsBought * allVariableCostsPerCarPnl) * UST_RATE;
+                    ustCashFlow = ustDue - ustVorsteuer;
+
+                    if (financialData.ustFrequency === 'monthly') {
+                       ustPaidThisMonth = ustCashFlow;
+                    } else if ((i + 1) % 3 === 0) {
+                        ust_period_due += ustCashFlow;
+                        ustPaidThisMonth = ust_period_due;
+                        ust_period_due = 0;
+                    } else {
+                        ust_period_due += ustCashFlow;
+                    }
+                    salesRevenuePnl = salesRevenuePnl - ustDue;
+                } else if (financialData.ustRegime === 'margin') {
+                    const margin = carsSold * (financialData.avgSalePrice - financialData.carPurchase);
+                    if (margin > 0) {
+                        ustDue = margin * UST_SATZ / (100 + UST_SATZ);
+                    }
+                    if (financialData.ustFrequency === 'monthly') {
+                       ustPaidThisMonth = ustDue;
+                    } else if ((i + 1) % 3 === 0) {
+                        ust_period_due += ustDue;
+                        ustPaidThisMonth = ust_period_due;
+                        ust_period_due = 0;
+                    } else {
+                         ust_period_due += ustDue;
+                    }
+                    salesRevenuePnl = salesRevenuePnl - ustDue;
+                } else if (financialData.ustRegime === 'kleinunternehmer') {
+                    ustDue = 0;
+                    ustPaidThisMonth = 0;
+                    ustCashFlow = 0;
+                    salesRevenuePnl = salesRevenuePnl;
+                }
+
+                const cogs = carsSold * financialData.carPurchase;
+                const totalVariableCostsPnl = cogs + carsSold * allVariableCostsPerCarPnl;
+                const totalExpensesPnl = totalFixedCostsPnl + totalVariableCostsPnl;
+                const ebit = salesRevenuePnl - totalExpensesPnl;
+                yearlyEbit += ebit;
+                yearly_gew_ertrag += ebit;
+
+                let taxesPaidThisMonth = 0;
+                if ( (i + 1) % 12 === 0 || i === NUM_MONTHS - 1) {
+                    let taxable_profit = yearlyEbit;
+                    last_yearly_tax_data = {
+                        Einkommensteuer: 0,
+                        Gewerbesteuer: 0,
+                        Koerperschaftsteuer: 0,
+                        Solidaritaetszuschlag: 0,
+                        total: 0,
+                        yearly_ebit: yearlyEbit,
+                    };
+
+                    if (taxable_profit > 0) {
+                        if (financialData.taxForm === 'einz') {
+                            let est_taxable_income = taxable_profit - (financialData.healthInsurance * 12);
+                            let est_tax = calculateESt(est_taxable_income).tax;
+                            
+                            let gewStTaxableBase = Math.max(0, yearly_gew_ertrag - FREIBETRAG_GEWST);
+                            let messbetrag = gewStTaxableBase * 0.035;
+                            let gewSt = messbetrag * (parseFloat(financialData.gebesatz) / 100);
+                            
+                            let gewSt_credit = Math.min(est_tax, gewSt * 3.8);
+                            let est_final = Math.max(0, est_tax - gewSt_credit);
+
+                            last_yearly_tax_data.Einkommensteuer = est_final;
+                            last_yearly_tax_data.Gewerbesteuer = gewSt;
+                            last_yearly_tax_data.total = est_final + gewSt;
+                        }
+                    }
+                    if ((i + 1) % 3 === 0) {
+                         taxesPaidThisMonth = last_yearly_tax_data.total / 4;
+                    }
+                    yearlyEbit = 0;
+                    yearly_gew_ertrag = 0;
+                } else {
+                     if ((i + 1) % 3 === 0) {
+                         taxesPaidThisMonth = last_yearly_tax_data.total / 4;
+                     }
+                }
+                
+                const salesCashInflow = (financialData.ustRegime === 'regular' || financialData.ustRegime === 'kleinunternehmer') ? salesRevenuePnl + ustDue : salesRevenuePnl;
+                const fixedCostsCashOutflow = totalFixedCostsCashFlow + (financialData.ustRegime === 'regular' ? totalFixedCostsPnl * UST_RATE : 0);
+                const variableCostsCashOutflow = carsSold * totalVariableCostsPerCarCashFlow;
+                const carPurchaseCashOutflow = carsBought * financialData.carPurchase;
+                const personalCashOutflow = financialData.healthInsurance + financialData.personalCosts;
+
+                const netCashFlow = salesCashInflow - fixedCostsCashOutflow - variableCostsCashOutflow - carPurchaseCashOutflow - ustPaidThisMonth - taxesPaidThisMonth - personalCashOutflow;
+                accumulatedCashBalance += netCashFlow;
+
+                const yearly_tax_data_clone = { ...last_yearly_tax_data };
+                if ((i + 1) % 12 !== 0 && i !== NUM_MONTHS - 1) {
+                    yearly_tax_data_clone.Einkommensteuer = 0;
+                    yearly_tax_data_clone.Gewerbesteuer = 0;
+                }
+
+                data.push({
+                    month: `Міс. ${i + 1}`,
+                    carsSold: carsSold,
+                    carsBought: carsBought,
+                    totalRevenuePnl: salesRevenuePnl,
+                    totalExpensesPnl: totalExpensesPnl,
+                    ebit: ebit,
+                    netIncomeAfterTax: ebit - (last_yearly_tax_data.total > 0 ? last_yearly_tax_data.total / 12 : 0),
+                    netCashFlow: netCashFlow,
+                    accumulatedBalance: accumulatedCashBalance,
+                    ustDue: ustDue,
+                    ustPaidThisMonth: ustPaidThisMonth,
+                    ustCashFlow: ustCashFlow,
+                    yearly_tax_data: yearly_tax_data_clone,
+                    taxesPaidThisMonth: taxesPaidThisMonth,
+                    totalFixedCostsPnl: totalFixedCostsPnl,
+                    totalVariableCostsPnl: totalVariableCostsPnl,
+                    totalCashInflow: salesCashInflow + (i === 0 ? financialData.grant + financialData.savings : 0),
+                    totalCashOutflow: fixedCostsCashOutflow + variableCostsCashOutflow + carPurchaseCashOutflow + ustPaidThisMonth + taxesPaidThisMonth,
+                    costBreakdown: {
+                        "Постійні витрати": totalFixedCostsPnl,
+                        "Змінні витрати": totalVariableCostsPnl,
+                        "Податки": taxesPaidThisMonth,
+                        "Рух ПДВ": ustPaidThisMonth,
+                        "Закупівлі авто": carPurchaseCashOutflow,
+                        "Особисті витрати": personalCashOutflow
+                    }
+                });
+            }
+            return data;
+        }
+
+        function updateAnalysisSection(lang, monthIndex) {
+            const analysisContent = document.getElementById('analysis-content');
+            const data = processedData[monthIndex];
+            const financialData = {
+                avgSalePrice: parseFloat(document.getElementById('avgSalePrice').value) || 0,
+                carPurchase: parseFloat(document.getElementById('carPurchase').value) || 0,
+                healthInsurance: parseFloat(document.getElementById('healthInsurance').value) || 0,
+                personalCosts: parseFloat(document.getElementById('personalCosts').value) || 0,
+                fixedCosts: {
+                    rent: parseFloat(document.getElementById('rent').value) || 0,
+                    accounting: parseFloat(document.getElementById('accounting').value) || 0,
+                    insurance: parseFloat(document.getElementById('insurance').value) || 0,
+                    communication: parseFloat(document.getElementById('communication').value) || 0,
+                    contingency: parseFloat(document.getElementById('contingency').value) || 0,
+                    software: parseFloat(document.getElementById('software').value) || 0,
+                    officeSupplies: parseFloat(document.getElementById('officeSupplies').value) || 0,
+                    workingMaterials: parseFloat(document.getElementById('workingMaterials').value) || 0,
+                    transportCosts: parseFloat(document.getElementById('transportCosts').value) || 0,
+                    adCosts: parseFloat(document.getElementById('adCosts').value) || 0,
+                    bankFees: parseFloat(document.getElementById('bankFees').value) || 0,
+                    repairCosts: parseFloat(document.getElementById('repairCosts').value) || 0,
+                },
+                variableCostsPerCar: {
+                    carWash: parseFloat(document.getElementById('carWash').value) || 0,
+                    carRepair: parseFloat(document.getElementById('carRepair').value) || 0,
+                    tuvDiag: parseFloat(document.getElementById('tuvDiag').value) || 0,
+                    logistics: parseFloat(document.getElementById('logistics').value) || 0,
+                    warranty: parseFloat(document.getElementById('warranty').value) || 0,
+                    carAd: parseFloat(document.getElementById('carAd').value) || 0,
+                },
+                taxForm: document.getElementById('taxForm').value,
+                ustRegime: document.getElementById('ustRegime').value
+            };
+            const allFixedCosts = Object.values(financialData.fixedCosts).reduce((sum, val) => sum + val, 0);
+            const totalVariableCostsPerCar = Object.values(financialData.variableCostsPerCar).reduce((sum, val) => sum + val, 0);
+            
+            let content = `
+                <div class="space-y-4">
+                    <p class="font-bold text-lg">${TRANSLATIONS[lang]["analysis-month-title"]}${monthIndex + 1}</p>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <!-- P&L Breakdown -->
+                        <div class="p-4 bg-gray-50 rounded-lg col-span-1">
+                            <h4 class="font-bold text-lg mb-2">${TRANSLATIONS[lang]["analysis-summary-title"]}</h4>
+                            <ul class="space-y-1">
+                                <li><span class="font-bold">${TRANSLATIONS[lang]["analysis-total-revenue"]}</span> ${formatCurrency(data.totalRevenuePnl)}</li>
+                                <li><span class="font-bold">${TRANSLATIONS[lang]["analysis-total-variable-cost"]}</span> ${formatCurrency(data.totalVariableCostsPnl)}</li>
+                                <li><span class="font-bold">${TRANSLATIONS[lang]["analysis-total-fixed-cost"]}</span> ${formatCurrency(data.totalFixedCostsPnl)}</li>
+                                <li class="font-bold text-green-700">${TRANSLATIONS[lang]["analysis-ebit"]} ${formatCurrency(data.ebit)}</li>
+                                <li><span class="font-bold">${TRANSLATIONS[lang]["analysis-profit-per-car"]}:</span> ${formatCurrency(data.carsSold > 0 ? data.ebit / data.carsSold : 0)}</li>
+                                <li class="font-bold text-blue-700">${TRANSLATIONS[lang]["analysis-after-tax-profit"]} ${formatCurrency(data.netIncomeAfterTax)}</li>
+                            </ul>
+                        </div>
+                        
+                        <!-- Tax Calculations -->
+                        <div class="p-4 bg-gray-50 rounded-lg col-span-2">
+                            <h4 class="font-bold text-lg mb-2">${TRANSLATIONS[lang]["analysis-taxes-title"]}</h4>
+                             <p class="text-sm font-semibold">${TRANSLATIONS[lang]["yearly-profit-for-taxes"]}: ${formatCurrency(data.yearly_tax_data.yearly_ebit)}</p>
+                             <ul class="space-y-1 mt-2 text-sm">
+                                ${data.yearly_tax_data.Einkommensteuer > 0 ? `<li><span class="font-bold">${TRANSLATIONS[lang]["einkommensteuer"]}</span> ${formatCurrency(data.yearly_tax_data.Einkommensteuer)}</li>` : ''}
+                                ${data.yearly_tax_data.Koerperschaftsteuer > 0 ? `<li><span class="font-bold">${TRANSLATIONS[lang]["koerperschaftsteuer"]}</span> ${formatCurrency(data.yearly_tax_data.Koerperschaftsteuer)}</li>` : ''}
+                                ${data.yearly_tax_data.Solidaritaetszuschlag > 0 ? `<li><span class="font-bold">${TRANSLATIONS[lang]["soli-tax"]}</span> ${formatCurrency(data.yearly_tax_data.Solidaritaetszuschlag)}</li>` : ''}
+                                ${data.yearly_tax_data.Gewerbesteuer > 0 ? `<li><span class="font-bold">${TRANSLATIONS[lang]["gebesatz-tax"]}</span> ${formatCurrency(data.yearly_tax_data.Gewerbesteuer)}</li>` : ''}
+                                ${data.yearly_tax_data.total > 0 ? `<li class="font-bold text-blue-700 mt-2">${TRANSLATIONS[lang]["final-tax-for-year"]} ${formatCurrency(data.yearly_tax_data.total)}</li>` : ''}
+                             </ul>
+                             <p class="font-semibold text-sm mt-4">${TRANSLATIONS[lang]["ust-note"]}</p>
+                             <p class="text-xs">Umsatzsteuer: ${formatCurrency(data.ustDue)} ${data.ustPaidThisMonth > 0 ? `(${TRANSLATIONS[lang]["tax-payment-month"]})` : ''}</p>
+                        </div>
+                        
+                        <!-- Cash Flow Details -->
+                        <div class="p-4 bg-gray-50 rounded-lg col-span-3">
+                            <h4 class="font-bold text-lg mb-2">${TRANSLATIONS[lang]["analysis-cash-flow-title"]}</h4>
+                             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                <div>
+                                    <h5 class="font-semibold">${TRANSLATIONS[lang]["chart-labels"]["cashInflow"]}</h5>
+                                    <ul class="list-disc list-inside space-y-1 mt-1">
+                                        <li>${TRANSLATIONS[lang]["analysis-total-revenue"]} ${formatCurrency(data.totalRevenuePnl)}</li>
+                                        <li>${TRANSLATIONS[lang]["investments-cash-flow"]} ${formatCurrency(monthIndex === 0 ? financialData.grant + financialData.savings : 0)}</li>
+                                        <li><span class="font-bold">${TRANSLATIONS[lang]["ust-received"]}</span> ${formatCurrency(data.ustCashFlow > 0 ? data.ustCashFlow : 0)}</li>
+                                    </ul>
+                                </div>
+                                <div>
+                                    <h5 class="font-semibold">${TRANSLATIONS[lang]["chart-labels"]["cashOutflow"]}</h5>
+                                     <ul class="list-disc list-inside space-y-1 mt-1">
+                                        <li>${TRANSLATIONS[lang]["car-purchase-cash-flow"]} ${formatCurrency(data.carsBought * financialData.carPurchase)}</li>
+                                        <li>${TRANSLATIONS[lang]["analysis-fixed-costs-title"]} ${formatCurrency(data.totalFixedCostsPnl)}</li>
+                                        <li>${TRANSLATIONS[lang]["variable-costs-sold-cars"]} ${formatCurrency(data.carsSold * totalVariableCostsPerCar)}</li>
+                                        <li>${TRANSLATIONS[lang]["analysis-taxes"]}: ${formatCurrency(data.taxesPaidThisMonth)}</li>
+                                        <li><span class="font-bold">${TRANSLATIONS[lang]["ust-paid"]}</span> ${formatCurrency(data.ustPaidThisMonth)}</li>
+                                        <li><span class="font-bold">${TRANSLATIONS[lang]["input-health-insurance"]}</span> ${formatCurrency(financialData.healthInsurance)}</li>
+                                        <li><span class="font-bold">${TRANSLATIONS[lang]["input-personal-costs"]}</span> ${formatCurrency(financialData.personalCosts)}</li>
+                                    </ul>
+                                </div>
+                             </div>
+                             <p class="font-bold mt-4">${TRANSLATIONS[lang]["analysis-net-cashflow"]} ${formatCurrency(data.netCashFlow)}</p>
+                             <p class="font-bold">${TRANSLATIONS[lang]["analysis-final-balance"]} ${formatCurrency(data.accumulatedBalance)}</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+            analysisContent.innerHTML = content;
+        }
+
+        function recalculatePlan() {
+            processedData = processData();
             
             if (chartInstances.cashFlowChart) chartInstances.cashFlowChart.destroy();
             if (chartInstances.revenueVsExpensesChart) chartInstances.revenueVsExpensesChart.destroy();
@@ -735,51 +1078,80 @@
             createCharts();
             updateDashboard(0);
             updateDataTable(document.documentElement.lang);
+            updateAnalysisSection(document.documentElement.lang, 0);
             document.getElementById('month-slider').value = 0;
             document.getElementById('analysis-slider').value = 0;
         }
 
-        function formatCurrency(value) {
-            if (value === "TBD") return "TBD";
-            return new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR', minimumFractionDigits: 0 }).format(value);
+        function setLanguage(lang) {
+            document.documentElement.lang = lang;
+            
+            updateTexts(lang);
+            const currentMonthIndex = parseInt(document.getElementById('month-slider').value);
+            const currentAnalysisMonthIndex = parseInt(document.getElementById('analysis-slider').value);
+            if (processedData) {
+                updateCharts(lang, currentMonthIndex);
+                updateDashboard(currentMonthIndex);
+                updateDataTable(lang);
+                updateAnalysisSection(lang, currentAnalysisMonthIndex);
+            }
         }
 
         function updateTexts(lang) {
             document.querySelectorAll('[data-i18n]').forEach(element => {
                 const key = element.getAttribute('data-i18n');
-                if (translations[lang] && translations[lang][key]) {
-                    element.textContent = translations[lang][key];
+                if (TRANSLATIONS[lang] && TRANSLATIONS[lang][key]) {
+                    element.textContent = TRANSLATIONS[lang][key];
                 }
             });
-            document.getElementById('slider-label-month').textContent = translations[lang]["month-current"] + (parseInt(document.getElementById('month-slider').value) + 1);
-            document.getElementById('slider-label-analysis-month').textContent = translations[lang]["month-current"] + (parseInt(document.getElementById('analysis-slider').value) + 1);
-        }
-
-        function setLanguage(lang) {
-            document.documentElement.lang = lang;
-            const currentMonthIndex = parseInt(document.getElementById('month-slider').value);
-            const currentAnalysisMonthIndex = parseInt(document.getElementById('analysis-slider').value);
-            updateTexts(lang);
-            updateCharts(lang, currentMonthIndex);
-            updateDataTable(lang);
-            updateAnalysisSection(lang, currentAnalysisMonthIndex);
+            document.getElementById('slider-label-month').textContent = TRANSLATIONS[lang]["month-current"] + (parseInt(document.getElementById('month-slider').value) + 1);
+            document.getElementById('slider-label-analysis-month').textContent = TRANSLATIONS[lang]["month-current"] + (parseInt(document.getElementById('analysis-slider').value) + 1);
         }
 
         function updateCharts(lang, monthIndex) {
-            const chartLabels = translations[lang]["chart-labels"];
-            
-            chartInstances.cashFlowChart.data.datasets[0].label = chartLabels.cashFlow;
+            const labels = TRANSLATIONS[lang]["chart-labels"];
+            if (!processedData || !processedData[monthIndex]) {
+                 console.error("processedData is not initialized or monthIndex is out of bounds.");
+                 return;
+            }
+            const dataForMonth = processedData[monthIndex];
+
+            chartInstances.cashFlowChart.data.datasets[0].label = labels.cashFlow;
             chartInstances.cashFlowChart.update();
 
-            chartInstances.revenueVsExpensesChart.data.datasets[0].label = chartLabels.revenue;
-            chartInstances.revenueVsExpensesChart.data.datasets[1].label = chartLabels.expenses;
+            chartInstances.revenueVsExpensesChart.data.datasets[0].label = labels.revenue;
+            chartInstances.revenueVsExpensesChart.data.datasets[1].label = labels.expenses;
             chartInstances.revenueVsExpensesChart.update();
 
-            chartInstances.salesChart.data.datasets[0].label = chartLabels.sales;
+            chartInstances.salesChart.data.datasets[0].label = labels.sales;
             chartInstances.salesChart.update();
 
-            chartInstances.costBreakdownChart.data.labels = translations[lang]["costBreakdownLabels"];
-            chartInstances.costBreakdownChart.data.datasets[0].data = Object.values(processedData[monthIndex].costBreakdown);
+            const costBreakdownData = [
+                dataForMonth.totalFixedCostsPnl,
+                dataForMonth.totalVariableCostsPnl,
+                dataForMonth.taxesPaidThisMonth,
+                dataForMonth.ustPaidThisMonth,
+                dataForMonth.carsBought * parseFloat(document.getElementById('carPurchase').value)
+            ].filter(value => value > 0);
+
+            const costBreakdownLabels = [
+                TRANSLATIONS[lang]["fixed-costs-cat"],
+                TRANSLATIONS[lang]["variable-costs-cat"],
+                TRANSLATIONS[lang]["taxes-cat"],
+                TRANSLATIONS[lang]["ust-cash-cat"],
+                TRANSLATIONS[lang]["inventory-cat"]
+            ].filter((label, index) => {
+                const dataValue = [
+                    dataForMonth.totalFixedCostsPnl,
+                    dataForMonth.totalVariableCostsPnl,
+                    dataForMonth.taxesPaidThisMonth,
+                    dataForMonth.ustPaidThisMonth,
+                    dataForMonth.carsBought * parseFloat(document.getElementById('carPurchase').value)
+                ][index];
+                return dataValue > 0;
+            });
+            chartInstances.costBreakdownChart.data.labels = costBreakdownLabels;
+            chartInstances.costBreakdownChart.data.datasets[0].data = costBreakdownData;
             chartInstances.costBreakdownChart.update();
         }
         
@@ -807,12 +1179,12 @@
                 }
             };
 
-            const labels = translations[document.documentElement.lang]["chart-labels"];
+            const labels = TRANSLATIONS[document.documentElement.lang]["chart-labels"];
 
             chartInstances.cashFlowChart = new Chart(document.getElementById('cashFlowChart').getContext('2d'), {
                 type: 'line',
                 data: {
-                    labels: Array.from({ length: 24 }, (_, i) => translations[document.documentElement.lang]["month-current"] + (i + 1)),
+                    labels: Array.from({ length: NUM_MONTHS }, (_, i) => TRANSLATIONS[document.documentElement.lang]["month-current"] + (i + 1)),
                     datasets: [{
                         label: labels.cashFlow,
                         data: processedData.map(d => d.accumulatedBalance),
@@ -828,16 +1200,16 @@
             chartInstances.revenueVsExpensesChart = new Chart(document.getElementById('revenueVsExpensesChart').getContext('2d'), {
                 type: 'bar',
                 data: {
-                    labels: Array.from({ length: 24 }, (_, i) => translations[document.documentElement.lang]["month-current"] + (i + 1)),
+                    labels: Array.from({ length: NUM_MONTHS }, (_, i) => TRANSLATIONS[document.documentElement.lang]["month-current"] + (i + 1)),
                     datasets: [
                         {
                             label: labels.revenue,
-                            data: processedData.map(d => d.totalRevenue),
+                            data: processedData.map(d => d.totalRevenuePnl),
                             backgroundColor: '#22c55e',
                         },
                         {
                             label: labels.expenses,
-                            data: processedData.map(d => d.totalExpenses),
+                            data: processedData.map(d => d.totalExpensesPnl),
                             type: 'line',
                             borderColor: '#ef4444',
                             backgroundColor: '#ef4444',
@@ -852,7 +1224,7 @@
             chartInstances.salesChart = new Chart(document.getElementById('salesChart').getContext('2d'), {
                 type: 'bar',
                 data: {
-                    labels: Array.from({ length: 24 }, (_, i) => translations[document.documentElement.lang]["month-current"] + (i + 1)),
+                    labels: Array.from({ length: NUM_MONTHS }, (_, i) => TRANSLATIONS[document.documentElement.lang]["month-current"] + (i + 1)),
                     datasets: [{
                         label: labels.sales,
                         data: processedData.map(d => d.carsSold),
@@ -869,12 +1241,37 @@
                 }, scales: { y: { beginAtZero: true } } }
             });
 
+            const costBreakdownData = [
+                processedData[0].totalFixedCostsPnl,
+                processedData[0].totalVariableCostsPnl,
+                processedData[0].taxesPaidThisMonth,
+                processedData[0].ustPaidThisMonth,
+                processedData[0].carsBought * parseFloat(document.getElementById('carPurchase').value)
+            ].filter(value => value > 0);
+
+            const costBreakdownLabels = [
+                TRANSLATIONS[document.documentElement.lang]["fixed-costs-cat"],
+                TRANSLATIONS[document.documentElement.lang]["variable-costs-cat"],
+                TRANSLATIONS[document.documentElement.lang]["taxes-cat"],
+                TRANSLATIONS[document.documentElement.lang]["ust-cash-cat"],
+                TRANSLATIONS[document.documentElement.lang]["inventory-cat"]
+            ].filter((label, index) => {
+                const dataValue = [
+                    processedData[0].totalFixedCostsPnl,
+                    processedData[0].totalVariableCostsPnl,
+                    processedData[0].taxesPaidThisMonth,
+                    processedData[0].ustPaidThisMonth,
+                    processedData[0].carsBought * parseFloat(document.getElementById('carPurchase').value)
+                ][index];
+                return dataValue > 0;
+            });
+            
             chartInstances.costBreakdownChart = new Chart(document.getElementById('costBreakdownChart').getContext('2d'), {
                 type: 'doughnut',
                 data: {
-                    labels: translations[document.documentElement.lang]["costBreakdownLabels"],
+                    labels: costBreakdownLabels,
                     datasets: [{
-                        data: Object.values(processedData[0].costBreakdown),
+                        data: costBreakdownData,
                         backgroundColor: ['#3b82f6', '#f97316', '#22c55e', '#ef4444', '#6b7280'],
                     }]
                 },
@@ -906,24 +1303,48 @@
             const data = processedData[monthIndex];
             const lang = document.documentElement.lang;
             
-            document.getElementById('slider-label-month').textContent = translations[lang]["month-current"] + (monthIndex + 1);
+            document.getElementById('slider-label-month').textContent = TRANSLATIONS[lang]["month-current"] + (parseInt(document.getElementById('month-slider').value) + 1);
             document.querySelectorAll('.selected-month-label').forEach(label => label.textContent = monthIndex + 1);
 
             document.getElementById('kpi-sales').textContent = data.carsSold;
-            document.getElementById('kpi-revenue').textContent = formatCurrency(data.totalRevenue);
-            document.getElementById('kpi-profit').textContent = formatCurrency(data.netCashFlow);
+            document.getElementById('kpi-revenue').textContent = formatCurrency(data.totalRevenuePnl);
+            document.getElementById('kpi-ebit').textContent = formatCurrency(data.ebit);
             document.getElementById('kpi-balance').textContent = formatCurrency(data.accumulatedBalance);
 
-            chartInstances.costBreakdownChart.data.datasets[0].data = Object.values(data.costBreakdown);
+            const costBreakdownData = [
+                data.totalFixedCostsPnl,
+                data.totalVariableCostsPnl,
+                data.taxesPaidThisMonth,
+                data.ustPaidThisMonth,
+                data.carsBought * parseFloat(document.getElementById('carPurchase').value)
+            ].filter(value => value > 0);
+
+            const costBreakdownLabels = [
+                TRANSLATIONS[lang]["fixed-costs-cat"],
+                TRANSLATIONS[lang]["variable-costs-cat"],
+                TRANSLATIONS[lang]["taxes-cat"],
+                TRANSLATIONS[lang]["ust-cash-cat"],
+                TRANSLATIONS[lang]["inventory-cat"]
+            ].filter((label, index) => {
+                const dataValue = [
+                    data.totalFixedCostsPnl,
+                    data.totalVariableCostsPnl,
+                    data.taxesPaidThisMonth,
+                    data.ustPaidThisMonth,
+                    data.carsBought * parseFloat(document.getElementById('carPurchase').value)
+                ][index];
+                return dataValue > 0;
+            });
+
+            chartInstances.costBreakdownChart.data.labels = costBreakdownLabels;
+            chartInstances.costBreakdownChart.data.datasets[0].data = costBreakdownData;
             chartInstances.costBreakdownChart.update();
-            
-            // updateAnalysisSection(lang, monthIndex); // This is now handled by the second slider
         }
 
         function updateDataTable(lang) {
             const tableHead = document.querySelector('#dataTable thead');
             const tableBody = document.querySelector('#dataTable tbody');
-            const headers = translations[lang]["table-headers"];
+            const headers = TRANSLATIONS[lang]["table-headers"];
             
             let headRow = '<tr>';
             headers.forEach(header => headRow += `<th scope="col" class="px-6 py-3">${header}</th>`);
@@ -932,15 +1353,17 @@
 
             let bodyHtml = '';
             processedData.forEach(data => {
+                const gewStDisplay = (data.yearly_tax_data && data.yearly_tax_data.Gewerbesteuer > 0) ? formatCurrency(data.yearly_tax_data.Gewerbesteuer) : '0 €';
+                const estDisplay = (data.yearly_tax_data && data.yearly_tax_data.Einkommensteuer > 0) ? formatCurrency(data.yearly_tax_data.Einkommensteuer) : '0 €';
                 bodyHtml += `<tr class="bg-white border-b">
-                    <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">${translations[lang]["month-current"]}${data.month.split(" ")[1]}</td>
+                    <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">${data.month.split(" ")[1]}</td>
                     <td class="px-6 py-4">${data.carsSold}</td>
-                    <td class="px-6 py-4">${formatCurrency(data.totalRevenue)}</td>
-                    <td class="px-6 py-4">${formatCurrency(data.totalExpenses)}</td>
-                    <td class="px-6 py-4">${formatCurrency(data.netProfit)}</td>
+                    <td class="px-6 py-4">${formatCurrency(data.ebit)}</td>
                     <td class="px-6 py-4">${formatCurrency(data.netCashFlow)}</td>
+                    <td class="px-6 py-4">${formatCurrency(data.ustPaidThisMonth)}</td>
+                    <td class="px-6 py-4">${formatCurrency(data.taxesPaidThisMonth)}</td>
+                    <td class="px-6 py-4">${estDisplay}</td>
                     <td class="px-6 py-4">${formatCurrency(data.accumulatedBalance)}</td>
-                    <td class="px-6 py-4">${data.taxes === "TBD" ? "TBD" : formatCurrency(data.taxes)}</td>
                 </tr>`;
             });
             tableBody.innerHTML = bodyHtml;
@@ -948,57 +1371,14 @@
 
         document.addEventListener('DOMContentLoaded', () => {
             const defaultSalesPlan = [1, 1, 2, 3, 4, 4, 5, 5, 6, 6, 7, 7, 8, 8, 9, 9, 10, 10, 10, 10, 10, 10, 10, 10];
-            for (let i = 0; i < 24; i++) {
+            for (let i = 0; i < NUM_MONTHS; i++) {
                 const inputElement = document.getElementById(`salesPlan_${i}`);
                 if (inputElement) {
                     inputElement.value = defaultSalesPlan[i];
                 }
             }
-
-            const initialFinancialData = {
-                grant: 0,
-                savings: 0,
-                avgSalePrice: 3850,
-                gebesatz: 465,
-                costs: {
-                    rent: 600,
-                    accounting: 171,
-                    quarterlyReport: 0,
-                    carPurchase: 2300,
-                    carWash: 25,
-                    carRepair: 350,
-                    tuvDiag: 75,
-                    logistics: 150,
-                    warranty: 500,
-                    carAd: 25,
-                    insurance: 193, 
-                    communication: 65,
-                    contingency: 100,
-                    software: 37.33,
-                    officeSupplies: 40,
-                    workingMaterials: 23.75,
-                    transportCosts: 166,
-                    adCosts: 30.83,
-                    bankFees: 17,
-                    repairCosts: 5.83,
-                }
-            };
             
-            document.getElementById('grant').value = initialFinancialData.grant;
-            document.getElementById('savings').value = initialFinancialData.savings;
-            document.getElementById('avgSalePrice').value = initialFinancialData.avgSalePrice;
-            document.getElementById('gebesatz').value = initialFinancialData.gebesatz;
-            document.getElementById('taxForm').value = 'einz';
-            
-            for (const cost in initialFinancialData.costs) {
-                if (document.getElementById(cost)) {
-                    document.getElementById(cost).value = initialFinancialData.costs[cost];
-                }
-            }
-            
-            processedData = processData(initialFinancialData);
-            createCharts();
-            setLanguage('ru');
+            recalculatePlan();
 
             document.getElementById('month-slider').addEventListener('input', (e) => {
                 updateDashboard(parseInt(e.target.value));
@@ -1008,18 +1388,43 @@
                 updateAnalysisSection(document.documentElement.lang, parseInt(e.target.value));
             });
             
-            document.getElementById('taxForm').addEventListener('change', (e) => {
+            document.getElementById('taxForm').addEventListener('change', () => {
                 const gebesatzLabel = document.getElementById('gebesatz-label');
-                if (e.target.value === 'einz' || e.target.value === 'gmbh') {
+                const taxFormValue = document.getElementById('taxForm').value;
+                if (taxFormValue === 'einz') {
                     gebesatzLabel.style.display = 'block';
-                } else {
-                    gebesatzLabel.style.display = 'none';
+                    document.getElementById('ustRegime').disabled = false;
                 }
+                recalculatePlan();
             });
-            
-            updateAnalysisSection('ru', 0); // Initial call for the analysis section
+
+            document.getElementById('ustRegime').addEventListener('change', () => {
+                const ustFrequencyBlock = document.getElementById('ust-frequency-block');
+                if (document.getElementById('ustRegime').value === 'kleinunternehmer') {
+                    ustFrequencyBlock.style.display = 'none';
+                } else {
+                    ustFrequencyBlock.style.display = 'block';
+                }
+                recalculatePlan();
+            });
+
+            document.getElementById('ustFrequency').addEventListener('change', () => {
+                recalculatePlan();
+            });
+
+            document.getElementById('calculate-button').addEventListener('click', () => {
+                recalculatePlan();
+            });
+
+            const inputs = document.querySelectorAll('input[type="number"]');
+            inputs.forEach(input => {
+                input.addEventListener('change', () => {
+                    recalculatePlan();
+                });
+            });
+
+            setLanguage('uk');
         });
     </script>
-
 </body>
 </html>
