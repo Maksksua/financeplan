@@ -63,7 +63,8 @@
                             <input type="number" id="prepCosts" value="850" min="0" class="mt-1 block w-full rounded-md shadow-sm p-2">
                         </label>
                         <label class="block"><span class="text-gray-700 text-sm font-semibold">Цільовий запас авто (для реінвестування):</span>
-                            <input type="number" id="targetInventory" value="5" min="0" class="mt-1 block w-full rounded-md shadow-sm p-2 bg-yellow-100">
+                            <input type="number" id="targetInventory" value="10" min="0" class="mt-1 block w-full rounded-md shadow-sm p-2 bg-yellow-100">
+                            <p class="text-xs text-gray-600 mt-1">Кількість авто, які потрібно підтримувати на складі, використовуючи прибуток.</p>
                         </label>
                     </div>
 
@@ -72,20 +73,19 @@
                         <label class="block mb-2"><span class="text-gray-700 text-sm">Загальні постійні витрати бізнесу (€/міс):</span>
                             <input type="number" id="fixedMonthlyCosts" value="1300" min="0" class="mt-1 block w-full rounded-md shadow-sm p-2">
                         </label>
-                         <label class="block mb-2"><span class="text-gray-700 text-sm">Прогнозована Мед. страховка/Пенсія (€/міс):</span>
-                            <input type="number" id="healthInsurance" value="400" min="0" class="mt-1 block w-full rounded-md shadow-sm p-2">
-                        </label>
-                         <label class="block"><span class="text-gray-700 text-sm">Режим ПДВ (для розрахунку):</span>
+                         <label class="block mb-2"><span class="text-gray-700 text-sm">Режим ПДВ (для розрахунку):</span>
                             <select id="ustRegime" class="mt-1 block w-full rounded-md shadow-sm p-2">
                                 <option value="regular">Стандартний (Regelbesteuerung)</option>
                                 <option value="margin">Differenzbesteuerung (§25a UStG)</option>
                                 <option value="kleinunternehmer">Малий підприємець (§19 UStG)</option>
                             </select>
                         </label>
+                        <input type="hidden" id="healthInsurance" value="400"> <!-- Приховано, але використовується в розрахунках ESt -->
                     </div>
 
                     <div class="input-group col-span-full">
                         <h4 class="font-semibold text-gray-800 mb-3">4. План продажів (Місяці 1-36)</h4>
+                         <p class="text-sm text-gray-600 mb-2">Автоматичне масштабування: старт з 2, досягнення 10 на місяць за 3 роки.</p>
                         <div id="salesPlanInputs" class="grid grid-cols-6 md:grid-cols-12 gap-3 max-h-48 overflow-y-auto p-2">
                             <!-- JS will populate these -->
                         </div>
@@ -230,66 +230,54 @@
             const inputs = getInputs();
             const data = [];
             const purchaseHasVAT = inputs.ustRegime === 'regular';
-            const lagMonths = 1; // Закупка відбувається на місяць раніше продажу
-
+            
             let accumulatedCashBalance = inputs.grant + inputs.savings;
             let currentInventory = 0; // Tracks number of cars owned
             let yearlyEbit = 0;
             let yearly_gew_ertrag = 0;
             let last_yearly_tax_data = { Gewerbesteuer: 0, Einkommensteuer: 0, total: 0 };
             let ust_period_due = 0;
-
-            const purchasePlan = new Array(NUM_MONTHS).fill(0);
-            for (let i = 0; i < NUM_MONTHS; i++) {
-                // Determine cars needed next month (based on sales plan)
-                const salesNextMonth = inputs.salesPlan[i + 1] || 0;
-                
-                // Cars to buy: Sales for next month + (Target Inventory - Current Inventory)
-                let carsToBuy = 0;
-                if (i === 0) {
-                     // Initial purchase to reach target inventory and cover next month's sale
-                     carsToBuy = inputs.salesPlan[i] + salesNextMonth + inputs.targetInventory;
-                } else {
-                     // Calculate inventory needed for sale next month + maintaining target
-                     const neededToCoverNextSale = salesNextMonth;
-                     const neededToReachTarget = Math.max(0, inputs.targetInventory - currentInventory);
-                     carsToBuy = neededToCoverNextSale + neededToReachTarget;
-                     
-                     // Ensure we don't overbuy if cash is low (simplification: only buy what we can afford)
-                     const costPerCar = inputs.carPurchase * (purchaseHasVAT ? 1 + UST_RATE : 1);
-                     const maxCarsAffordable = Math.floor(accumulatedCashBalance / costPerCar);
-                     carsToBuy = Math.min(carsToBuy, maxCarsAffordable);
-                     
-                     // Subtract what's currently in inventory that can cover sales
-                     const netCarsNeeded = carsToBuy - currentInventory;
-                     carsToBuy = Math.max(0, netCarsNeeded);
-                }
-                
-                purchasePlan[i] = carsToBuy;
-            }
-            // Reset inventory for loop
-            currentInventory = 0;
             
             for (let i = 0; i < NUM_MONTHS; i++) {
                 const carsSold = inputs.salesPlan[i];
-                const carsBought = purchasePlan[i];
+                let carsBought = 0; 
                 
-                // Update Inventory
-                // Start of month inventory = previous end of month inventory
-                // Inventory update for loop consistency (this model uses direct purchase plan)
-                currentInventory += carsBought;
-                currentInventory -= carsSold;
+                // --- INVENTORY / REINVESTMENT LOGIC ---
+                // 1. Calculate cars needed for sales and target inventory maintenance
+                const neededForSale = carsSold;
+                const neededToReachTarget = Math.max(0, inputs.targetInventory - currentInventory);
+                
+                // 2. Determine raw purchases required
+                let rawPurchases = neededForSale + neededToReachTarget;
+                
+                // 3. Check affordability and execute purchase
+                const costPerCarGross = inputs.carPurchase * (purchaseHasVAT ? 1 + UST_RATE : 1);
+                
+                // Prioritize covering sales shortage and maintaining target inventory
+                let neededToBuy = 0;
+                if (currentInventory < neededForSale) {
+                    // Buy needed to cover sales shortage
+                    neededToBuy = neededForSale - currentInventory;
+                }
+                
+                // If we have achieved sales cover, buy to reach target inventory
+                if (currentInventory < inputs.targetInventory && neededToBuy < neededForSale + inputs.targetInventory) {
+                    neededToBuy += neededToReachTarget;
+                }
 
-                // 1. P&L Variables
+                // Execute purchase based on affordability
+                const maxCarsAffordable = Math.floor(accumulatedCashBalance / costPerCarGross);
+                carsBought = Math.min(neededToBuy, maxCarsAffordable);
+
+                // --- P&L CALCULATIONS ---
+                
+                // 1. Revenue (Gross sales, USt depends on regime)
                 let salesRevenueGross = carsSold * inputs.avgSalePrice;
                 let salesRevenuePnl;
                 let ustDue = 0;
                 let ustVorsteuer = 0;
-
-                // Витрати (нетто)
                 const totalFixedCostsPnl = inputs.fixedMonthlyCosts;
 
-                // 2. VAT (USt) Logic - Affects P&L and Cash Flow
                 if (inputs.ustRegime === 'regular') {
                     salesRevenuePnl = salesRevenueGross / (1 + UST_RATE); // Netto Revenue
                     ustDue = salesRevenueGross - salesRevenuePnl;         // Output VAT
@@ -305,14 +293,14 @@
                         ustDue = margin * UST_SATZ / (100 + UST_SATZ);
                     }
                     salesRevenuePnl = salesRevenueGross - ustDue; // P&L = Gross - USt
-                    ustVorsteuer = 0; // Vorsteuer not applicable on goods bought for margin scheme
+                    ustVorsteuer = 0;
                 } else { // kleinunternehmer
                     salesRevenuePnl = salesRevenueGross; // P&L = Gross Revenue
                     ustDue = 0;
                     ustVorsteuer = 0;
                 }
 
-                // Variable Costs for P&L (Gross for KUR, Netto for others)
+                // 2. Expenses (Netto for regular/margin, Gross for KUR)
                 let totalVariableCostsPnl = carsSold * inputs.carPurchase;
                 if (inputs.ustRegime === 'kleinunternehmer') {
                     totalVariableCostsPnl += carsSold * inputs.prepCosts * (1 + UST_RATE);
@@ -320,29 +308,35 @@
                      totalVariableCostsPnl += carsSold * inputs.prepCosts;
                 }
                 
-                // Fixed Costs for P&L (Gross for KUR, Netto for others)
                 let totalExpensesPnl;
                  if (inputs.ustRegime === 'kleinunternehmer') {
-                    // P&L = Fixed Costs (Gross) + Variable Costs (Gross)
                     totalExpensesPnl = totalFixedCostsPnl * (1 + UST_RATE) + totalVariableCostsPnl;
                 } else {
-                    // P&L = Fixed Costs (Netto) + Variable Costs (Netto)
                     totalExpensesPnl = totalFixedCostsPnl + totalVariableCostsPnl;
                 }
                 
+                // P&L (EBIT) Calculation
                 const ebit = salesRevenuePnl - totalExpensesPnl;
                 yearlyEbit += ebit;
-                yearly_gew_ertrag += ebit; // Gewerbeertrag uses EBIT as base (simplified)
+                yearly_gew_ertrag += ebit;
+
+                // --- CASH FLOW CALCULATIONS ---
+                
+                // Update Inventory (After sale/purchase for the current month)
+                currentInventory -= carsSold;
+                currentInventory += carsBought;
 
                 // 3. USt Cash Flow (USt Paid This Month)
                 let ustCashFlowMovement = ustDue - ustVorsteuer;
                 let ustPaidThisMonth = 0;
 
                 // Quarterly USt Payment Logic
-                ust_period_due += ustCashFlowMovement;
-                if ((i + 1) % 3 === 0) {
-                    ustPaidThisMonth = ust_period_due;
-                    ust_period_due = 0; // Reset period due after payment
+                if (inputs.ustRegime !== 'kleinunternehmer') {
+                    ust_period_due += ustCashFlowMovement;
+                    if ((i + 1) % 3 === 0) {
+                        ustPaidThisMonth = ust_period_due;
+                        ust_period_due = 0; // Reset period due after payment
+                    }
                 }
                 
                 // 4. Yearly Tax Calculation (ESt/GwSt)
@@ -355,16 +349,13 @@
                     current_yearly_tax_data = { Gewerbesteuer: 0, Einkommensteuer: 0, total: 0, yearly_ebit: yearlyEbit };
 
                     if (taxable_profit > 0) {
-                        // Einkommensteuer Calculation (simplified)
                         let est_taxable_income = taxable_profit - (inputs.healthInsurance * 12);
                         let est_tax = calculateESt(est_taxable_income).tax;
                         
-                        // Gewerbesteuer Calculation (simplified)
                         let gewStTaxableBase = Math.max(0, yearly_gew_ertrag - FREIBETRAG_GEWST);
                         let messbetrag = gewStTaxableBase * 0.035;
                         let gewSt = messbetrag * (HEBESATZ / 100); 
                         
-                        // Gewerbesteuer Credit (§35 EStG)
                         let gewSt_credit = Math.min(est_tax, messbetrag * 3.8);
                         let est_final = Math.max(0, est_tax - gewSt_credit);
 
@@ -382,7 +373,7 @@
                     taxesPaidThisMonth = last_yearly_tax_data.total / 4;
                 }
 
-                // 6. Total Cash Flow
+                // 6. Total Cash Flow (Gross Payments)
                 const fixedCostsCashOutflow = inputs.fixedMonthlyCosts * (purchaseHasVAT ? 1 + UST_RATE : 1);
                 const prepCostsCashOutflow = carsSold * inputs.prepCosts * (purchaseHasVAT ? 1 + UST_RATE : 1);
                 const carPurchaseCashOutflow = carsBought * inputs.carPurchase * (purchaseHasVAT ? 1 + UST_RATE : 1);
@@ -398,8 +389,8 @@
                 data.push({
                     month: `Міс. ${i + 1}`,
                     carsSold: carsSold,
-                    carsBought: carsBought, // Added for clearer debugging
-                    currentInventory: currentInventory, // Added for clearer debugging
+                    carsBought: carsBought,
+                    currentInventory: currentInventory,
                     ebit: ebit,
                     netCashFlow: netCashFlow,
                     ustPaidThisMonth: ustPaidThisMonth,
@@ -509,7 +500,7 @@
                 // Get annual tax values for the year just ended or current month (for Q4)
                 const yearlyData = data.yearly_tax_data;
 
-                // Display only the final calculated annual amount or quarterly payment
+                // Display annual tax amounts in the final month of the year/period
                 const gwst_val = (i + 1) % 12 === 0 || i === NUM_MONTHS - 1 ? formatCurrency(yearlyData.Gewerbesteuer) : 
                                  (data.taxesPaidThisMonth > 0 && (i + 1) % 3 === 0 ? formatCurrency(data.taxesPaidThisMonth) : '0.00 €');
                 
@@ -534,7 +525,20 @@
             const container = document.getElementById('salesPlanInputs');
             container.innerHTML = '';
             for (let i = 0; i < NUM_MONTHS; i++) {
-                const defaultValue = i < 6 ? 2 : (i < 12 ? 3 : 4); // Default plan: 2 for M1-M6, 3 for M7-M12, 4+ for M13+
+                // Scaling from 2 to 10 over 3 years (36 months)
+                let defaultValue;
+                if (i < 6) {
+                    defaultValue = 2; // M1-M6: 2 cars/month
+                } else if (i < 12) {
+                    defaultValue = 3; // M7-M12: 3 cars/month
+                } else if (i < 18) {
+                    defaultValue = 5; // M13-M18: 5 cars/month
+                } else if (i < 24) {
+                    defaultValue = 7; // M19-M24: 7 cars/month
+                } else {
+                    defaultValue = 10; // M25-M36: 10 cars/month
+                }
+
                 const month = i + 1;
                 const label = `Міс. ${month}`;
                 const inputHtml = `
