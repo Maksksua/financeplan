@@ -54,7 +54,7 @@
                     <div class="input-group">
                         <h4 class="font-semibold text-gray-800 mb-3">Юніт-економіка (на 1 авто)</h4>
                          <label class="block mb-2"><span class="text-gray-700 text-sm">Середня ціна продажу (БРУТТО, €):</span>
-                            <input type="number" id="avgSalePrice" value="4800" min="0" class="mt-1 block w-full rounded-md shadow-sm p-2">
+                            <input type="number" id="avgSalePrice" value="4500" min="0" class="mt-1 block w-full rounded-md shadow-sm p-2">
                         </label>
                         <label class="block mb-2"><span class="text-gray-700 text-sm">Ціна закупівлі (€):</span>
                             <input type="number" id="carPurchase" value="2300" min="0" class="mt-1 block w-full rounded-md shadow-sm p-2">
@@ -152,6 +152,7 @@
                                     <th scope="col" class="px-6 py-3">Продажі (шт)</th>
                                     <th scope="col" class="px-6 py-3">EBIT (Прибуток)</th>
                                     <th scope="col" class="px-6 py-3">Cash Flow (Чистий)</th>
+                                    <th scope="col" class="px-6 py-3">Особистий Cash Flow</th>
                                     <th scope="col" class="px-6 py-3">USt (ПДВ, сплата)</th>
                                     <th scope="col" class="px-6 py-3">GwSt (Торг. податок)</th>
                                     <th scope="col" class="px-6 py-3">ESt (Податок на дохід)</th>
@@ -247,22 +248,26 @@
                 const neededForSale = carsSold;
                 const neededToReachTarget = Math.max(0, inputs.targetInventory - currentInventory);
                 
-                // 2. Determine raw purchases required
-                let rawPurchases = neededForSale + neededToReachTarget;
-                
-                // 3. Check affordability and execute purchase
                 const costPerCarGross = inputs.carPurchase * (purchaseHasVAT ? 1 + UST_RATE : 1);
                 
                 // Prioritize covering sales shortage and maintaining target inventory
                 let neededToBuy = 0;
-                if (currentInventory < neededForSale) {
-                    // Buy needed to cover sales shortage
-                    neededToBuy = neededForSale - currentInventory;
-                }
                 
-                // If we have achieved sales cover, buy to reach target inventory
-                if (currentInventory < inputs.targetInventory && neededToBuy < neededForSale + inputs.targetInventory) {
-                    neededToBuy += neededToReachTarget;
+                if (i === 0) {
+                     // In M1, only buy what is needed for M1 sales + 1 car for emergency/initial stock,
+                     // to prevent spending all 10k on inventory immediately.
+                     neededToBuy = neededForSale + 1; // Buy 2 to sell + 1 for stock
+                     
+                } else {
+                    if (currentInventory < neededForSale) {
+                        // Buy needed to cover sales shortage
+                        neededToBuy = neededForSale - currentInventory;
+                    }
+                    
+                    // If we have achieved sales cover, buy to reach target inventory
+                    if (currentInventory < inputs.targetInventory) {
+                        neededToBuy += neededToReachTarget;
+                    }
                 }
 
                 // Execute purchase based on affordability
@@ -372,12 +377,14 @@
                 if (last_yearly_tax_data.total > 0 && (i + 1) % 3 === 0) {
                     taxesPaidThisMonth = last_yearly_tax_data.total / 4;
                 }
+                
+                // 6. Private Cash Flow (Always Gross Outflow)
+                const personalCashOutflow = inputs.healthInsurance + inputs.personalCosts; 
 
-                // 6. Total Cash Flow (Gross Payments)
+                // 7. Total Cash Flow (Gross Payments)
                 const fixedCostsCashOutflow = inputs.fixedMonthlyCosts * (purchaseHasVAT ? 1 + UST_RATE : 1);
                 const prepCostsCashOutflow = carsSold * inputs.prepCosts * (purchaseHasVAT ? 1 + UST_RATE : 1);
                 const carPurchaseCashOutflow = carsBought * inputs.carPurchase * (purchaseHasVAT ? 1 + UST_RATE : 1);
-                const personalCashOutflow = inputs.healthInsurance + inputs.personalCosts; 
                 
                 const salesCashInflow = salesRevenueGross;
                 
@@ -393,6 +400,7 @@
                     currentInventory: currentInventory,
                     ebit: ebit,
                     netCashFlow: netCashFlow,
+                    personalCashOutflow: personalCashOutflow, // Added for table column
                     ustPaidThisMonth: ustPaidThisMonth,
                     taxesPaidThisMonth: taxesPaidThisMonth,
                     accumulatedBalance: accumulatedCashBalance,
@@ -512,6 +520,7 @@
                     <td class="px-6 py-4">${data.carsSold}</td>
                     <td class="px-6 py-4 ${data.ebit < 0 ? 'text-red-500' : 'text-green-600'}">${formatCurrency(data.ebit)}</td>
                     <td class="px-6 py-4 ${data.netCashFlow < 0 ? 'text-red-500' : ''}">${formatCurrency(data.netCashFlow)}</td>
+                    <td class="px-6 py-4 ${data.personalCashOutflow > 0 && data.netCashFlow < 0 ? 'text-red-500' : ''}">${formatCurrency(data.personalCashOutflow)}</td>
                     <td class="px-6 py-4">${formatCurrency(data.ustPaidThisMonth)}</td>
                     <td class="px-6 py-4">${gwst_val}</td>
                     <td class="px-6 py-4">${est_val}</td>
