@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="uk">
 <head>
@@ -114,7 +115,7 @@
                                 <th scope="col" class="px-3 py-2 text-red-700">USt (Сплата)</th>
                                 <th scope="col" class="px-3 py-2">GwSt</th>
                                 <th scope="col" class="px-3 py-2">ESt</th>
-                                <th scope="col" class="px-3 py-2 font-bold">Баланс (Накопич.)</th>
+                                <th scope="col" class="px-3 py-2 font-bold">Залишок (Подуш. безп.)</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -301,7 +302,7 @@
             const data = [];
             const purchaseHasVAT = inputs.ustRegime === 'regular';
             
-            let accumulatedCashBalance = inputs.grant + inputs.savings; // Uses new editable inputs
+            let accumulatedCashBalance = inputs.grant + inputs.savings; // Starts with 10000
             let currentInventory = 0;
             let yearlyEbit = 0;
             let yearly_gew_ertrag = 0;
@@ -419,10 +420,14 @@
                 
                 // Final Cash Flow (totalCashOutflow MUST include the calculated taxes/purchases)
                 const totalCashOutflow = cashNeededToOperate + carPurchaseCashOutflow + ustOutflowFinal + taxesPaidThisMonth;
+                
+                // FIX: Initial Cash Injection is the full 10k, but only once.
                 const initialCashInjection = i === 0 ? inputs.grant + inputs.savings : 0;
                 const netCashFlow = (salesRevenueGross + initialCashInjection) - totalCashOutflow;
                 
                 accumulatedCashBalance += netCashFlow;
+                // FIX END
+                
 
                 data.push({
                     month: `Міс. ${i + 1}`,
