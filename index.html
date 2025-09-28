@@ -1,5 +1,3 @@
-
-
 <!DOCTYPE html>
 <html lang="uk">
 <head>
@@ -34,7 +32,7 @@
     <div class="container mx-auto p-4 md:p-8">
         <header class="text-center mb-8">
             <h1 class="text-3xl md:text-4xl font-bold text-gray-900">Інтерактивна Таблиця Ліквідності (3 Роки)</h1>
-            <p class="text-md text-gray-600 mt-2">Ви повністю контролюєте **Продажі** та **Закупівлі**.</p>
+            <p class="text-md text-gray-600 mt-2">Ви повністю контролюєте **Продажі**, **Закупівлі** та **Фіксовані Витрати**.</p>
         </header>
 
         <main>
@@ -45,19 +43,26 @@
                     
                     <div class="input-group">
                         <h4 class="font-semibold text-gray-800 mb-3">Фінансування та Постійні витрати</h4>
-                        <label class="block mb-2"><span class="text-gray-700 text-sm font-bold">Стартовий Капітал (€):</span>
-                            <input type="number" id="grant" value="5000" disabled class="mt-1 block w-full rounded-md shadow-sm p-2 bg-gray-200">
-                            <input type="number" id="savings" value="5000" disabled class="mt-1 block w-full rounded-md shadow-sm p-2 bg-gray-200">
+                        
+                        <!-- СТАРТОВИЙ КАПІТАЛ - ТЕПЕР РЕДАГУЄТЬСЯ -->
+                        <label class="block mb-2"><span class="text-gray-700 text-sm font-bold">Стартовий Капітал (Грант, €):</span>
+                            <input type="number" id="grant" value="5000" class="mt-1 block w-full rounded-md shadow-sm p-2">
                         </label>
-                        <label class="block mb-2"><span class="text-gray-700 text-sm">Особисті витрати/Житло (€/міс):</span>
+                        <label class="block mb-2"><span class="text-gray-700 text-sm font-bold">Власні Кошти/Заощадження (€):</span>
+                            <input type="number" id="savings" value="5000" class="mt-1 block w-full rounded-md shadow-sm p-2">
+                        </label>
+
+                        <!-- НОВІ РЕДАГОВАНІ ВХІДНІ ДАНІ -->
+                        <label class="block mb-2"><span class="text-gray-700 text-sm">Цільовий Запас Авто (шт):</span>
+                             <input type="number" id="targetInventory" value="10" class="mt-1 block w-full rounded-md shadow-sm p-2">
+                        </label>
+                        <label class="block mb-2"><span class="text-gray-700 text-sm">Щомісячні Особисті/Соц. Внески (€/міс):</span>
+                             <input type="number" id="healthInsurance" value="400" class="mt-1 block w-full rounded-sm p-2">
+                        </label>
+                         <label class="block mb-2"><span class="text-gray-700 text-sm">Особисті Витрати на Життя (€/міс):</span>
                             <input type="number" id="personalCosts" value="1450" class="mt-1 block w-full rounded-md shadow-sm p-2">
                         </label>
-                        <label class="block mb-2"><span class="text-gray-700 text-sm">Щомісячні пост. витрати (€/міс):</span>
-                            <input type="number" id="fixedMonthlyCosts" value="1300" class="mt-1 block w-full rounded-md shadow-sm p-2">
-                        </label>
-                         <input type="hidden" id="rentDeposit" value="5000"> 
-                         <input type="hidden" id="healthInsurance" value="400">
-                         <input type="hidden" id="targetInventory" value="0"> <!-- Hidden, no longer used for automated logic -->
+                        <input type="hidden" id="rentDeposit" value="5000"> 
                     </div>
 
                     <div class="input-group">
@@ -92,7 +97,7 @@
             <!-- SALES PLAN (Integrated in the table/scrollable) -->
             <div class="bg-white p-6 rounded-xl shadow-md overflow-hidden">
                 <h3 class="p-0 font-semibold text-lg text-blue-700 mb-4">Детальний Фінансовий Звіт (36 місяців)</h3>
-                <p class="text-sm text-gray-600 mb-4">УВАГА: Контролюйте стовпчик **Запас**. Якщо він негативний, ви запланували продати більше, ніж купили!</p>
+                <p class="text-sm text-gray-600 mb-4">Ви можете редагувати **Продажі**, **Куплено** та **Місячні Витрати** безпосередньо в таблиці.</p>
                 <div class="overflow-x-auto">
                     <table id="dataTable" class="min-w-full text-sm text-left text-gray-500 border-collapse">
                         <thead class="text-xs text-gray-700 uppercase bg-gray-100 sticky top-0">
@@ -100,6 +105,8 @@
                                 <th scope="col" class="px-3 py-2">Міс.</th>
                                 <th scope="col" class="px-3 py-2 w-20">Продажі (шт)</th>
                                 <th scope="col" class="px-3 py-2 w-20">Куплено (шт)</th>
+                                <th scope="col" class="px-3 py-2 w-20">Оренда Місця (€)</th> <!-- НОВА КОЛОНКА -->
+                                <th scope="col" class="px-3 py-2 w-20">Інші Пост. (€)</th> <!-- НОВА КОЛОНКА -->
                                 <th scope="col" class="px-3 py-2">Запас</th>
                                 <th scope="col" class="px-3 py-2 text-green-700">EBIT (Прибуток)</th>
                                 <th scope="col" class="px-3 py-2 text-blue-700">Cash Flow (Чистий)</th>
@@ -156,43 +163,44 @@
         function getInputs() {
             const salesPlan = [];
             const purchasePlan = [];
+            const rentPlan = []; // NEW
+            const otherFixedPlan = []; // NEW
             
             // Collect data directly from the dynamic table inputs
             for (let i = 0; i < NUM_MONTHS; i++) {
                 const salesInput = document.getElementById(`salesPlan_${i}`);
                 const purchaseInput = document.getElementById(`purchasePlan_${i}`);
+                const rentInput = document.getElementById(`rentPlan_${i}`); 
+                const otherFixedInput = document.getElementById(`otherFixedPlan_${i}`); 
 
                 // Sales plan (user input)
-                if(salesInput) {
-                   salesPlan.push(parseInt(salesInput.value) || 0);
-                } else {
-                   // Fallback for initial load
-                   salesPlan.push(i < 6 ? 2 : (i < 12 ? 3 : (i < 18 ? 5 : (i < 24 ? 7 : 10)))); 
-                }
+                salesPlan.push(parseInt(salesInput?.value) || 0);
                 
                 // Purchase plan (user input)
-                if(purchaseInput) {
-                   purchasePlan.push(parseInt(purchaseInput.value) || 0);
-                } else {
-                   // Fallback for initial load
-                   purchasePlan.push(i === 0 ? 2 : 0); // Default: Buy 2 in M1, then 0
-                }
+                purchasePlan.push(parseInt(purchaseInput?.value) || 0);
+                
+                // Monthly Rent/Lease (NEW)
+                rentPlan.push(parseFloat(rentInput?.value) || 0);
+                
+                // Other Fixed Monthly Costs (NEW)
+                otherFixedPlan.push(parseFloat(otherFixedInput?.value) || 0);
             }
             
-            // Collect editable inputs
+            // Collect editable inputs (now includes grant, savings, deposit, insurance)
             return {
-                grant: 5000,
-                savings: 5000,
+                grant: parseFloat(document.getElementById('grant').value) || 0, 
+                savings: parseFloat(document.getElementById('savings').value) || 0, 
                 avgSalePrice: parseFloat(document.getElementById('avgSalePrice').value) || 0,
                 carPurchase: parseFloat(document.getElementById('carPurchase').value) || 0,
                 prepCosts: parseFloat(document.getElementById('prepCosts').value) || 0,
-                fixedMonthlyCosts: parseFloat(document.getElementById('fixedMonthlyCosts').value) || 0,
-                healthInsurance: 400, // Fixed internal value
+                healthInsurance: parseFloat(document.getElementById('healthInsurance').value) || 0, 
                 personalCosts: parseFloat(document.getElementById('personalCosts').value) || 0, 
                 ustRegime: document.getElementById('ustRegime').value,
                 salesPlan: salesPlan,
                 purchasePlan: purchasePlan,
-                rentDeposit: 5000, // Fixed M1 Cash Out
+                rentDeposit: parseFloat(document.getElementById('rentDeposit').value) || 0, 
+                rentPlan: rentPlan, 
+                otherFixedPlan: otherFixedPlan 
             };
         }
         
@@ -201,11 +209,6 @@
             const initialSalesPlan = [];
              for (let i = 0; i < NUM_MONTHS; i++) {
                 // STARTING WITH A CONSERVATIVE, REALISTIC SCALING PLAN: 
-                // M1-M2: 1 car (slow start)
-                // M3-M6: 2 cars
-                // M7-M12: 3 cars
-                // M13-M24: 5 cars
-                // M25-M36: 8 cars
                 if (i < 2) {
                     initialSalesPlan.push(1);
                 } else if (i < 6) {
@@ -221,56 +224,66 @@
             return initialSalesPlan;
         }
 
+        // NEW: Initial Rent Plan (e.g., M1-M36: 800 EUR)
+        function populateInitialRentPlan() {
+            return Array(NUM_MONTHS).fill(560); // Set default to 560 EUR
+        }
+
+        // NEW: Initial Other Fixed Costs Plan (e.g., M1-M36: 500 EUR)
+        function populateInitialOtherFixedPlan() {
+            return Array(NUM_MONTHS).fill(740); // 1300 (total fixed) - 560 (rent) = 740 EUR
+        }
+
         // AUTO-GENERATING INITIAL PURCHASE PLAN based on selling constraints (buy what you need + 1 for stock)
         function generateInitialPurchasePlan(salesPlan) {
             const initialPurchasePlan = [];
-            const carCost = 2300 + 850; // Purchase + Prep = 3150 EUR
-            const rentDeposit = 5000;
-            const fixedOps = 1300 + 1450 + 400; // Fixed Monthly + Personal + Health Insurance = 3150 EUR
+            const carCost = 2300 + 850; // Purchase + Prep = 3150 EUR (Hardcoded default for initial plan)
+            const rentDeposit = 5000; // Hardcoded default for initial plan
+            const initialRent = 560; // New Default
+            const initialOtherFixed = 740; // New Default
+            const healthInsurance = 400; // Hardcoded default for initial plan
+            const personalCosts = 1450; // Hardcoded default for initial plan
+            const grant = 5000;
+            const savings = 5000;
             
-            let cash = 10000; // Starting cash
+            // Fixed Monthly Operating Costs for M1 for initial calculation (Rent + Other + Personal + Insurance)
+            const fixedOps = initialRent + initialOtherFixed + personalCosts + healthInsurance; 
+
+            let cash = grant + savings; // Starting cash
             let inventory = 0; 
 
             for (let i = 0; i < NUM_MONTHS; i++) {
                 const salesTarget = salesPlan[i];
-                let neededToCoverSales = Math.max(0, salesTarget - inventory);
                 let carsToBuy = 0;
                 
                 // --- M1: CRITICAL STARTUP COSTS ---
                 if (i === 0) {
-                    // M1 cash outflow priority: Deposit (5000) + Fixed Ops (3150) = 8150
-                    const m1RequiredCash = rentDeposit + fixedOps;
-                    const availableForCars = cash - m1RequiredCash;
+                    // M1 cash outflow priority: Deposit (5000) + Fixed Ops (2750) 
+                    const m1RequiredCash = rentDeposit + fixedOps; 
+                    const availableForCars = cash - m1RequiredCash; // Cash remaining after all M1 fixed/deposit outflows
                     
-                    // We must buy at least one car for sale target
                     const maxCarsICanAfford = Math.floor(availableForCars / carCost);
                     
-                    // Buy minimum required (salesTarget) or max affordable, if available.
-                    carsToBuy = Math.min(salesTarget + 1, maxCarsICanAfford); // Buy sales target + 1 for minimal buffer
+                    // We want to buy targetInventory (10) minus current stock (0), but are limited by cash
+                    const targetBuy = 10;
+                    
+                    carsToBuy = Math.min(targetBuy, maxCarsICanAfford); 
                     
                     if (carsToBuy < salesTarget) {
-                        carsToBuy = salesTarget; // Ensure we buy at least what we plan to sell
+                        carsToBuy = salesTarget; // Must buy at least what we plan to sell
                     }
                     if (carsToBuy > maxCarsICanAfford) {
-                         carsToBuy = maxCarsICanAfford; // Cannot exceed cash limits
+                         carsToBuy = maxCarsICanAfford; 
                     }
-
-                    // After M1, deduct the required cash + cost of purchased cars
+                    
+                    // Update cash for the manual tracking
                     cash -= m1RequiredCash + (carsToBuy * carCost); 
 
                 } else {
-                    // --- M2 and onwards: REINVESTMENT LOGIC (Buy to cover next month's sale target + buffer) ---
+                    // --- M2 and onwards: REINVESTMENT LOGIC (Simplified) ---
                     
-                    // Calculate cash balance *after* sales and *before* buying next stock
-                    // This is complex and relies on Cash Flow, which we calculate later.
-                    // For initial population, we rely on the conservative target.
-                    
-                    // Simplified scaling logic for initial plan: Buy exactly what we sell + 1 for stock if cash allows
-                    
-                    const neededForNextMonth = salesPlan[i < NUM_MONTHS - 1 ? i + 1 : i] + 1; // Target stock for next month
-                    const currentDeficit = Math.max(0, neededForNextMonth - inventory);
-                    
-                    // Simplified assumption: We buy what we need for the next month, as long as the cash is positive
+                    // Goal is to reach/maintain 10 cars
+                    const currentDeficit = Math.max(0, 10 - inventory);
                     carsToBuy = currentDeficit;
                 }
                 
@@ -288,7 +301,7 @@
             const data = [];
             const purchaseHasVAT = inputs.ustRegime === 'regular';
             
-            let accumulatedCashBalance = inputs.grant + inputs.savings;
+            let accumulatedCashBalance = inputs.grant + inputs.savings; // Uses new editable inputs
             let currentInventory = 0;
             let yearlyEbit = 0;
             let yearly_gew_ertrag = 0;
@@ -299,8 +312,12 @@
                 const carsSold = inputs.salesPlan[i];
                 const carsBought = inputs.purchasePlan[i];
                 
+                // Monthly Fixed Costs from the table inputs
+                const rentCostMonthly = inputs.rentPlan[i]; 
+                const otherFixedCostMonthly = inputs.otherFixedPlan[i]; 
+                
                 // --- P&L EXPENSE COMPONENTS (NO VAT) ---
-                const totalFixedCostsPnl = inputs.fixedMonthlyCosts;
+                const totalFixedCostsPnl = rentCostMonthly + otherFixedCostMonthly; // Uses monthly table inputs
                 const cogsPnl = carsSold * (inputs.carPurchase + inputs.prepCosts);
                 let totalExpensesPnl = totalFixedCostsPnl + cogsPnl; 
                 
@@ -308,10 +325,10 @@
                 const costPerCarGross = inputs.carPurchase + inputs.prepCosts;
                 const grossFactor = purchaseHasVAT ? 1 + UST_RATE : 1;
 
-                const fixedCostsCashOutflow = inputs.fixedMonthlyCosts * grossFactor;
-                const personalCashOutflow = inputs.healthInsurance + inputs.personalCosts; 
-                const rentDepositCashOutflow = i === 0 ? inputs.rentDeposit * grossFactor : 0; 
-                
+                const fixedCostsCashOutflow = (rentCostMonthly + otherFixedCostMonthly) * grossFactor; // Uses monthly table inputs
+                const personalCashOutflow = inputs.healthInsurance + inputs.personalCosts; // Uses editable inputs
+                const rentDepositCashOutflow = i === 0 ? inputs.rentDeposit * grossFactor : 0; // Uses editable deposit
+
                 // Define cashNeededToOperate before use
                 const cashNeededToOperate = fixedCostsCashOutflow + personalCashOutflow + rentDepositCashOutflow; 
 
@@ -336,7 +353,7 @@
                     salesRevenuePnl = salesRevenueGross;
                     ustDue = 0;
                     ustVorsteuer = 0;
-                    totalExpensesPnl = inputs.fixedMonthlyCosts * grossFactor + cogsPnl * grossFactor;
+                    totalExpensesPnl = totalFixedCostsPnl * grossFactor + cogsPnl * grossFactor;
                 }
 
                 // Final EBIT Calculation (Deposit is 1-time P&L hit in M1)
@@ -377,7 +394,8 @@
                     current_yearly_tax_data = { Gewerbesteuer: 0, Einkommensteuer: 0, total: 0, yearly_ebit: yearlyEbit };
 
                     if (taxable_profit > 0) {
-                        let est_taxable_income = taxable_profit - (inputs.healthInsurance * 12);
+                        // Health insurance is deductible from taxable income for ESt
+                        let est_taxable_income = taxable_profit - (inputs.healthInsurance * 12); 
                         let est_tax = calculateESt(est_taxable_income).tax;
                         
                         let gewStTaxableBase = Math.max(0, yearly_gew_ertrag - FREIBETRAG_GEWST);
@@ -410,6 +428,8 @@
                     month: `Міс. ${i + 1}`,
                     carsSold: carsSold,
                     carsBought: carsBought,
+                    rentCostMonthly: rentCostMonthly, // NEW
+                    otherFixedCostMonthly: otherFixedCostMonthly, // NEW
                     currentInventory: currentInventory,
                     ebit: ebit,
                     netCashFlow: netCashFlow,
@@ -458,13 +478,17 @@
                 // Generate input fields for Sales and Purchase plans
                 const salesInput = `<input type="number" id="salesPlan_${i}" value="${data.carsSold}" min="0" class="w-16 data-input">`;
                 const purchaseInput = `<input type="number" id="purchasePlan_${i}" value="${data.carsBought}" min="0" class="w-16 data-input">`;
-                
+                const rentInput = `<input type="number" id="rentPlan_${i}" value="${data.rentCostMonthly}" min="0" class="w-20 data-input">`;
+                const otherFixedInput = `<input type="number" id="otherFixedPlan_${i}" value="${data.otherFixedCostMonthly}" min="0" class="w-20 data-input">`;
+
                 const inventoryClass = data.currentInventory < 0 ? 'warning-text' : '';
 
                 bodyHtml += `<tr class="bg-white border-b hover:bg-gray-50">
                     <td class="px-3 py-2 font-medium text-gray-900 whitespace-nowrap">${i + 1}</td>
                     <td class="px-3 py-2">${salesInput}</td>
                     <td class="px-3 py-2">${purchaseInput}</td>
+                    <td class="px-3 py-2">${rentInput}</td>
+                    <td class="px-3 py-2">${otherFixedInput}</td>
                     <td class="px-3 py-2 ${inventoryClass}">${data.currentInventory}</td>
                     <td class="px-3 py-2 ${data.ebit < 0 ? 'text-red-500' : 'text-green-600'}">${formatCurrency(data.ebit)}</td>
                     <td class="px-3 py-2 ${data.netCashFlow < 0 ? 'text-red-500' : ''}">${formatCurrency(data.netCashFlow)}</td>
@@ -486,23 +510,30 @@
         document.addEventListener('DOMContentLoaded', () => {
             // Initial dummy data generation
             const initialSalesPlan = populateInitialSalesPlan();
-            const initialPurchasePlan = generateInitialPurchasePlan(initialSalesPlan); // Generate purchase plan based on calculated affordability
+            const initialPurchasePlan = generateInitialPurchasePlan(initialSalesPlan); 
+            const initialRentPlan = populateInitialRentPlan();
+            const initialOtherFixedPlan = populateInitialOtherFixedPlan();
             
             const tableBody = document.querySelector('#dataTable tbody');
             let initialHtml = '';
             initialSalesPlan.forEach((val, i) => {
                 const initialPurchase = initialPurchasePlan[i]; 
+                const initialRent = initialRentPlan[i];
+                const initialOtherFixed = initialOtherFixedPlan[i];
+
                 initialHtml += `<tr class="bg-white border-b hover:bg-gray-50">
                     <td class="px-3 py-2 font-medium text-gray-900 whitespace-nowrap">${i + 1}</td>
                     <td class="px-3 py-2"><input type="number" id="salesPlan_${i}" value="${val}" min="0" class="w-16 data-input"></td>
                     <td class="px-3 py-2"><input type="number" id="purchasePlan_${i}" value="${initialPurchase}" min="0" class="w-16 data-input"></td>
+                    <td class="px-3 py-2"><input type="number" id="rentPlan_${i}" value="${initialRent}" min="0" class="w-20 data-input"></td> 
+                    <td class="px-3 py-2"><input type="number" id="otherFixedPlan_${i}" value="${initialOtherFixed}" min="0" class="w-20 data-input"></td> 
                     <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
                 </tr>`;
             });
             tableBody.innerHTML = initialHtml;
 
             // Attach listeners to main inputs (outside the dynamic table)
-            document.querySelectorAll('#personalCosts, #fixedMonthlyCosts, #avgSalePrice, #carPurchase, #prepCosts, #ustRegime').forEach(input => {
+            document.querySelectorAll('#grant, #savings, #rentDeposit, #healthInsurance, #personalCosts, #avgSalePrice, #carPurchase, #prepCosts, #ustRegime').forEach(input => { 
                 input.addEventListener('change', recalculatePlan);
             });
             document.getElementById('calculate-button').addEventListener('click', recalculatePlan);
