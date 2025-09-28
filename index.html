@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="uk">
 <head>
@@ -26,6 +25,12 @@
             color: #ef4444; /* Tailwind red-500 */
             font-weight: 600;
         }
+        .text-purple-700 {
+            color: #7c3aed; /* Tailwind purple-600 */
+        }
+        .text-blue-700 {
+            color: #1d4ed8; /* Tailwind blue-700 */
+        }
     </style>
 </head>
 <body class="antialiased text-gray-800">
@@ -43,7 +48,7 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     
                     <div class="input-group">
-                        <h4 class="font-semibold text-gray-800 mb-3">Фінансування та Постійні витрати</h4>
+                        <h4 class="font-semibold text-gray-800 mb-3">Фінансування та Податкові фактори</h4>
                         
                         <!-- СТАРТОВИЙ КАПІТАЛ - ТЕПЕР РЕДАГУЄТЬСЯ -->
                         <label class="block mb-2"><span class="text-gray-700 text-sm font-bold">Стартовий Капітал (Грант, €):</span>
@@ -52,18 +57,23 @@
                         <label class="block mb-2"><span class="text-gray-700 text-sm font-bold">Власні Кошти/Заощадження (€):</span>
                             <input type="number" id="savings" value="5000" class="mt-1 block w-full rounded-md shadow-sm p-2">
                         </label>
+                        
+                        <!-- ДЕПОЗИТ І ЙОГО РОЗПОДІЛ -->
+                        <label class="block mb-2 mt-4"><span class="text-gray-700 text-sm font-bold">Застава оренди (Депозит, €):</span>
+                            <input type="number" id="rentDeposit" value="5000" class="mt-1 block w-full rounded-md shadow-sm p-2">
+                        </label>
+                        <label class="block mb-2"><span class="text-gray-700 text-sm font-bold">Розподіл депозиту (міс., 0=у М1):</span>
+                            <input type="number" id="rentDepositSpreadMonths" value="0" class="mt-1 block w-full rounded-md shadow-sm p-2" min="0" max="12">
+                        </label>
 
-                        <!-- НОВІ РЕДАГОВАНІ ВХІДНІ ДАНІ -->
-                        <label class="block mb-2"><span class="text-gray-700 text-sm">Цільовий Запас Авто (шт):</span>
-                             <input type="number" id="targetInventory" value="10" class="mt-1 block w-full rounded-md shadow-sm p-2">
-                        </label>
-                        <label class="block mb-2"><span class="text-gray-700 text-sm">Щомісячні Особисті/Соц. Внески (€/міс):</span>
-                             <input type="number" id="healthInsurance" value="400" class="mt-1 block w-full rounded-sm p-2">
-                        </label>
-                         <label class="block mb-2"><span class="text-gray-700 text-sm">Особисті Витрати на Життя (€/міс):</span>
-                            <input type="number" id="personalCosts" value="1450" class="mt-1 block w-full rounded-md shadow-sm p-2">
-                        </label>
-                        <input type="hidden" id="rentDeposit" value="5000"> 
+
+                        <!-- ОСОБИСТІ ВИТРАТИ: Залишаються у внутрішніх розрахунках -->
+                        <input type="hidden" id="healthInsurance" value="400"> 
+                        <input type="hidden" id="personalCosts" value="1450">
+                        
+                        <p class="text-sm mt-4 p-2 bg-blue-100 rounded-md font-semibold">
+                            Тип діяльності: Малий приватний підприємець (Einzelunternehmen)
+                        </p>
                     </div>
 
                     <div class="input-group">
@@ -81,7 +91,7 @@
                     </div>
 
                     <div class="input-group">
-                        <h4 class="font-semibold text-gray-800 mb-3">Податковий Режим</h4>
+                        <h4 class="font-semibold text-gray-800 mb-3">Податковий Режим та Jobcenter</h4>
                          <label class="block mb-2"><span class="text-gray-700 text-sm">Режим ПДВ:</span>
                             <select id="ustRegime" class="mt-1 block w-full rounded-md shadow-sm p-2">
                                 <option value="regular">Стандартний (Regelbesteuerung)</option>
@@ -89,6 +99,29 @@
                                 <option value="kleinunternehmer">Малий підприємець (§19 UStG)</option>
                             </select>
                         </label>
+                        
+                        <!-- Jobcenter Coverage -->
+                        <div class="mt-4 p-2 bg-pink-100 rounded-md">
+                            <h5 class="font-semibold text-sm mb-1">Покриття Jobcenter (Перші 6 міс.)</h5>
+                            <label class="flex items-center space-x-2"><input type="checkbox" id="jobcenterCoversHousing" class="rounded">
+                                <span class="text-gray-700 text-sm">Jobcenter покриває житло</span>
+                            </label>
+                            <label class="flex items-center space-x-2 mt-1"><input type="checkbox" id="jobcenterCoversInsurance" class="rounded">
+                                <span class="text-gray-700 text-sm">Jobcenter покриває мед/соц</span>
+                            </label>
+                        </div>
+                        
+                        <!-- VAT OPTIONS -->
+                        <label id="purchaseWithVAT_label" class="flex items-center space-x-2 mt-4">
+                            <input type="checkbox" id="purchaseWithVAT" checked class="rounded">
+                            <span class="text-gray-700 text-sm">Закупівля авто з ПДВ (є Vorsteuer)</span>
+                        </label>
+                        <label id="rentHasVAT_label" class="flex items-center space-x-2 mt-1">
+                            <input type="checkbox" id="rentHasVAT" class="rounded">
+                            <span class="text-gray-700 text-sm">Оренда площі з ПДВ</span>
+                        </label>
+                       
+
                         <p class="text-xs text-red-500 mt-4">Усі податки (GwSt, ESt) розраховуються на річній основі та сплачуються щоквартальними авансами.</p>
                         <button id="calculate-button" class="mt-4 w-full px-6 py-3 text-lg font-semibold rounded-lg text-white bg-green-600 hover:bg-green-700 transition-colors shadow-md">Перерахувати</button>
                     </div>
@@ -106,15 +139,16 @@
                                 <th scope="col" class="px-3 py-2">Міс.</th>
                                 <th scope="col" class="px-3 py-2 w-20">Продажі (шт)</th>
                                 <th scope="col" class="px-3 py-2 w-20">Куплено (шт)</th>
-                                <th scope="col" class="px-3 py-2 w-20">Оренда Місця (€)</th> <!-- НОВА КОЛОНКА -->
-                                <th scope="col" class="px-3 py-2 w-20">Інші Пост. (€)</th> <!-- НОВА КОЛОНКА -->
+                                <th scope="col" class="px-3 py-2 w-20">Оренда площі (бізнес) €</th>
+                                <th scope="col" class="px-3 py-2 w-20">Інші Пост. (€)</th>
                                 <th scope="col" class="px-3 py-2">Запас</th>
                                 <th scope="col" class="px-3 py-2 text-green-700">EBIT (Прибуток)</th>
                                 <th scope="col" class="px-3 py-2 text-blue-700">Cash Flow (Чистий)</th>
-                                <th scope="col" class="px-3 py-2 text-purple-700">Особистий CF</th>
                                 <th scope="col" class="px-3 py-2 text-red-700">USt (Сплата)</th>
-                                <th scope="col" class="px-3 py-2">GwSt</th>
-                                <th scope="col" class="px-3 py-2">ESt</th>
+                                <th scope="col" class="px-3 py-2 font-bold">Аванс ESt+GwSt</th>
+                                <th scope="col" class="px-3 py-2">GwSt (Річний)</th>
+                                <th scope="col" class="px-3 py-2">ESt (Річний)</th>
+                                <th scope="col" class="px-3 py-2 text-green-800 font-bold">Чистий Прибуток (Фінал)</th>
                                 <th scope="col" class="px-3 py-2 font-bold">Залишок (Подуш. безп.)</th>
                             </tr>
                         </thead>
@@ -164,8 +198,8 @@
         function getInputs() {
             const salesPlan = [];
             const purchasePlan = [];
-            const rentPlan = []; // NEW
-            const otherFixedPlan = []; // NEW
+            const rentPlan = []; 
+            const otherFixedPlan = []; 
             
             // Collect data directly from the dynamic table inputs
             for (let i = 0; i < NUM_MONTHS; i++) {
@@ -197,100 +231,71 @@
                 healthInsurance: parseFloat(document.getElementById('healthInsurance').value) || 0, 
                 personalCosts: parseFloat(document.getElementById('personalCosts').value) || 0, 
                 ustRegime: document.getElementById('ustRegime').value,
+                purchaseWithVAT: document.getElementById('purchaseWithVAT')?.checked ?? true, // NEW CHECKBOX ID
+                rentHasVAT: document.getElementById('rentHasVAT')?.checked ?? false,
+                jobcenterCoversHousing: document.getElementById('jobcenterCoversHousing')?.checked ?? false, // FIX: Default to false
+                jobcenterCoversInsurance: document.getElementById('jobcenterCoversInsurance')?.checked ?? false, // FIX: Default to false
                 salesPlan: salesPlan,
                 purchasePlan: purchasePlan,
                 rentDeposit: parseFloat(document.getElementById('rentDeposit').value) || 0, 
+                rentDepositSpreadMonths: parseInt(document.getElementById('rentDepositSpreadMonths').value) || 0,
                 rentPlan: rentPlan, 
                 otherFixedPlan: otherFixedPlan 
             };
         }
         
+        // Function to set up the initial *realistic* plan
         function populateInitialSalesPlan() {
-            // Generates initial default sales plan values for the first time
-            const initialSalesPlan = [];
+             const initialSalesPlan = [];
              for (let i = 0; i < NUM_MONTHS; i++) {
-                // STARTING WITH A CONSERVATIVE, REALISTIC SCALING PLAN: 
                 if (i < 2) {
-                    initialSalesPlan.push(1);
+                    initialSalesPlan.push(1); 
+                } else if (i < 4) {
+                    initialSalesPlan.push(2); 
                 } else if (i < 6) {
-                    initialSalesPlan.push(2);
+                    initialSalesPlan.push(3); 
+                } else if (i < 9) {
+                    initialSalesPlan.push(4); 
                 } else if (i < 12) {
-                    initialSalesPlan.push(3);
+                    initialSalesPlan.push(5); 
                 } else if (i < 24) {
-                    initialSalesPlan.push(5);
+                    initialSalesPlan.push(7);
                 } else {
-                    initialSalesPlan.push(8);
+                    initialSalesPlan.push(10);
                 }
             }
             return initialSalesPlan;
         }
 
-        // NEW: Initial Rent Plan (e.g., M1-M36: 800 EUR)
         function populateInitialRentPlan() {
             return Array(NUM_MONTHS).fill(560); // Set default to 560 EUR
         }
 
-        // NEW: Initial Other Fixed Costs Plan (e.g., M1-M36: 500 EUR)
         function populateInitialOtherFixedPlan() {
             return Array(NUM_MONTHS).fill(740); // 1300 (total fixed) - 560 (rent) = 740 EUR
         }
 
-        // AUTO-GENERATING INITIAL PURCHASE PLAN based on selling constraints (buy what you need + 1 for stock)
+        // AUTO-GENERATING INITIAL PURCHASE PLAN based on the logic: buy 1 more than needed for M1, then follow sales
         function generateInitialPurchasePlan(salesPlan) {
             const initialPurchasePlan = [];
-            const carCost = 2300 + 850; // Purchase + Prep = 3150 EUR (Hardcoded default for initial plan)
-            const rentDeposit = 5000; // Hardcoded default for initial plan
-            const initialRent = 560; // New Default
-            const initialOtherFixed = 740; // New Default
-            const healthInsurance = 400; // Hardcoded default for initial plan
-            const personalCosts = 1450; // Hardcoded default for initial plan
-            const grant = 5000;
-            const savings = 5000;
-            
-            // Fixed Monthly Operating Costs for M1 for initial calculation (Rent + Other + Personal + Insurance)
-            const fixedOps = initialRent + initialOtherFixed + personalCosts + healthInsurance; 
-
-            let cash = grant + savings; // Starting cash
             let inventory = 0; 
 
             for (let i = 0; i < NUM_MONTHS; i++) {
                 const salesTarget = salesPlan[i];
                 let carsToBuy = 0;
                 
-                // --- M1: CRITICAL STARTUP COSTS ---
+                // Assuming sales and purchase are synced for minimal risk, M1 needs initial stock
                 if (i === 0) {
-                    // M1 cash outflow priority: Deposit (5000) + Fixed Ops (2750) 
-                    const m1RequiredCash = rentDeposit + fixedOps; 
-                    const availableForCars = cash - m1RequiredCash; // Cash remaining after all M1 fixed/deposit outflows
-                    
-                    const maxCarsICanAfford = Math.floor(availableForCars / carCost);
-                    
-                    // We want to buy targetInventory (10) minus current stock (0), but are limited by cash
-                    const targetBuy = 10;
-                    
-                    carsToBuy = Math.min(targetBuy, maxCarsICanAfford); 
-                    
-                    if (carsToBuy < salesTarget) {
-                        carsToBuy = salesTarget; // Must buy at least what we plan to sell
-                    }
-                    if (carsToBuy > maxCarsICanAfford) {
-                         carsToBuy = maxCarsICanAfford; 
-                    }
-                    
-                    // Update cash for the manual tracking
-                    cash -= m1RequiredCash + (carsToBuy * carCost); 
-
+                    // M1: Buy 2 (to match sales and maintain zero initial stock)
+                    carsToBuy = 2;
                 } else {
-                    // --- M2 and onwards: REINVESTMENT LOGIC (Simplified) ---
-                    
-                    // Goal is to reach/maintain 10 cars
-                    const currentDeficit = Math.max(0, 10 - inventory);
-                    carsToBuy = currentDeficit;
+                    // M2 and onwards: Buy exactly what you sell this month
+                    carsToBuy = salesTarget;
                 }
                 
                 // Update inventory for next loop
                 inventory += carsToBuy - salesTarget;
-                initialPurchasePlan.push(Math.max(0, carsToBuy));
+                initialPurchasePlan.push(carsToBuy);
             }
             
             return initialPurchasePlan;
@@ -300,38 +305,86 @@
         function processData() {
             const inputs = getInputs();
             const data = [];
-            const purchaseHasVAT = inputs.ustRegime === 'regular';
             
-            let accumulatedCashBalance = inputs.grant + inputs.savings; // Starts with 10000
+            const isRegular = inputs.ustRegime === 'regular';
+            const isMargin  = inputs.ustRegime === 'margin';
+            const isKU      = inputs.ustRegime === 'kleinunternehmer';
+
+            // FIX: accumulatedCashBalance starts with 10k. No double injection.
+            let accumulatedCashBalance = inputs.grant + inputs.savings; 
             let currentInventory = 0;
             let yearlyEbit = 0;
             let yearly_gew_ertrag = 0;
             let last_yearly_tax_data = { Gewerbesteuer: 0, Einkommensteuer: 0, total: 0 };
             let ust_period_due = 0;
-            
+            const COST_PER_CAR = inputs.carPurchase + inputs.prepCosts;
+            const PERSONAL_COSTS_HOUSING = inputs.personalCosts; // Житло
+            const PERSONAL_COSTS_INSURANCE = inputs.healthInsurance; // Соц. внески
+
             for (let i = 0; i < NUM_MONTHS; i++) {
-                const carsSold = inputs.salesPlan[i];
+                const carsSoldTarget = inputs.salesPlan[i];
                 const carsBought = inputs.purchasePlan[i];
                 
                 // Monthly Fixed Costs from the table inputs
                 const rentCostMonthly = inputs.rentPlan[i]; 
                 const otherFixedCostMonthly = inputs.otherFixedPlan[i]; 
                 
-                // --- P&L EXPENSE COMPONENTS (NO VAT) ---
-                const totalFixedCostsPnl = rentCostMonthly + otherFixedCostMonthly; // Uses monthly table inputs
-                const cogsPnl = carsSold * (inputs.carPurchase + inputs.prepCosts);
-                let totalExpensesPnl = totalFixedCostsPnl + cogsPnl; 
+                // --- P&L EXPENSE COMPONENTS (NETTO/BRUTTO) ---
+                const totalFixedCostsPnlNetto = rentCostMonthly + otherFixedCostMonthly; // Base P&L fixed cost (before VAT factor)
                 
-                // --- CASH FLOW OUTFLOW COMPONENTS (WITH VAT) ---
-                const costPerCarGross = inputs.carPurchase + inputs.prepCosts;
-                const grossFactor = purchaseHasVAT ? 1 + UST_RATE : 1;
+                // INVENTORY CHECK & CLAMPING
+                const potentialInventory = currentInventory + carsBought;
+                const carsSold = Math.min(carsSoldTarget, potentialInventory); // CLAMP SALES
+                const inventoryWarning = carsSoldTarget > potentialInventory;
 
-                const fixedCostsCashOutflow = (rentCostMonthly + otherFixedCostMonthly) * grossFactor; // Uses monthly table inputs
-                const personalCashOutflow = inputs.healthInsurance + inputs.personalCosts; // Uses editable inputs
-                const rentDepositCashOutflow = i === 0 ? inputs.rentDeposit * grossFactor : 0; // Uses editable deposit
+                // --- P&L EXPENSE COMPONENTS ---
+                const expensePnlFactor = isKU ? (1 + UST_RATE) : 1;
+                const cogsPnl = carsSold * COST_PER_CAR * expensePnlFactor; // COGS is Gross for KU, Net for Regular/Margin
+                let totalExpensesPnl = totalFixedCostsPnlNetto * expensePnlFactor + cogsPnl;
+                
+                // --- CASH FLOW OUTFLOW COMPONENTS (BRUTTO FOR MOST) ---
+                
+                // 1. Personal Costs (Jobcenter Coverage Logic)
+                const inJobcenterWindow = i < 6; // M1-M6
+                let housingCashOutflow = PERSONAL_COSTS_HOUSING; 
+                let insuranceCashOutflow = PERSONAL_COSTS_INSURANCE; 
 
-                // Define cashNeededToOperate before use
-                const cashNeededToOperate = fixedCostsCashOutflow + personalCashOutflow + rentDepositCashOutflow; 
+                // FIX: Jobcenter coverage
+                if (inJobcenterWindow && inputs.jobcenterCoversHousing) housingCashOutflow = 0;
+                if (inJobcenterWindow && inputs.jobcenterCoversInsurance) insuranceCashOutflow = 0;
+                
+                // 2. Operating Fixed Costs (VAT logic)
+                const rentVatFactor = inputs.rentHasVAT ? (1 + UST_RATE) : 1;
+                const operatingRentOutflow = rentCostMonthly * rentVatFactor;
+                const operatingOtherFixedOutflow = otherFixedCostMonthly * (1 + UST_RATE); // Assume other fixed are VAT-inclusive
+                
+                const operatingFixedOutflow = operatingRentOutflow + operatingOtherFixedOutflow;
+                
+                // 3. RENT DEPOSIT: Paid without VAT, with optional spreading
+                let rentDepositCashOutflow = 0;
+                if (i === 0 && inputs.rentDepositSpreadMonths === 0) {
+                    rentDepositCashOutflow = inputs.rentDeposit;
+                } else if (i < inputs.rentDepositSpreadMonths && inputs.rentDepositSpreadMonths > 0) {
+                    rentDepositCashOutflow = inputs.rentDeposit / inputs.rentDepositSpreadMonths;
+                }
+                
+                // 4. CAR PURCHASE: Split purchase (Netto/Brutto) and prep (Brutto)
+                const purchaseWithVAT = inputs.purchaseWithVAT; // Checkbox state
+                
+                // LOGIC FIX: Car purchase factor (For Cash Outflow)
+                // KU factor is 1.19 (MUST pay brutto)
+                const carPurchaseFactor = isKU
+                    ? (1 + UST_RATE)
+                    : (isMargin || (isRegular && !purchaseWithVAT))
+                        ? 1 // Margin / Regular(25a): Pay NETTO/§25a
+                        : (1 + UST_RATE); // Regular + VAT: Pay BRUTTO
+                
+                const carPurchaseOutflow = carsBought * inputs.carPurchase * carPurchaseFactor; 
+                
+                // Prep: Always paid Brutto (1.19)
+                const prepOutflow = carsBought * inputs.prepCosts * (1 + UST_RATE); 
+
+                const carRelatedCashOutflow = carPurchaseOutflow + prepOutflow;
 
                 // --- P&L REVENUE & VAT CALCULATION ---
                 let salesRevenueGross = carsSold * inputs.avgSalePrice;
@@ -339,46 +392,54 @@
                 let ustDue = 0;
                 let ustVorsteuer = 0;
 
-                if (inputs.ustRegime === 'regular') {
+                if (isRegular) {
                     salesRevenuePnl = salesRevenueGross / (1 + UST_RATE);
                     ustDue = salesRevenueGross - salesRevenuePnl;
                     
-                    ustVorsteuer = (totalFixedCostsPnl * UST_RATE) + (carsSold * inputs.prepCosts * UST_RATE) + (carsBought * inputs.carPurchase * UST_RATE);
+                    // Vorsteuer calculation for Regular (on all business expenses/purchases)
+                    const rentVorsteuer = inputs.rentHasVAT ? rentCostMonthly * UST_RATE : 0; // FIX: Rent Vorsteuer only if rentHasVAT
+                    const otherFixedVorsteuer = otherFixedCostMonthly * UST_RATE; 
+                    const prepVorsteuer = (carsBought * inputs.prepCosts) * UST_RATE;
                     
-                } else if (inputs.ustRegime === 'margin') {
+                    // FIX: Apply Vorsteuer ONLY if purchase IS CHECKED
+                    const carPurchaseVorsteuer = (isRegular && purchaseWithVAT) ? (carsBought * inputs.carPurchase) * UST_RATE : 0;
+                    ustVorsteuer = rentVorsteuer + otherFixedVorsteuer + prepVorsteuer + carPurchaseVorsteuer;
+                    
+                } else if (isMargin) {
                     const margin = salesRevenueGross - (carsSold * inputs.carPurchase);
-                    if (margin > 0) ustDue = margin * UST_SATZ / (100 + UST_SATZ);
-                    salesRevenuePnl = salesRevenueGross - ustDue;
-                    ustVorsteuer = 0;
-                } else { // kleinunternehmer: P&L is Gross
+                    const ustOnMargin = margin > 0 ? margin * UST_SATZ / (100 + UST_SATZ) : 0;
+                    ustDue = ustOnMargin;
+                    salesRevenuePnl = salesRevenueGross - ustOnMargin;
+                    
+                    // Vorsteuer allowed only on general business expenses, NOT on car purchase/COGS
+                    const rentVorsteuer = inputs.rentHasVAT ? rentCostMonthly * UST_RATE : 0;
+                    const otherFixedVorsteuer = otherFixedCostMonthly * UST_RATE; 
+                    const prepVorsteuer  = (carsBought * inputs.prepCosts) * UST_RATE;
+                    ustVorsteuer = rentVorsteuer + otherFixedVorsteuer + prepVorsteuer;
+
+                } else { // kleinunternehmer
                     salesRevenuePnl = salesRevenueGross;
                     ustDue = 0;
                     ustVorsteuer = 0;
-                    totalExpensesPnl = totalFixedCostsPnl * grossFactor + cogsPnl * grossFactor;
                 }
 
-                // Final EBIT Calculation (Deposit is 1-time P&L hit in M1)
-                const ebit = salesRevenuePnl - totalExpensesPnl - (i === 0 ? inputs.rentDeposit : 0); 
+                // Final EBIT Calculation (FIX: Deposit removed from EBIT)
+                const ebit = salesRevenuePnl - totalExpensesPnl; 
 
                 // Update yearly totals BEFORE tax calculation logic
                 yearlyEbit += ebit;
                 yearly_gew_ertrag += ebit;
 
-                // --- INVENTORY LOGIC (USER CONTROLLED) ---
-                const carPurchaseCashOutflow = carsBought * costPerCarGross;
-                currentInventory -= carsSold;
-                currentInventory += carsBought;
+                // --- INVENTORY LOGIC (UPDATE) ---
+                currentInventory = potentialInventory - carsSold;
                 
-                // Check for inventory warning
-                const inventoryWarning = currentInventory < 0;
-
                 // --- TAXES & CASH FLOW ---
                 
                 let ustCashFlowMovement = ustDue - ustVorsteuer;
                 let ustPaidThisMonth = 0;
                 let ustOutflowFinal = 0;
 
-                if (inputs.ustRegime !== 'kleinunternehmer') {
+                if (!isKU) { // Only calculate VAT flow if not KU
                     ust_period_due += ustCashFlowMovement;
                     if ((i + 1) % 3 === 0) {
                         ustPaidThisMonth = ust_period_due;
@@ -396,7 +457,7 @@
 
                     if (taxable_profit > 0) {
                         // Health insurance is deductible from taxable income for ESt
-                        let est_taxable_income = taxable_profit - (inputs.healthInsurance * 12); 
+                        let est_taxable_income = taxable_profit - (PERSONAL_COSTS_INSURANCE * 12); 
                         let est_tax = calculateESt(est_taxable_income).tax;
                         
                         let gewStTaxableBase = Math.max(0, yearly_gew_ertrag - FREIBETRAG_GEWST);
@@ -410,20 +471,22 @@
                         current_yearly_tax_data.Gewerbesteuer = gewSt;
                         current_yearly_tax_data.total = est_final + gewSt;
                     }
+                    // Reset yearly accumulators for the next year's calculation
                     yearlyEbit = 0;
                     yearly_gew_ertrag = 0;
                 }
                 
+                // Авансові платежі за ESt/GwSt ідуть з минулого річного розрахунку
                 if (last_yearly_tax_data.total > 0 && (i + 1) % 3 === 0) {
                     taxesPaidThisMonth = last_yearly_tax_data.total / 4;
                 }
                 
-                // Final Cash Flow (totalCashOutflow MUST include the calculated taxes/purchases)
-                const totalCashOutflow = cashNeededToOperate + carPurchaseCashOutflow + ustOutflowFinal + taxesPaidThisMonth;
+                // Total Cash Outflow (FIX: Deposit must be subtracted from 10k, not added to expenses)
+                // Total outflow = OperatingFixed + Personal + Deposit + Car-related + USt + Taxes
+                const totalCashOutflow = operatingFixedOutflow + housingCashOutflow + insuranceCashOutflow + rentDepositCashOutflow + carRelatedCashOutflow + ustOutflowFinal + taxesPaidThisMonth;
                 
-                // FIX: Initial Cash Injection is the full 10k, but only once.
-                const initialCashInjection = i === 0 ? inputs.grant + inputs.savings : 0;
-                const netCashFlow = (salesRevenueGross + initialCashInjection) - totalCashOutflow;
+                // Cash Inflow: Only sales revenue (initial 10k already set as accumulatedBalance start)
+                const netCashFlow = salesRevenueGross - totalCashOutflow;
                 
                 accumulatedCashBalance += netCashFlow;
                 // FIX END
@@ -431,19 +494,22 @@
 
                 data.push({
                     month: `Міс. ${i + 1}`,
-                    carsSold: carsSold,
+                    carsSoldTarget: carsSoldTarget, // Sold target
+                    carsSold: carsSold, // Actual sold (clamped)
                     carsBought: carsBought,
                     rentCostMonthly: rentCostMonthly, // NEW
                     otherFixedCostMonthly: otherFixedCostMonthly, // NEW
                     currentInventory: currentInventory,
                     ebit: ebit,
                     netCashFlow: netCashFlow,
-                    personalCashOutflow: personalCashOutflow,
+                    housingCashOutflow: housingCashOutflow,
+                    insuranceCashOutflow: insuranceCashOutflow,
                     ustPaidThisMonth: ustPaidThisMonth,
                     taxesPaidThisMonth: taxesPaidThisMonth,
                     accumulatedBalance: accumulatedCashBalance,
                     yearly_tax_data: current_yearly_tax_data,
-                    inventoryWarning: inventoryWarning
+                    inventoryWarning: inventoryWarning,
+                    netProfitFinal: ebit - (current_yearly_tax_data.total / 12)
                 });
                 last_yearly_tax_data = current_yearly_tax_data;
             }
@@ -454,13 +520,29 @@
             processedData = processData();
             updateDataTable();
             updateCostPerCarDisplay();
+            updatePurchase25aVisibility();
         }
 
         function updateCostPerCarDisplay() {
             const carPurchase = parseFloat(document.getElementById('carPurchase').value) || 0;
             const prepCosts = parseFloat(document.getElementById('prepCosts').value) || 0;
-            const totalCost = carPurchase + prepCosts;
+            const isKU = document.getElementById('ustRegime').value === 'kleinunternehmer';
+
+            // FIX: Cost display should be BRUTTO for KU P&L
+            const totalCost = (carPurchase + prepCosts) * (isKU ? (1 + UST_RATE) : 1);
+            
             document.getElementById('costPerCarDisplay').textContent = formatCurrency(totalCost);
+        }
+
+        function updatePurchase25aVisibility() {
+            const purchase25aLabel = document.getElementById('purchaseWithVAT_label');
+            const ustRegime = document.getElementById('ustRegime').value;
+            
+            if (ustRegime === 'regular') {
+                purchase25aLabel.style.display = 'flex';
+            } else {
+                purchase25aLabel.style.display = 'none';
+            }
         }
         
         function updateDataTable() {
@@ -471,37 +553,53 @@
                 const data = processedData[i];
                 const yearlyData = data.yearly_tax_data;
 
-                const personalCf = -data.personalCashOutflow; 
-
                 // Display annual tax totals in the final month of the year/period
-                const gwst_val = (i + 1) % 12 === 0 || i === NUM_MONTHS - 1 ? formatCurrency(yearlyData.Gewerbesteuer) : 
-                                 (data.taxesPaidThisMonth > 0 && (i + 1) % 3 === 0 ? formatCurrency(yearlyData.Gewerbesteuer) : '0.00 €');
+                const gwst_val = (i + 1) % 12 === 0 || i === NUM_MONTHS - 1 ? formatCurrency(yearlyData.Gewerbesteuer) : '0.00 €';
+                const est_val = (i + 1) % 12 === 0 || i === NUM_MONTHS - 1 ? formatCurrency(yearlyData.Einkommensteuer) : '0.00 €';
                 
-                const est_val = (i + 1) % 12 === 0 || i === NUM_MONTHS - 1 ? formatCurrency(yearlyData.Einkommensteuer) :
-                                (data.taxesPaidThisMonth > 0 && (i + 1) % 3 === 0 ? formatCurrency(yearlyData.Einkommensteuer) : '0.00 €');
+                // Display advance payment in the dedicated column
+                const advance_val = data.taxesPaidThisMonth > 0 && (i + 1) % 3 === 0 ? formatCurrency(data.taxesPaidThisMonth) : '0.00 €';
+
 
                 // Generate input fields for Sales and Purchase plans
-                const salesInput = `<input type="number" id="salesPlan_${i}" value="${data.carsSold}" min="0" class="w-16 data-input">`;
+                const salesInput = `<input type="number" id="salesPlan_${i}" value="${data.carsSoldTarget}" min="0" class="w-16 data-input">`;
                 const purchaseInput = `<input type="number" id="purchasePlan_${i}" value="${data.carsBought}" min="0" class="w-16 data-input">`;
                 const rentInput = `<input type="number" id="rentPlan_${i}" value="${data.rentCostMonthly}" min="0" class="w-20 data-input">`;
                 const otherFixedInput = `<input type="number" id="otherFixedPlan_${i}" value="${data.otherFixedCostMonthly}" min="0" class="w-20 data-input">`;
 
-                const inventoryClass = data.currentInventory < 0 ? 'warning-text' : '';
+                let inventoryClass = data.currentInventory < 0 ? 'warning-text' : ''; // Use 'let' instead of 'const'
+                if (data.inventoryWarning) inventoryClass = 'warning-text'; // Highlight if sold more than in stock
 
+                // Apply special warning to sales if they were clamped
+                const salesCellClass = data.carsSoldTarget !== data.carsSold ? 'warning-text' : '';
+                
+                // Personal cash flow display (negative for outflow)
+                const housingCfDisplay = formatCurrency(-data.housingCashOutflow);
+                const insuranceCfDisplay = formatCurrency(-data.insuranceCashOutflow);
+
+
+                let ustClass = 'text-gray-500';
+                if (data.ustPaidThisMonth > 0) {
+                    ustClass = 'text-red-700';
+                } else if (data.ustPaidThisMonth < 0) {
+                    ustClass = 'text-green-600 font-bold';
+                }
+                
                 bodyHtml += `<tr class="bg-white border-b hover:bg-gray-50">
                     <td class="px-3 py-2 font-medium text-gray-900 whitespace-nowrap">${i + 1}</td>
-                    <td class="px-3 py-2">${salesInput}</td>
+                    <td class="px-3 py-2 ${salesCellClass}">${salesInput}</td>
                     <td class="px-3 py-2">${purchaseInput}</td>
                     <td class="px-3 py-2">${rentInput}</td>
                     <td class="px-3 py-2">${otherFixedInput}</td>
                     <td class="px-3 py-2 ${inventoryClass}">${data.currentInventory}</td>
                     <td class="px-3 py-2 ${data.ebit < 0 ? 'text-red-500' : 'text-green-600'}">${formatCurrency(data.ebit)}</td>
                     <td class="px-3 py-2 ${data.netCashFlow < 0 ? 'text-red-500' : ''}">${formatCurrency(data.netCashFlow)}</td>
-                    <td class="px-3 py-2 text-purple-600">${formatCurrency(personalCf)}</td>
-                    <td class="px-3 py-2">${formatCurrency(data.ustPaidThisMonth)}</td>
+                    <td class="px-3 py-2 text-red-700 ${ustClass}">${formatCurrency(data.ustPaidThisMonth)}</td>
+                    <td class="px-3 py-2 font-bold">${advance_val}</td>
                     <td class="px-3 py-2">${gwst_val}</td>
                     <td class="px-3 py-2">${est_val}</td>
-                    <td class="px-3 py-2 ${data.accumulatedBalance < 0 ? 'text-red-500' : 'font-bold'}">${formatCurrency(data.accumulatedBalance)}</td>
+                    <td class="px-3 py-2 ${data.netProfitFinal < 0 ? 'text-red-500' : 'text-green-800 font-bold'}">${formatCurrency(data.netProfitFinal)}</td>
+                    <td class="px-3 py-2 ${data.accumulatedBalance < 0 ? 'warning-text' : 'font-bold'}">${formatCurrency(data.accumulatedBalance)}</td>
                 </tr>`;
             }
             tableBody.innerHTML = bodyHtml;
@@ -532,18 +630,24 @@
                     <td class="px-3 py-2"><input type="number" id="purchasePlan_${i}" value="${initialPurchase}" min="0" class="w-16 data-input"></td>
                     <td class="px-3 py-2"><input type="number" id="rentPlan_${i}" value="${initialRent}" min="0" class="w-20 data-input"></td> 
                     <td class="px-3 py-2"><input type="number" id="otherFixedPlan_${i}" value="${initialOtherFixed}" min="0" class="w-20 data-input"></td> 
-                    <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+                    <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
                 </tr>`;
             });
             tableBody.innerHTML = initialHtml;
 
             // Attach listeners to main inputs (outside the dynamic table)
-            document.querySelectorAll('#grant, #savings, #rentDeposit, #healthInsurance, #personalCosts, #avgSalePrice, #carPurchase, #prepCosts, #ustRegime').forEach(input => { 
+            document.querySelectorAll('#grant, #savings, #rentDeposit, #rentDepositSpreadMonths, #healthInsurance, #personalCosts, #avgSalePrice, #carPurchase, #prepCosts').forEach(input => { 
                 input.addEventListener('change', recalculatePlan);
             });
+            document.getElementById('ustRegime').addEventListener('change', recalculatePlan);
+            document.getElementById('purchaseWithVAT').addEventListener('change', recalculatePlan);
+            document.getElementById('rentHasVAT').addEventListener('change', recalculatePlan);
+            document.getElementById('jobcenterCoversHousing').addEventListener('change', recalculatePlan);
+            document.getElementById('jobcenterCoversInsurance').addEventListener('change', recalculatePlan);
             document.getElementById('calculate-button').addEventListener('click', recalculatePlan);
 
             // Initial calculation
+            updatePurchase25aVisibility(); // Set initial visibility
             recalculatePlan();
         });
     </script>
