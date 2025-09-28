@@ -37,32 +37,38 @@
 
     <div class="container mx-auto p-4 md:p-8">
         <header class="text-center mb-8">
-            <h1 class="text-3xl md:text-4xl font-bold text-gray-900">Інтерактивна Таблиця Ліквідності (3 Роки)</h1>
-            <p class="text-md text-gray-600 mt-2">Ви повністю контролюєте **Продажі**, **Закупівлі** та **Фіксовані Витрати**.</p>
+            <h1 class="text-3xl md:text-4xl font-bold text-gray-900" data-i18n="title">Інтерактивна Таблиця Ліквідності (3 Роки)</h1>
+            <p class="text-md text-gray-600 mt-2" data-i18n="subtitle">Ви повністю контролюєте **Продажі**, **Закупівлі** та **Фіксовані Витрати**.</p>
         </header>
 
         <main>
+            <!-- Language Switcher -->
+            <div class="flex justify-center mb-6 space-x-4">
+                <button class="px-4 py-2 text-sm font-medium rounded-lg text-white bg-blue-500 hover:bg-blue-600 transition-colors" onclick="setLanguage('uk')">Українська</button>
+                <button class="px-4 py-2 text-sm font-medium rounded-lg text-white bg-gray-500 hover:bg-gray-600 transition-colors" onclick="setLanguage('de')">Deutsch</button>
+            </div>
+            
             <!-- Input Data Section -->
             <div class="bg-white p-6 rounded-xl shadow-md mb-8">
-                <h3 class="text-lg font-semibold mb-4 text-blue-700">1. Ключові вхідні дані</h3>
+                <h3 class="text-lg font-semibold mb-4 text-blue-700" data-i18n="section_1_title">1. Ключові вхідні дані</h3>
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     
                     <div class="input-group">
-                        <h4 class="font-semibold text-gray-800 mb-3">Фінансування та Податкові фактори</h4>
+                        <h4 class="font-semibold text-gray-800 mb-3" data-i18n="group_funding">Фінансування та Податкові фактори</h4>
                         
                         <!-- СТАРТОВИЙ КАПІТАЛ - ТЕПЕР РЕДАГУЄТЬСЯ -->
-                        <label class="block mb-2"><span class="text-gray-700 text-sm font-bold">Стартовий Капітал (Грант, €):</span>
+                        <label class="block mb-2"><span class="text-gray-700 text-sm font-bold" data-i18n="input_grant">Стартовий Капітал (Грант, €):</span>
                             <input type="number" id="grant" value="5000" class="mt-1 block w-full rounded-md shadow-sm p-2">
                         </label>
-                        <label class="block mb-2"><span class="text-gray-700 text-sm font-bold">Власні Кошти/Заощадження (€):</span>
-                            <input type="number" id="savings" value="5000" class="mt-1 block w-full rounded-md shadow-sm p-2">
+                        <label class="block mb-2"><span class="text-gray-700 text-sm font-bold" data-i18n="input_savings">Власні Кошти/Заощадження (€):</span>
+                            <input type="number" id="savings" value="7500" class="mt-1 block w-full rounded-md shadow-sm p-2">
                         </label>
                         
                         <!-- ДЕПОЗИТ І ЙОГО РОЗПОДІЛ -->
-                        <label class="block mb-2 mt-4"><span class="text-gray-700 text-sm font-bold">Застава оренди (Депозит, €):</span>
+                        <label class="block mb-2 mt-4"><span class="text-gray-700 text-sm font-bold" data-i18n="input_deposit">Застава оренди (Депозит, €):</span>
                             <input type="number" id="rentDeposit" value="5000" class="mt-1 block w-full rounded-md shadow-sm p-2">
                         </label>
-                        <label class="block mb-2"><span class="text-gray-700 text-sm font-bold">Розподіл депозиту (міс., 0=у М1):</span>
+                        <label class="block mb-2"><span class="text-gray-700 text-sm font-bold" data-i18n="input_deposit_spread">Розподіл депозиту (міс., 0=у М1):</span>
                             <input type="number" id="rentDepositSpreadMonths" value="0" class="mt-1 block w-full rounded-md shadow-sm p-2" min="0" max="12">
                         </label>
 
@@ -71,85 +77,85 @@
                         <input type="hidden" id="healthInsurance" value="400"> 
                         <input type="hidden" id="personalCosts" value="1450">
                         
-                        <p class="text-sm mt-4 p-2 bg-blue-100 rounded-md font-semibold">
+                        <p class="text-sm mt-4 p-2 bg-blue-100 rounded-md font-semibold" data-i18n="business_type">
                             Тип діяльності: Малий приватний підприємець (Einzelunternehmen)
                         </p>
                     </div>
 
                     <div class="input-group">
-                        <h4 class="font-semibold text-gray-800 mb-3">Юніт-економіка (на 1 авто)</h4>
-                         <label class="block mb-2"><span class="text-gray-700 text-sm">Середня ціна продажу (БРУТТО, €):</span>
+                        <h4 class="font-semibold text-gray-800 mb-3" data-i18n="group_unit_econ">Юніт-економіка (на 1 авто)</h4>
+                         <label class="block mb-2"><span class="text-gray-700 text-sm" data-i18n="input_sale_price">Середня ціна продажу (БРУТТО, €):</span>
                             <input type="number" id="avgSalePrice" value="4500" class="mt-1 block w-full rounded-md shadow-sm p-2">
                         </label>
-                        <label class="block mb-2"><span class="text-gray-700 text-sm">Ціна закупівлі (€):</span>
+                        <label class="block mb-2"><span class="text-gray-700 text-sm" data-i18n="input_car_purchase">Ціна закупівлі (€):</span>
                             <input type="number" id="carPurchase" value="2300" class="mt-1 block w-full rounded-md shadow-sm p-2">
                         </label>
-                        <label class="block mb-2"><span class="text-gray-700 text-sm">Витрати на підготовку (€):</span>
+                        <label class="block mb-2"><span class="text-gray-700 text-sm" data-i18n="input_prep_costs">Витрати на підготовку (€):</span>
                             <input type="number" id="prepCosts" value="850" class="mt-1 block w-full rounded-md shadow-sm p-2">
                         </label>
-                        <p class="text-sm mt-4 p-2 bg-yellow-100 rounded-md">Вартість 1 авто (закупка + підготовка) = <span id="costPerCarDisplay" class="font-bold"></span></p>
+                        <p class="text-sm mt-4 p-2 bg-yellow-100 rounded-md" data-i18n="cost_per_car">Вартість 1 авто (закупка + підготовка) = <span id="costPerCarDisplay" class="font-bold"></span></p>
                     </div>
 
                     <div class="input-group">
-                        <h4 class="font-semibold text-gray-800 mb-3">Податковий Режим та Jobcenter</h4>
-                         <label class="block mb-2"><span class="text-gray-700 text-sm">Режим ПДВ:</span>
+                        <h4 class="font-semibold text-gray-800 mb-3" data-i18n="group_taxes_jc">Податковий Режим та Jobcenter</h4>
+                         <label class="block mb-2"><span class="text-gray-700 text-sm" data-i18n="input_vat_regime">Режим ПДВ:</span>
                             <select id="ustRegime" class="mt-1 block w-full rounded-md shadow-sm p-2">
-                                <option value="regular">Стандартний (Regelbesteuerung)</option>
-                                <option value="margin">Differenzbesteuerung (§25a UStG)</option>
-                                <option value="kleinunternehmer">Малий підприємець (§19 UStG)</option>
+                                <option value="regular" data-i18n="option_regular">Стандартний (Regelbesteuerung)</option>
+                                <option value="margin" data-i18n="option_margin">Differenzbesteuerung (§25a UStG)</option>
+                                <option value="kleinunternehmer" data-i18n="option_ku">Малий підприємець (§19 UStG)</option>
                             </select>
                         </label>
                         
                         <!-- Jobcenter Coverage -->
                         <div class="mt-4 p-2 bg-pink-100 rounded-md">
-                            <h5 class="font-semibold text-sm mb-1">Покриття Jobcenter (Перші 6 міс.)</h5>
+                            <h5 class="font-semibold text-sm mb-1" data-i18n="jc_coverage_title">Покриття Jobcenter (Перші 6 міс.)</h5>
                             <label class="flex items-center space-x-2"><input type="checkbox" id="jobcenterCoversHousing" class="rounded">
-                                <span class="text-gray-700 text-sm">Jobcenter покриває житло</span>
+                                <span class="text-gray-700 text-sm" data-i18n="jc_covers_housing">Jobcenter покриває житло</span>
                             </label>
                             <label class="flex items-center space-x-2 mt-1"><input type="checkbox" id="jobcenterCoversInsurance" class="rounded">
-                                <span class="text-gray-700 text-sm">Jobcenter покриває мед/соц</span>
+                                <span class="text-gray-700 text-sm" data-i18n="jc_covers_insurance">Jobcenter покриває мед/соц</span>
                             </label>
                         </div>
                         
                         <!-- VAT OPTIONS -->
                         <label id="purchaseWithVAT_label" class="flex items-center space-x-2 mt-4">
                             <input type="checkbox" id="purchaseWithVAT" checked class="rounded">
-                            <span class="text-gray-700 text-sm">Закупівля авто з ПДВ (є Vorsteuer)</span>
+                            <span class="text-gray-700 text-sm" data-i18n="input_purchase_vat">Закупівля авто з ПДВ (є Vorsteuer)</span>
                         </label>
                         <label id="rentHasVAT_label" class="flex items-center space-x-2 mt-1">
                             <input type="checkbox" id="rentHasVAT" class="rounded">
-                            <span class="text-gray-700 text-sm">Оренда площі з ПДВ</span>
+                            <span class="text-gray-700 text-sm" data-i18n="input_rent_vat">Оренда площі з ПДВ</span>
                         </label>
                        
 
-                        <p class="text-xs text-red-500 mt-4">Усі податки (GwSt, ESt) розраховуються на річній основі та сплачуються щоквартальними авансами.</p>
-                        <button id="calculate-button" class="mt-4 w-full px-6 py-3 text-lg font-semibold rounded-lg text-white bg-green-600 hover:bg-green-700 transition-colors shadow-md">Перерахувати</button>
+                        <p class="text-xs text-red-500 mt-4" data-i18n="taxes_note">Усі податки (GwSt, ESt) розраховуються на річній основі та сплачуються щоквартальними авансами.</p>
+                        <button id="calculate-button" class="mt-4 w-full px-6 py-3 text-lg font-semibold rounded-lg text-white bg-green-600 hover:bg-green-700 transition-colors shadow-md" data-i18n="calculate_button">Перерахувати</button>
                     </div>
                 </div>
             </div>
 
             <!-- SALES PLAN (Integrated in the table/scrollable) -->
             <div class="bg-white p-6 rounded-xl shadow-md overflow-hidden">
-                <h3 class="p-0 font-semibold text-lg text-blue-700 mb-4">Детальний Фінансовий Звіт (36 місяців)</h3>
-                <p class="text-sm text-gray-600 mb-4">Ви можете редагувати **Продажі**, **Куплено** та **Місячні Витрати** безпосередньо в таблиці.</p>
+                <h3 class="p-0 font-semibold text-lg text-blue-700 mb-4" data-i18n="section_2_title">Детальний Фінансовий Звіт (36 місяців)</h3>
+                <p class="text-sm text-gray-600 mb-4" data-i18n="table_note">Ви можете редагувати **Продажі**, **Куплено** та **Місячні Витрати** безпосередньо в таблиці.</p>
                 <div class="overflow-x-auto">
                     <table id="dataTable" class="min-w-full text-sm text-left text-gray-500 border-collapse">
                         <thead class="text-xs text-gray-700 uppercase bg-gray-100 sticky top-0">
                             <tr>
-                                <th scope="col" class="px-3 py-2">Міс.</th>
-                                <th scope="col" class="px-3 py-2 w-20">Продажі (шт)</th>
-                                <th scope="col" class="px-3 py-2 w-20">Куплено (шт)</th>
-                                <th scope="col" class="px-3 py-2 w-20">Оренда площі (бізнес) €</th>
-                                <th scope="col" class="px-3 py-2 w-20">Інші Пост. (€)</th>
-                                <th scope="col" class="px-3 py-2">Запас</th>
-                                <th scope="col" class="px-3 py-2 text-green-700">EBIT (Прибуток)</th>
-                                <th scope="col" class="px-3 py-2 text-blue-700">Cash Flow (Чистий)</th>
-                                <th scope="col" class="px-3 py-2 text-red-700">USt (Сплата)</th>
-                                <th scope="col" class="px-3 py-2 font-bold">Аванс ESt+GwSt</th>
-                                <th scope="col" class="px-3 py-2">GwSt (Річний)</th>
-                                <th scope="col" class="px-3 py-2">ESt (Річний)</th>
-                                <th scope="col" class="px-3 py-2 text-green-800 font-bold">Чистий Прибуток (Фінал)</th>
-                                <th scope="col" class="px-3 py-2 font-bold">Залишок (Подуш. безп.)</th>
+                                <th scope="col" class="px-3 py-2" data-i18n="col_month">Міс.</th>
+                                <th scope="col" class="px-3 py-2 w-20" data-i18n="col_sales">Продажі (шт)</th>
+                                <th scope="col" class="px-3 py-2 w-20" data-i18n="col_purchase">Куплено (шт)</th>
+                                <th scope="col" class="px-3 py-2 w-20" data-i18n="col_rent">Оренда площі (бізнес) €</th>
+                                <th scope="col" class="px-3 py-2 w-20" data-i18n="col_other_fixed">Інші Пост. (€)</th>
+                                <th scope="col" class="px-3 py-2" data-i18n="col_inventory">Запас</th>
+                                <th scope="col" class="px-3 py-2 text-green-700" data-i18n="col_ebit">EBIT (Прибуток)</th>
+                                <th scope="col" class="px-3 py-2 text-blue-700" data-i18n="col_cf_net">Cash Flow (Чистий)</th>
+                                <th scope="col" class="px-3 py-2 text-red-700" data-i18n="col_ust">USt (Сплата)</th>
+                                <th scope="col" class="px-3 py-2 font-bold" data-i18n="col_tax_advance">Аванс ESt+GwSt</th>
+                                <th scope="col" class="px-3 py-2" data-i18n="col_gwst_annual">GwSt (Річний)</th>
+                                <th scope="col" class="px-3 py-2" data-i18n="col_est_annual">ESt (Річний)</th>
+                                <th scope="col" class="px-3 py-2 text-green-800 font-bold" data-i18n="col_net_profit_final">Чистий Прибуток (Фінал)</th>
+                                <th scope="col" class="px-3 py-2 font-bold" data-i18n="col_balance_final">Залишок (Подуш. безп.)</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -171,6 +177,98 @@
         
         let processedData;
         
+        // --- TRANSLATIONS ---
+        const TRANSLATIONS = {
+            uk: {
+                "title": "Інтерактивна Таблиця Ліквідності (3 Роки)",
+                "subtitle": "Ви повністю контролюєте **Продажі**, **Закупівлі** та **Фіксовані Витрати**.",
+                "section_1_title": "1. Ключові вхідні дані",
+                "group_funding": "Фінансування та Податкові фактори",
+                "input_grant": "Стартовий Капітал (Грант, €):",
+                "input_savings": "Власні Кошти/Заощадження (€):",
+                "input_deposit": "Застава оренди (Депозит, €):",
+                "input_deposit_spread": "Розподіл депозиту (міс., 0=у М1):",
+                "business_type": "Тип діяльності: Малий приватний підприємець (Einzelunternehmen)",
+                "group_unit_econ": "Юніт-економіка (на 1 авто)",
+                "input_sale_price": "Середня ціна продажу (БРУТТО, €):",
+                "input_car_purchase": "Ціна закупівлі (€):",
+                "input_prep_costs": "Витрати на підготовку (€):",
+                "cost_per_car": "Вартість 1 авто (закупка + підготовка) =",
+                "group_taxes_jc": "Податковий Режим та Jobcenter",
+                "input_vat_regime": "Режим ПДВ:",
+                "option_regular": "Стандартний (Regelbesteuerung)",
+                "option_margin": "Differenzbesteuerung (§25a UStG)",
+                "option_ku": "Малий підприємець (§19 UStG)",
+                "jc_coverage_title": "Покриття Jobcenter (Перші 6 міс.)",
+                "jc_covers_housing": "Jobcenter покриває житло",
+                "jc_covers_insurance": "Jobcenter покриває мед/соц",
+                "input_purchase_vat": "Закупівля авто з ПДВ (є Vorsteuer)",
+                "input_rent_vat": "Оренда площі з ПДВ",
+                "taxes_note": "Усі податки (GwSt, ESt) розраховуються на річній основі та сплачуються щоквартальними авансами.",
+                "calculate_button": "Перерахувати",
+                "section_2_title": "Детальний Фінансовий Звіт (36 місяців)",
+                "table_note": "Ви можете редагувати **Продажі**, **Куплено** та **Місячні Витрати** безпосередньо в таблиці.",
+                "col_month": "Міс.",
+                "col_sales": "Продажі (шт)",
+                "col_purchase": "Куплено (шт)",
+                "col_rent": "Оренда площі (бізнес) €",
+                "col_other_fixed": "Інші Пост. (€)",
+                "col_inventory": "Запас",
+                "col_ebit": "EBIT (Прибуток)",
+                "col_cf_net": "Cash Flow (Чистий)",
+                "col_ust": "USt (Сплата)",
+                "col_tax_advance": "Аванс ESt+GwSt",
+                "col_gwst_annual": "GwSt (Річний)",
+                "col_est_annual": "ESt (Річний)",
+                "col_net_profit_final": "Чистий Прибуток (Фінал)",
+                "col_balance_final": "Залишок (Подуш. безп.)",
+            },
+            de: {
+                "title": "Interaktive Liquiditätsplanung (36 Monate)",
+                "subtitle": "Sie kontrollieren **Verkäufe**, **Einkäufe** und **Fixkosten** vollständig.",
+                "section_1_title": "1. Schlüssel-Eingabedaten",
+                "group_funding": "Finanzierung und Steuerfaktoren",
+                "input_grant": "Startkapital (Zuschuss, €):",
+                "input_savings": "Eigenmittel/Ersparnisse (€):",
+                "input_deposit": "Mietkaution (Depot, €):",
+                "input_deposit_spread": "Verteilung Kaution (Monate, 0=in M1):",
+                "business_type": "Geschäftsart: Kleingewerbetreibender (Einzelunternehmen)",
+                "group_unit_econ": "Unit Economics (pro Auto)",
+                "input_sale_price": "Durchschnittlicher Verkaufspreis (BRUTTO, €):",
+                "input_car_purchase": "Einkaufspreis (€):",
+                "input_prep_costs": "Vorbereitungskosten (€):",
+                "cost_per_car": "Kosten pro Auto (Einkauf + Vorbereitung) =",
+                "group_taxes_jc": "Steuerregime und Jobcenter",
+                "input_vat_regime": "USt-Regime:",
+                "option_regular": "Standard (Regelbesteuerung)",
+                "option_margin": "Differenzbesteuerung (§25a UStG)",
+                "option_ku": "Kleinunternehmer (§19 UStG)",
+                "jc_coverage_title": "Jobcenter-Abdeckung (Erste 6 Monate)",
+                "jc_covers_housing": "Jobcenter übernimmt Wohnkosten",
+                "jc_covers_insurance": "Jobcenter übernimmt Kranken-/Sozialversicherung",
+                "input_purchase_vat": "Einkauf Auto mit USt (Vorsteuerabzug)",
+                "input_rent_vat": "Miete der Fläche mit USt",
+                "taxes_note": "Alle Steuern (GwSt, ESt) werden auf Jahresbasis berechnet und vierteljährlich im Voraus bezahlt.",
+                "calculate_button": "Berechnen",
+                "section_2_title": "Detaillierter Finanzbericht (36 Monate)",
+                "table_note": "Sie können **Verkäufe**, **Einkäufe** und **Monatsausgaben** direkt in der Tabelle bearbeiten.",
+                "col_month": "Monat",
+                "col_sales": "Verkäufe (Stk)",
+                "col_purchase": "Einkäufe (Stk)",
+                "col_rent": "Miete Fläche (Business) €",
+                "col_other_fixed": "Andere Fixkosten (€)",
+                "col_inventory": "Bestand",
+                "col_ebit": "EBIT (Gewinn)",
+                "col_cf_net": "Cash Flow (Netto)",
+                "col_ust": "USt (Zahlung)",
+                "col_tax_advance": "Vorauszahlung ESt+GwSt",
+                "col_gwst_annual": "GwSt (Jährlich)",
+                "col_est_annual": "ESt (Jährlich)",
+                "col_net_profit_final": "Nettogewinn (Final)",
+                "col_balance_final": "Guthaben (Puffer)",
+            }
+        };
+
         function calculateESt(taxableIncome, gewStCredit = 0) {
             let tax = 0;
             if (taxableIncome < 0) return { tax: 0, finalTax: 0 };
@@ -195,6 +293,41 @@
             return new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR', minimumFractionDigits: 2 }).format(value);
         }
         
+        function updateTexts(lang) {
+            document.querySelectorAll('[data-i18n]').forEach(element => {
+                const key = element.getAttribute('data-i18n');
+                if (TRANSLATIONS[lang] && TRANSLATIONS[lang][key]) {
+                    if (element.tagName === 'INPUT' && element.type === 'number') {
+                        // Skip number inputs, they are controlled by value attribute
+                    } else if (element.tagName === 'OPTION') {
+                        element.textContent = TRANSLATIONS[lang][key];
+                    }
+                    else {
+                         element.textContent = TRANSLATIONS[lang][key];
+                    }
+                }
+            });
+            // Update table headers manually since they are not data-i18n elements
+            const headers = document.querySelectorAll('#dataTable thead th');
+            const uk_keys = Object.keys(TRANSLATIONS.uk);
+            const de_keys = Object.keys(TRANSLATIONS.de);
+            
+            headers.forEach((th, index) => {
+                // Assuming the order of columns matches the order of 'col_' keys in translations
+                const col_key = 'col_' + th.getAttribute('data-i18n')?.replace('col_', '');
+                if (TRANSLATIONS[lang][col_key]) {
+                    th.textContent = TRANSLATIONS[lang][col_key];
+                }
+            });
+        }
+
+        function setLanguage(lang) {
+            document.documentElement.lang = lang;
+            updateTexts(lang);
+            // Recalculate to ensure VAT option visibility is updated with correct language logic
+            recalculatePlan();
+        }
+
         function getInputs() {
             const salesPlan = [];
             const purchasePlan = [];
@@ -208,20 +341,12 @@
                 const rentInput = document.getElementById(`rentPlan_${i}`); 
                 const otherFixedInput = document.getElementById(`otherFixedPlan_${i}`); 
 
-                // Sales plan (user input)
                 salesPlan.push(parseInt(salesInput?.value) || 0);
-                
-                // Purchase plan (user input)
                 purchasePlan.push(parseInt(purchaseInput?.value) || 0);
-                
-                // Monthly Rent/Lease (NEW)
                 rentPlan.push(parseFloat(rentInput?.value) || 0);
-                
-                // Other Fixed Monthly Costs (NEW)
                 otherFixedPlan.push(parseFloat(otherFixedInput?.value) || 0);
             }
             
-            // Collect editable inputs (now includes grant, savings, deposit, insurance)
             return {
                 grant: parseFloat(document.getElementById('grant').value) || 0, 
                 savings: parseFloat(document.getElementById('savings').value) || 0, 
@@ -231,10 +356,10 @@
                 healthInsurance: parseFloat(document.getElementById('healthInsurance').value) || 0, 
                 personalCosts: parseFloat(document.getElementById('personalCosts').value) || 0, 
                 ustRegime: document.getElementById('ustRegime').value,
-                purchaseWithVAT: document.getElementById('purchaseWithVAT')?.checked ?? true, // NEW CHECKBOX ID
+                purchaseWithVAT: document.getElementById('purchaseWithVAT')?.checked ?? true, 
                 rentHasVAT: document.getElementById('rentHasVAT')?.checked ?? false,
-                jobcenterCoversHousing: document.getElementById('jobcenterCoversHousing')?.checked ?? false, // FIX: Default to false
-                jobcenterCoversInsurance: document.getElementById('jobcenterCoversInsurance')?.checked ?? false, // FIX: Default to false
+                jobcenterCoversHousing: document.getElementById('jobcenterCoversHousing')?.checked ?? false, 
+                jobcenterCoversInsurance: document.getElementById('jobcenterCoversInsurance')?.checked ?? false, 
                 salesPlan: salesPlan,
                 purchasePlan: purchasePlan,
                 rentDeposit: parseFloat(document.getElementById('rentDeposit').value) || 0, 
@@ -248,19 +373,26 @@
         function populateInitialSalesPlan() {
              const initialSalesPlan = [];
              for (let i = 0; i < NUM_MONTHS; i++) {
-                if (i < 2) {
-                    initialSalesPlan.push(1); 
-                } else if (i < 4) {
+                // Values based on the user's provided image for M1-M18 and scaling thereafter
+                if (i < 2) { // M1, M2
                     initialSalesPlan.push(2); 
-                } else if (i < 6) {
+                } else if (i < 4) { // M3, M4
                     initialSalesPlan.push(3); 
-                } else if (i < 9) {
+                } else if (i < 6) { // M5, M6
                     initialSalesPlan.push(4); 
-                } else if (i < 12) {
+                } else if (i < 8) { // M7, M8
                     initialSalesPlan.push(5); 
-                } else if (i < 24) {
+                } else if (i < 9) { // M9
+                    initialSalesPlan.push(5); 
+                } else if (i < 10) { // M10
+                    initialSalesPlan.push(6); 
+                } else if (i < 12) { // M11, M12
+                    initialSalesPlan.push(5); 
+                } else if (i < 17) { // M13-M17 (7 cars)
                     initialSalesPlan.push(7);
-                } else {
+                } else if (i < 24) { // M18-M24 (8 cars, smooth scaling)
+                    initialSalesPlan.push(8); 
+                } else { // M25-M36 (10 cars, smooth scaling)
                     initialSalesPlan.push(10);
                 }
             }
@@ -278,23 +410,24 @@
         // AUTO-GENERATING INITIAL PURCHASE PLAN based on the logic: buy 1 more than needed for M1, then follow sales
         function generateInitialPurchasePlan(salesPlan) {
             const initialPurchasePlan = [];
-            let inventory = 0; 
-
+            
             for (let i = 0; i < NUM_MONTHS; i++) {
                 const salesTarget = salesPlan[i];
                 let carsToBuy = 0;
                 
-                // Assuming sales and purchase are synced for minimal risk, M1 needs initial stock
+                // M1: Buy 2 (to match sales and maintain zero initial stock)
                 if (i === 0) {
-                    // M1: Buy 2 (to match sales and maintain zero initial stock)
-                    carsToBuy = 2;
+                    carsToBuy = 2; 
+                } else if (i < 12) {
+                    // M2-M12: Use the exact sales figures from the provided image/logic
+                    carsToBuy = salesTarget;
+                } else if (i < 17) {
+                    // M13-M17: Use the exact sales figures from the provided image/logic
+                    carsToBuy = salesTarget;
                 } else {
-                    // M2 and onwards: Buy exactly what you sell this month
                     carsToBuy = salesTarget;
                 }
                 
-                // Update inventory for next loop
-                inventory += carsToBuy - salesTarget;
                 initialPurchasePlan.push(carsToBuy);
             }
             
