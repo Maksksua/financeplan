@@ -1,1 +1,440 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Інтерактивний Планувальник Ліквідності (36 Місяців)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #f0f4f8; }
+        .input-group { background-color: #e5e7eb; border-radius: 0.5rem; padding: 1rem; }
+        .data-input { 
+            border: 1px solid #d1d5db; 
+            padding: 0.25rem; 
+            font-size: 0.875rem; 
+            border-radius: 0.25rem;
+            text-align: center;
+        }
+        .data-input:focus {
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 1px #3b82f6;
+            outline: none;
+        }
+        .warning-text {
+            color: #ef4444; /* Tailwind red-500 */
+            font-weight: 600;
+        }
+        .text-purple-700 { color: #7c3aed; }
+        .text-blue-700 { color: #1d4ed8; }
+        /* Style to hide columns for KU mode */
+        .ku-mode .ust-column {
+            display: none;
+        }
+    </style>
+</head>
+<body class="antialiased text-gray-800">
+
+    <div class="container mx-auto p-4 md:p-8">
+        <header class="text-center mb-8">
+            <h1 class="text-3xl md:text-4xl font-bold text-gray-900" data-i18n="title">Інтерактивна Таблиця Ліквідності (3 Роки)</h1>
+            <p class="text-md text-gray-600 mt-2" data-i18n="subtitle">Ви повністю контролюєте **Продажі**, **Закупівлі** та **Фіксовані Витрати**.</p>
+        </header>
+
+        <main>
+            <div class="flex justify-center mb-6 space-x-4">
+                <button class="px-4 py-2 text-sm font-medium rounded-lg text-white bg-blue-500 hover:bg-blue-600 transition-colors" onclick="setLanguage('uk')">Українська</button>
+                <button class="px-4 py-2 text-sm font-medium rounded-lg text-white bg-gray-500 hover:bg-gray-600 transition-colors" onclick="setLanguage('de')">Deutsch</button>
+            </div>
+            
+            <div class="bg-white p-6 rounded-xl shadow-md mb-8">
+                <h3 class="text-lg font-semibold mb-4 text-blue-700" data-i18n="section_1_title">1. Ключові вхідні дані</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    
+                    <div class="input-group">
+                        <h4 class="font-semibold text-gray-800 mb-3" data-i18n="group_funding">Фінансування та Податкові фактори</h4>
+                        <label class="block mb-2"><span class="text-gray-700 text-sm font-bold" data-i18n="input_grant">Стартовий Капітал (Грант, €):</span>
+                            <input type="number" id="grant" value="5000" class="mt-1 block w-full rounded-md shadow-sm p-2">
+                        </label>
+                        <label class="block mb-2"><span class="text-gray-700 text-sm font-bold" data-i18n="input_savings">Власні Кошти/Заощадження (€):</span>
+                            <input type="number" id="savings" value="7500" class="mt-1 block w-full rounded-md shadow-sm p-2">
+                        </label>
+                        <label class="block mb-2 mt-4"><span class="text-gray-700 text-sm font-bold" data-i18n="input_deposit">Застава оренди (Депозит, €):</span>
+                            <input type="number" id="rentDeposit" value="5000" class="mt-1 block w-full rounded-md shadow-sm p-2">
+                        </label>
+                        <label class="block mb-2"><span class="text-gray-700 text-sm font-bold" data-i18n="input_deposit_spread">Розподіл депозиту (міс., 0=у М1):</span>
+                            <input type="number" id="rentDepositSpreadMonths" value="0" class="mt-1 block w-full rounded-md shadow-sm p-2" min="0" max="12">
+                        </label>
+                        <input type="hidden" id="healthInsurance" value="0"> 
+                        <input type="hidden" id="personalCosts" value="1450">
+                        <p class="text-sm mt-4 p-2 bg-blue-100 rounded-md font-semibold" data-i18n="business_type">Тип діяльності: Малий приватний підприємець (Einzelunternehmen)</p>
+                    </div>
+
+                    <div class="input-group">
+                        <h4 class="font-semibold text-gray-800 mb-3" data-i18n="group_unit_econ">Юніт-економіка (на 1 авто)</h4>
+                         <label class="block mb-2"><span class="text-gray-700 text-sm" data-i18n="input_sale_price">Середня ціна продажу (БРУТТО, €):</span>
+                            <input type="number" id="avgSalePrice" value="4500" class="mt-1 block w-full rounded-md shadow-sm p-2">
+                        </label>
+                        <label class="block mb-2"><span class="text-gray-700 text-sm" data-i18n="input_car_purchase">Ціна закупівлі (БРУТТО, €):</span>
+                            <input type="number" id="carPurchase" value="2300" class="mt-1 block w-full rounded-md shadow-sm p-2">
+                        </label>
+                        <label class="block mb-2"><span class="text-gray-700 text-sm" data-i18n="input_prep_costs">Витрати на підготовку (НЕТТО, €):</span>
+                            <input type="number" id="prepCosts" value="850" class="mt-1 block w-full rounded-md shadow-sm p-2">
+                        </label>
+                        <p class="text-sm mt-4 p-2 bg-yellow-100 rounded-md"><span data-i18n="cost_per_car">Вартість 1 авто (P&L) = </span><span id="costPerCarDisplay" class="font-bold"></span></p>
+                    </div>
+
+                    <div class="input-group">
+                        <h4 class="font-semibold text-gray-800 mb-3" data-i18n="group_taxes_jc">Податковий Режим та Jobcenter</h4>
+                         <label class="block mb-2"><span class="text-gray-700 text-sm" data-i18n="input_vat_regime">Режим ПДВ:</span>
+                            <select id="ustRegime" class="mt-1 block w-full rounded-md shadow-sm p-2">
+                                <option value="regular" data-i18n="option_regular">Стандартний (Regelbesteuerung)</option>
+                                <option value="margin" data-i18n="option_margin">Differenzbesteuerung (§25a UStG)</option>
+                                <option value="kleinunternehmer" data-i18n="option_ku">Малий підприємець (§19 UStG)</option>
+                            </select>
+                        </label>
+                        <div class="mt-4 p-2 bg-pink-100 rounded-md">
+                            <h5 class="font-semibold text-sm mb-1" data-i18n="jc_coverage_title">Покриття Jobcenter (Перші 6 міс.)</h5>
+                            <label class="flex items-center space-x-2"><input type="checkbox" id="jobcenterCoversHousing" class="rounded">
+                                <span class="text-gray-700 text-sm" data-i18n="jc_covers_housing">Jobcenter покриває житло</span>
+                            </label>
+                        </div>
+                        <label id="purchaseWithVAT_label" class="flex items-center space-x-2 mt-4" data-i18n-title="tooltip_purchase_vat">
+                            <input type="checkbox" id="purchaseWithVAT" checked class="rounded">
+                            <span class="text-gray-700 text-sm" data-i18n="input_purchase_vat">Закупівля авто з ПДВ (є Vorsteuer)</span>
+                        </label>
+                        <p class="text-xs text-red-500 mt-4" data-i18n="taxes_note">Усі податки (GwSt, ESt) розраховуються на річній основі та сплачуються щоквартальними авансами.</p>
+                        <button id="calculate-button" class="mt-4 w-full px-6 py-3 text-lg font-semibold rounded-lg text-white bg-green-600 hover:bg-green-700 transition-colors shadow-md" data-i18n="calculate_button">Перерахувати</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white p-6 rounded-xl shadow-md overflow-hidden">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="p-0 font-semibold text-lg text-blue-700" data-i18n="section_2_title">Детальний Фінансовий Звіт (36 місяців)</h3>
+                    <div id="vat-receivable-badge" class="px-3 py-1 text-sm font-semibold text-white bg-blue-600 rounded-full shadow ust-column"></div>
+                </div>
+                <p class="text-sm text-gray-600 mb-4" data-i18n="table_note">Ви можете редагувати **Продажі**, **Куплено** та **Місячні Витрати** безпосередньо в таблиці.</p>
+                <div class="overflow-x-auto">
+                    <table id="dataTable" class="min-w-full text-sm text-left text-gray-500 border-collapse">
+                        <thead class="text-xs text-gray-700 uppercase bg-gray-100 sticky top-0">
+                            <tr>
+                                <th scope="col" class="px-3 py-2" data-i18n="col_month">Міс.</th>
+                                <th scope="col" class="px-3 py-2 w-20" data-i18n="col_sales_plan">Продажі (план)</th>
+                                <th scope="col" class="px-3 py-2 w-20" data-i18n="col_sales_actual">Продано (факт)</th>
+                                <th scope="col" class="px-3 py-2 w-20" data-i18n="col_purchase">Куплено (шт)</th>
+                                <th scope="col" class="px-3 py-2 w-20" data-i18n="col_rent">Оренда (БРУТТО, €)</th>
+                                <th scope="col" class="px-3 py-2 w-20" data-i18n="col_other_fixed">Інші пост. (БРУТТО, €)</th>
+                                <th scope="col" class="px-3 py-2" data-i18n="col_inventory">Запас</th>
+                                <th scope="col" class="px-3 py-2 text-green-700" data-i18n="col_ebit">EBIT (Прибуток)</th>
+                                <th scope="col" class="px-3 py-2 text-blue-700" data-i18n="col_cf_net">Cash Flow (Чистий)</th>
+                                <th scope="col" class="px-3 py-2 text-red-700 ust-column" data-i18n="col_ust">USt (Сплата)</th>
+                                <th scope="col" class="px-3 py-2 text-blue-700 font-bold ust-column" data-i18n="col_ust_receivable">USt-Депозит (борг ФА)</th>
+                                <th scope="col" class="px-3 py-2 font-bold" data-i18n="col_tax_advance">Аванс ESt+GwSt</th>
+                                <th scope="col" class="px-3 py-2" data-i18n="col_gwst_annual">GwSt (Річний)</th>
+                                <th scope="col" class="px-3 py-2" data-i18n="col_est_annual">ESt (Річний)</th>
+                                <th scope="col" class="px-3 py-2 text-green-800 font-bold" data-i18n="col_net_profit_final">Чистий Прибуток (Фінал)</th>
+                                <th scope="col" class="px-3 py-2 font-bold" data-i18n="col_balance_final">Залишок (Подуш. безп.)</th>
+                            </tr>
+                        </thead>
+                        <tbody id="dataTableBody"></tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        const NUM_MONTHS = 36;
+        const FREIBETRAG_GEWST = 24500; 
+        const GRUNDFREIBETRAG_EST = 12096; 
+        const UST_RATE = 0.19;
+        const UST_SATZ = 19;
+        const HEBESATZ = 467; 
+        
+        let processedData;
+        
+        const TRANSLATIONS = {
+            uk: { "title": "Інтерактивна Таблиця Ліквідності (3 Роки)", "subtitle": "Ви повністю контролюєте **Продажі**, **Закупівлі** та **Фіксовані Витрати**.", "section_1_title": "1. Ключові вхідні дані", "group_funding": "Фінансування та Податкові фактори", "input_grant": "Стартовий Капітал (Грант, €):", "input_savings": "Власні Кошти/Заощадження (€):", "input_deposit": "Застава оренди (Депозит, €):", "input_deposit_spread": "Розподіл депозиту (міс., 0=у М1):", "business_type": "Тип діяльності: Малий приватний підприємець (Einzelunternehmen)", "group_unit_econ": "Юніт-економіка (на 1 авто)", "input_sale_price": "Середня ціна продажу (БРУТТО, €):", "input_car_purchase": "Ціна закупівлі (БРУТТО, €):", "input_prep_costs": "Витрати на підготовку (НЕТТО, €):", "cost_per_car": "Вартість 1 авто (P&L) =", "group_taxes_jc": "Податковий Режим та Jobcenter", "input_vat_regime": "Режим ПДВ:", "option_regular": "Стандартний (Regelbesteuerung)", "option_margin": "Differenzbesteuerung (§25a UStG)", "option_ku": "Малий підприємець (§19 UStG)", "jc_coverage_title": "Покриття Jobcenter (Перші 6 міс.)", "jc_covers_housing": "Jobcenter покриває житло", "input_purchase_vat": "Закупівля авто з ПДВ (є Vorsteuer)", "tooltip_purchase_vat": "Недоступно для §25a та Kleinunternehmer, оскільки Vorsteuer з авто не відшкодовується.", "taxes_note": "Усі податки (GwSt, ESt) розраховуються на річній основі та сплачуються щоквартальними авансами.", "calculate_button": "Перерахувати", "section_2_title": "Детальний Фінансовий Звіт (36 місяців)", "table_note": "Ви можете редагувати **Продажі**, **Куплено** та **Місячні Витрати** безпосередньо в таблиці.", "vat_receivable_badge": "USt-депозит у ФА:", "col_month": "Міс.", "col_sales_plan": "Продажі (план)", "col_sales_actual": "Продано (факт)", "col_purchase": "Куплено (шт)", "col_rent": "Оренда (БРУТТО, €)", "col_other_fixed": "Інші пост. (БРУТТО, €)", "col_inventory": "Запас", "col_ebit": "EBIT (Прибуток)", "col_cf_net": "Cash Flow (Чистий)", "col_ust": "USt (Сплата)", "col_ust_receivable": "USt-Депозит (борг ФА)", "col_tax_advance": "Аванс ESt+GwSt", "col_gwst_annual": "GwSt (Річний)", "col_est_annual": "ESt (Річний)", "col_net_profit_final": "Чистий Прибуток (Фінал)", "col_balance_final": "Залишок (Подуш. безп.)",
+            },
+            de: { "title": "Interaktive Liquiditätsplanung (36 Monate)", "subtitle": "Sie kontrollieren **Verkäufe**, **Einkäufe** und **Fixkosten** vollständig.", "section_1_title": "1. Schlüssel-Eingabedaten", "group_funding": "Finanzierung und Steuerfaktoren", "input_grant": "Startkapital (Zuschuss, €):", "input_savings": "Eigenmittel/Ersparnisse (€):", "input_deposit": "Mietkaution (Depot, €):", "input_deposit_spread": "Verteilung Kaution (Monate, 0=in M1):", "business_type": "Geschäftsart: Kleingewerbetreibender (Einzelunternehmen)", "group_unit_econ": "Unit Economics (pro Auto)", "input_sale_price": "Durchschnittlicher Verkaufspreis (BRUTTO, €):", "input_car_purchase": "Einkaufspreis (BRUTTO, €):", "input_prep_costs": "Vorbereitungskosten (NETTO, €):", "cost_per_car": "Kosten pro Auto (GuV) =", "group_taxes_jc": "Steuerregime und Jobcenter", "input_vat_regime": "USt-Regime:", "option_regular": "Standard (Regelbesteuerung)", "option_margin": "Differenzbesteuerung (§25a UStG)", "option_ku": "Kleinunternehmer (§19 UStG)", "jc_coverage_title": "Jobcenter-Abdeckung (Erste 6 Monate)", "jc_covers_housing": "Jobcenter übernimmt Wohnkosten", "input_purchase_vat": "Einkauf Auto mit USt (Vorsteuerabzug)", "tooltip_purchase_vat": "Nicht verfügbar für §25a & Kleinunternehmer, da die Vorsteuer für Fahrzeuge nicht abzugsfähig ist.", "taxes_note": "Alle Steuern (GwSt, ESt) werden auf Jahresbasis berechnet und vierteljährlich im Voraus bezahlt.", "calculate_button": "Neu berechnen", "section_2_title": "Detaillierter Finanzbericht (36 Monate)", "table_note": "Sie können **Verkäufe**, **Einkäufe** und **Monatsausgaben** direkt in der Tabelle bearbeiten.", "vat_receivable_badge": "USt-Guthaben beim FA:", "col_month": "Monat", "col_sales_plan": "Verkäufe (Plan)", "col_sales_actual": "Verkauft (Ist)", "col_purchase": "Einkäufe (Stk)", "col_rent": "Miete (BRUTTO, €)", "col_other_fixed": "Fixkosten (BRUTTO, €)", "col_inventory": "Bestand", "col_ebit": "EBIT (Gewinn)", "col_cf_net": "Cash Flow (Netto)", "col_ust": "USt-Zahlung", "col_ust_receivable": "USt-Guthaben (beim FA)", "col_tax_advance": "Vorauszahlung ESt+GwSt", "col_gwst_annual": "GwSt (Jährlich)", "col_est_annual": "ESt (Jährlich)", "col_net_profit_final": "Nettogewinn (Final)", "col_balance_final": "Kontostand (Puffer)",
+            }
+        };
+
+        function calculateESt(taxableIncome) {
+            if (taxableIncome < GRUNDFREIBETRAG_EST) return 0;
+            const Y = (taxableIncome - GRUNDFREIBETRAG_EST) / 10000;
+            let tax = 0;
+            if (taxableIncome <= 15999) tax = (980.14 * Y + 1400) * Y;
+            else if (taxableIncome <= 62809) tax = (212.02 * (Y - 1.5) + 2397) * (Y - 1.5) + 1400;
+            else if (taxableIncome <= 277825) tax = 0.42 * taxableIncome - 9877.94;
+            else tax = 0.45 * taxableIncome - 17316.5;
+            return Math.max(0, tax);
+        }
+
+        function formatCurrency(value) {
+            return new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR' }).format(isNaN(value) ? 0 : value);
+        }
+        
+        function setLanguage(lang) {
+            document.documentElement.lang = lang;
+            document.querySelectorAll('[data-i18n], [data-i18n-title]').forEach(element => {
+                const textKey = element.getAttribute('data-i18n');
+                const titleKey = element.getAttribute('data-i18n-title');
+
+                if (textKey && TRANSLATIONS[lang]?.[textKey]) {
+                    const translation = TRANSLATIONS[lang][textKey];
+                    if (element.querySelector('span')) {
+                        const firstNode = element.firstChild;
+                        if (firstNode && firstNode.nodeType === Node.TEXT_NODE) {
+                            firstNode.textContent = translation + ' ';
+                        } else {
+                            element.insertBefore(document.createTextNode(translation + ' '), element.firstChild);
+                        }
+                    } else {
+                        element.textContent = translation;
+                    }
+                }
+                if (titleKey && TRANSLATIONS[lang]?.[titleKey]) {
+                    element.setAttribute('title', TRANSLATIONS[lang][titleKey]);
+                }
+            });
+        }
+
+        function getInputs() {
+            return {
+                grant: parseFloat(document.getElementById('grant').value) || 0,
+                savings: parseFloat(document.getElementById('savings').value) || 0,
+                avgSalePrice: parseFloat(document.getElementById('avgSalePrice').value) || 0,
+                carPurchase: parseFloat(document.getElementById('carPurchase').value) || 0,
+                prepCosts: parseFloat(document.getElementById('prepCosts').value) || 0,
+                personalCosts: parseFloat(document.getElementById('personalCosts').value) || 0,
+                ustRegime: document.getElementById('ustRegime').value,
+                purchaseWithVAT: document.getElementById('purchaseWithVAT')?.checked ?? true,
+                jobcenterCoversHousing: document.getElementById('jobcenterCoversHousing')?.checked ?? false,
+                rentDeposit: parseFloat(document.getElementById('rentDeposit').value) || 0,
+                rentDepositSpreadMonths: parseInt(document.getElementById('rentDepositSpreadMonths').value) || 0,
+                salesPlan: Array.from({ length: NUM_MONTHS }, (_, i) => parseInt(document.getElementById(`salesPlan_${i}`)?.value) || 0),
+                purchasePlan: Array.from({ length: NUM_MONTHS }, (_, i) => parseInt(document.getElementById(`purchasePlan_${i}`)?.value) || 0),
+                rentPlan: Array.from({ length: NUM_MONTHS }, (_, i) => parseFloat(document.getElementById(`rentPlan_${i}`)?.value) || 0),
+                otherFixedPlan: Array.from({ length: NUM_MONTHS }, (_, i) => parseFloat(document.getElementById(`otherFixedPlan_${i}`)?.value) || 0),
+            };
+        }
+        
+        function populateInitialSalesPlan() {
+             return Array.from({ length: NUM_MONTHS }, (_, i) => {
+                 if (i < 2) return 2; if (i < 4) return 3; if (i < 6) return 4;
+                 if (i < 9) return 5; if (i < 12) return 6; if (i < 24) return 8;
+                 return 10;
+             });
+        }
+        function generateInitialPurchasePlan(salesPlan) { return salesPlan.slice(); }
+        function populateInitialRentPlan() { return Array(NUM_MONTHS).fill(560); }
+        function populateInitialOtherFixedPlan() { return Array(NUM_MONTHS).fill(740); }
+
+        function processData() {
+            const inputs = getInputs();
+            const data = [];
+            const isRegular = inputs.ustRegime === 'regular';
+            const isMargin  = inputs.ustRegime === 'margin';
+            const isKU      = inputs.ustRegime === 'kleinunternehmer';
+
+            let accumulatedCashBalance = inputs.grant + inputs.savings; 
+            let currentInventory = 0;
+            let yearlyEbit = 0;
+            let last_yearly_tax_data = { Gewerbesteuer: 0, Einkommensteuer: 0, total: 0 };
+            let ust_period_due = 0;
+            let vatReceivable = 0;
+
+            for (let i = 0; i < NUM_MONTHS; i++) {
+                const carsSoldTarget = inputs.salesPlan[i];
+                const carsBought = inputs.purchasePlan[i];
+                const potentialInventory = currentInventory + carsBought;
+                const carsSold = Math.min(carsSoldTarget, potentialInventory);
+                const inventoryWarning = carsSoldTarget > potentialInventory;
+                currentInventory = potentialInventory - carsSold;
+
+                const carPurchaseNet = inputs.carPurchase / (1 + UST_RATE);
+                const prepCostsNet = inputs.prepCosts;
+                const rentCostMonthlyNet = inputs.rentPlan[i] / (1 + UST_RATE);
+                const otherFixedCostMonthlyNet = inputs.otherFixedPlan[i] / (1 + UST_RATE);
+                
+                const totalFixedCostsPnl = rentCostMonthlyNet + otherFixedCostMonthlyNet;
+                let cogsPnl = 0;
+                if (isRegular) cogsPnl = carsSold * (carPurchaseNet + prepCostsNet);
+                else if (isMargin) cogsPnl = carsSold * (inputs.carPurchase + prepCostsNet);
+                else cogsPnl = carsSold * (inputs.carPurchase + (prepCostsNet * (1 + UST_RATE)));
+                
+                const salesRevenueGross = carsSold * inputs.avgSalePrice;
+                let salesRevenuePnl = 0, ustDue = 0;
+                if (isRegular) {
+                    salesRevenuePnl = salesRevenueGross / (1 + UST_RATE);
+                    ustDue = salesRevenueGross - salesRevenuePnl;
+                } else if (isMargin) {
+                    const marginGross = salesRevenueGross - (carsSold * inputs.carPurchase);
+                    ustDue = Math.max(0, (marginGross * UST_SATZ) / (100 + UST_SATZ));
+                    salesRevenuePnl = salesRevenueGross - ustDue;
+                } else { // KU
+                    salesRevenuePnl = salesRevenueGross;
+                }
+                
+                const ebit = salesRevenuePnl - (totalFixedCostsPnl + cogsPnl);
+                yearlyEbit += ebit;
+
+                let ustVorsteuer = 0;
+                if (isRegular || isMargin) {
+                    const rentVorsteuer = rentCostMonthlyNet * UST_RATE;
+                    const otherFixedVorsteuer = otherFixedCostMonthlyNet * UST_RATE;
+                    const prepVorsteuer = (carsBought * prepCostsNet) * UST_RATE;
+                    let carPurchaseVorsteuer = (isRegular && inputs.purchaseWithVAT) ? (carsBought * carPurchaseNet * UST_RATE) : 0;
+                    ustVorsteuer = rentVorsteuer + otherFixedVorsteuer + prepVorsteuer + carPurchaseVorsteuer;
+                }
+
+                const housingCashOutflow = (i < 6 && inputs.jobcenterCoversHousing) ? 0 : inputs.personalCosts;
+                let rentDepositCashOutflow = (inputs.rentDepositSpreadMonths === 0 && i === 0) ? inputs.rentDeposit : (i < inputs.rentDepositSpreadMonths ? inputs.rentDeposit / inputs.rentDepositSpreadMonths : 0);
+                const carRelatedCashOutflow = (carsBought * inputs.carPurchase) + (carsBought * prepCostsNet * (1 + UST_RATE));
+                const operatingFixedOutflow = inputs.rentPlan[i] + inputs.otherFixedPlan[i];
+                
+                ust_period_due += (ustDue - ustVorsteuer);
+                let ustPaidThisMonth = 0;
+                if (!isKU && (i + 1) % 3 === 0) {
+                    const netDue = ust_period_due - vatReceivable;
+                    if (netDue > 0) {
+                        ustPaidThisMonth = netDue;
+                        vatReceivable = 0;
+                    } else {
+                        vatReceivable = Math.abs(netDue);
+                        ustPaidThisMonth = 0;
+                    }
+                    ust_period_due = 0;
+                }
+                
+                let taxesPaidThisMonth = (last_yearly_tax_data.total > 0 && (i + 1) % 3 === 0) ? last_yearly_tax_data.total / 4 : 0;
+                
+                const totalCashOutflow = operatingFixedOutflow + housingCashOutflow + rentDepositCashOutflow + carRelatedCashOutflow + ustPaidThisMonth + taxesPaidThisMonth;
+                const netCashFlow = salesRevenueGross - totalCashOutflow;
+                accumulatedCashBalance += netCashFlow;
+
+                if ((i + 1) % 12 === 0 || i === NUM_MONTHS - 1) {
+                    const est_tax = calculateESt(yearlyEbit);
+                    const gewStTaxableBase = Math.max(0, yearlyEbit - FREIBETRAG_GEWST);
+                    const messbetrag = gewStTaxableBase * 0.035;
+                    const gewSt = messbetrag * (HEBESATZ / 100);
+                    const gewSt_credit = Math.min(est_tax, messbetrag * 3.8); // Corrected factor
+                    const est_final = Math.max(0, est_tax - gewSt_credit);
+                    last_yearly_tax_data = { Gewerbesteuer: gewSt, Einkommensteuer: est_final, total: est_final + gewSt };
+                    yearlyEbit = 0;
+                }
+
+                data.push({
+                    month: i + 1, carsSoldTarget, carsSold, carsBought, rentCostMonthly: inputs.rentPlan[i], otherFixedCostMonthly: inputs.otherFixedPlan[i], currentInventory, ebit, netCashFlow, ustPaidThisMonth, vatReceivable, taxesPaidThisMonth, accumulatedBalance: accumulatedCashBalance, yearly_tax_data: { ...last_yearly_tax_data }, inventoryWarning
+                });
+            }
+            return data;
+        }
+
+        function updateUiForVatRegime() {
+            const table = document.getElementById('dataTable');
+            const badge = document.getElementById('vat-receivable-badge');
+            const isKU = document.getElementById('ustRegime').value === 'kleinunternehmer';
+
+            if (isKU) {
+                table.classList.add('ku-mode');
+                badge.style.display = 'none';
+            } else {
+                table.classList.remove('ku-mode');
+                badge.style.display = '';
+            }
+        }
+
+        function recalculatePlan() {
+            processedData = processData();
+            updateDataTable();
+            updateCostPerCarDisplay();
+            updatePurchase25aVisibility();
+            updateUiForVatRegime();
+        }
+
+        function updateCostPerCarDisplay() {
+            const inputs = getInputs();
+            const isKU = inputs.ustRegime === 'kleinunternehmer';
+            const carPurchaseCost = isKU ? inputs.carPurchase : inputs.carPurchase / (1 + UST_RATE);
+            const prepCost = isKU ? inputs.prepCosts * (1 + UST_RATE) : inputs.prepCosts;
+            document.getElementById('costPerCarDisplay').textContent = formatCurrency(carPurchaseCost + prepCost);
+        }
+
+        function updatePurchase25aVisibility() {
+            document.getElementById('purchaseWithVAT_label').style.display = document.getElementById('ustRegime').value === 'regular' ? 'flex' : 'none';
+        }
+        
+        function updateDataTable() {
+            const tableBody = document.getElementById('dataTableBody');
+            const lang = document.documentElement.lang;
+            let bodyHtml = '';
+            
+            processedData.forEach((rowData, i) => {
+                const { month, carsSoldTarget, carsSold, carsBought, rentCostMonthly, otherFixedCostMonthly, currentInventory, ebit, netCashFlow, ustPaidThisMonth, vatReceivable, taxesPaidThisMonth, accumulatedBalance, yearly_tax_data, inventoryWarning } = rowData;
+                const isYearEnd = (i + 1) % 12 === 0 || i === NUM_MONTHS - 1;
+                const netProfitFinal = ebit - (yearly_tax_data.total / 12);
+
+                bodyHtml += `
+                    <tr class="bg-white border-b hover:bg-gray-50">
+                        <td class="px-3 py-2 font-medium text-gray-900">${month}</td>
+                        <td class="px-3 py-2 ${inventoryWarning ? 'warning-text' : ''}"><input type="number" id="salesPlan_${i}" value="${carsSoldTarget}" min="0" class="w-16 data-input"></td>
+                        <td class="px-3 py-2 font-bold ${inventoryWarning ? 'text-red-500' : 'text-gray-900'}">${carsSold}</td>
+                        <td class="px-3 py-2"><input type="number" id="purchasePlan_${i}" value="${carsBought}" min="0" class="w-16 data-input"></td>
+                        <td class="px-3 py-2"><input type="number" id="rentPlan_${i}" value="${rentCostMonthly}" min="0" class="w-20 data-input"></td>
+                        <td class="px-3 py-2"><input type="number" id="otherFixedPlan_${i}" value="${otherFixedCostMonthly}" min="0" class="w-20 data-input"></td>
+                        <td class="px-3 py-2">${currentInventory}</td>
+                        <td class="px-3 py-2 ${ebit < 0 ? 'text-red-500' : 'text-green-600'}">${formatCurrency(ebit)}</td>
+                        <td class="px-3 py-2 ${netCashFlow < 0 ? 'text-red-500' : ''}">${formatCurrency(netCashFlow)}</td>
+                        <td class="px-3 py-2 ust-column ${ustPaidThisMonth > 0 ? 'text-red-700' : 'text-gray-500'}">${formatCurrency(ustPaidThisMonth)}</td>
+                        <td class="px-3 py-2 text-blue-700 ust-column">${formatCurrency(vatReceivable)}</td>
+                        <td class="px-3 py-2 font-bold">${formatCurrency(taxesPaidThisMonth)}</td>
+                        <td class="px-3 py-2">${isYearEnd ? formatCurrency(yearly_tax_data.Gewerbesteuer) : '0.00 €'}</td>
+                        <td class="px-3 py-2">${isYearEnd ? formatCurrency(yearly_tax_data.Einkommensteuer) : '0.00 €'}</td>
+                        <td class="px-3 py-2 ${netProfitFinal < 0 ? 'text-red-500' : 'text-green-800 font-bold'}">${formatCurrency(netProfitFinal)}</td>
+                        <td class="px-3 py-2 ${accumulatedBalance < 0 ? 'warning-text' : 'font-bold'}">${formatCurrency(accumulatedBalance)}</td>
+                    </tr>`;
+            });
+            tableBody.innerHTML = bodyHtml;
+            
+            tableBody.querySelectorAll('input[type="number"]').forEach(input => input.addEventListener('change', recalculatePlan));
+
+            const finalVatReceivable = processedData.length > 0 ? processedData[processedData.length - 1].vatReceivable : 0;
+            document.getElementById('vat-receivable-badge').textContent = `${TRANSLATIONS[lang].vat_receivable_badge} ${formatCurrency(finalVatReceivable)}`;
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const initialSalesPlan = populateInitialSalesPlan();
+            const initialPurchasePlan = generateInitialPurchasePlan(initialSalesPlan); 
+            const initialRentPlan = populateInitialRentPlan();
+            const initialOtherFixedPlan = populateInitialOtherFixedPlan();
+            
+            const tableBody = document.getElementById('dataTableBody');
+            let initialHtml = '';
+            for (let i = 0; i < NUM_MONTHS; i++) {
+                initialHtml += `
+                    <tr class="bg-white border-b hover:bg-gray-50">
+                        <td class="px-3 py-2 font-medium text-gray-900">${i + 1}</td>
+                        <td><input type="number" id="salesPlan_${i}" value="${initialSalesPlan[i]}" class="w-16 data-input"></td>
+                        <td></td>
+                        <td><input type="number" id="purchasePlan_${i}" value="${initialPurchasePlan[i]}" class="w-16 data-input"></td>
+                        <td><input type="number" id="rentPlan_${i}" value="${initialRentPlan[i]}" class="w-20 data-input"></td> 
+                        <td><input type="number" id="otherFixedPlan_${i}" value="${initialOtherFixedPlan[i]}" class="w-20 data-input"></td> 
+                        ${'<td></td>'.repeat(10)}
+                    </tr>`;
+            }
+            tableBody.innerHTML = initialHtml;
+
+            document.querySelectorAll('input, select').forEach(el => el.addEventListener('change', recalculatePlan));
+            document.getElementById('calculate-button').addEventListener('click', recalculatePlan);
+
+            setLanguage('uk');
+            recalculatePlan();
+        });
+    </script>
+
+</body>
+</html>
 
