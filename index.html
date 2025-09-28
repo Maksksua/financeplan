@@ -25,12 +25,8 @@
             color: #ef4444; /* Tailwind red-500 */
             font-weight: 600;
         }
-        .text-purple-700 {
-            color: #7c3aed; /* Tailwind purple-600 */
-        }
-        .text-blue-700 {
-            color: #1d4ed8; /* Tailwind blue-700 */
-        }
+        .text-purple-700 { color: #7c3aed; }
+        .text-blue-700 { color: #1d4ed8; }
     </style>
 </head>
 <body class="antialiased text-gray-800">
@@ -53,28 +49,21 @@
                     
                     <div class="input-group">
                         <h4 class="font-semibold text-gray-800 mb-3" data-i18n="group_funding">Фінансування та Податкові фактори</h4>
-                        
                         <label class="block mb-2"><span class="text-gray-700 text-sm font-bold" data-i18n="input_grant">Стартовий Капітал (Грант, €):</span>
                             <input type="number" id="grant" value="5000" class="mt-1 block w-full rounded-md shadow-sm p-2">
                         </label>
                         <label class="block mb-2"><span class="text-gray-700 text-sm font-bold" data-i18n="input_savings">Власні Кошти/Заощадження (€):</span>
                             <input type="number" id="savings" value="7500" class="mt-1 block w-full rounded-md shadow-sm p-2">
                         </label>
-                        
                         <label class="block mb-2 mt-4"><span class="text-gray-700 text-sm font-bold" data-i18n="input_deposit">Застава оренди (Депозит, €):</span>
                             <input type="number" id="rentDeposit" value="5000" class="mt-1 block w-full rounded-md shadow-sm p-2">
                         </label>
                         <label class="block mb-2"><span class="text-gray-700 text-sm font-bold" data-i18n="input_deposit_spread">Розподіл депозиту (міс., 0=у М1):</span>
                             <input type="number" id="rentDepositSpreadMonths" value="0" class="mt-1 block w-full rounded-md shadow-sm p-2" min="0" max="12">
                         </label>
-
-
-                        <input type="hidden" id="healthInsurance" value="400"> 
+                        <input type="hidden" id="healthInsurance" value="0"> 
                         <input type="hidden" id="personalCosts" value="1450">
-                        
-                        <p class="text-sm mt-4 p-2 bg-blue-100 rounded-md font-semibold" data-i18n="business_type">
-                            Тип діяльності: Малий приватний підприємець (Einzelunternehmen)
-                        </p>
+                        <p class="text-sm mt-4 p-2 bg-blue-100 rounded-md font-semibold" data-i18n="business_type">Тип діяльності: Малий приватний підприємець (Einzelunternehmen)</p>
                     </div>
 
                     <div class="input-group">
@@ -85,10 +74,10 @@
                         <label class="block mb-2"><span class="text-gray-700 text-sm" data-i18n="input_car_purchase">Ціна закупівлі (БРУТТО, €):</span>
                             <input type="number" id="carPurchase" value="2300" class="mt-1 block w-full rounded-md shadow-sm p-2">
                         </label>
-                        <label class="block mb-2"><span class="text-gray-700 text-sm" data-i18n="input_prep_costs">Витрати на підготовку (€):</span>
+                        <label class="block mb-2"><span class="text-gray-700 text-sm" data-i18n="input_prep_costs">Витрати на підготовку (НЕТТО, €):</span>
                             <input type="number" id="prepCosts" value="850" class="mt-1 block w-full rounded-md shadow-sm p-2">
                         </label>
-                        <p class="text-sm mt-4 p-2 bg-yellow-100 rounded-md" data-i18n="cost_per_car">Вартість 1 авто (закупка + підготовка) = <span id="costPerCarDisplay" class="font-bold"></span></p>
+                        <p class="text-sm mt-4 p-2 bg-yellow-100 rounded-md"><span data-i18n="cost_per_car">Вартість 1 авто (P&L) = </span><span id="costPerCarDisplay" class="font-bold"></span></p>
                     </div>
 
                     <div class="input-group">
@@ -100,27 +89,16 @@
                                 <option value="kleinunternehmer" data-i18n="option_ku">Малий підприємець (§19 UStG)</option>
                             </select>
                         </label>
-                        
                         <div class="mt-4 p-2 bg-pink-100 rounded-md">
                             <h5 class="font-semibold text-sm mb-1" data-i18n="jc_coverage_title">Покриття Jobcenter (Перші 6 міс.)</h5>
                             <label class="flex items-center space-x-2"><input type="checkbox" id="jobcenterCoversHousing" class="rounded">
                                 <span class="text-gray-700 text-sm" data-i18n="jc_covers_housing">Jobcenter покриває житло</span>
                             </label>
-                            <label class="flex items-center space-x-2 mt-1"><input type="checkbox" id="jobcenterCoversInsurance" class="rounded">
-                                <span class="text-gray-700 text-sm" data-i18n="jc_covers_insurance">Jobcenter покриває мед/соц</span>
-                            </label>
                         </div>
-                        
                         <label id="purchaseWithVAT_label" class="flex items-center space-x-2 mt-4">
                             <input type="checkbox" id="purchaseWithVAT" checked class="rounded">
                             <span class="text-gray-700 text-sm" data-i18n="input_purchase_vat">Закупівля авто з ПДВ (є Vorsteuer)</span>
                         </label>
-                        <label id="rentHasVAT_label" class="flex items-center space-x-2 mt-1">
-                            <input type="checkbox" id="rentHasVAT" class="rounded">
-                            <span class="text-gray-700 text-sm" data-i18n="input_rent_vat">Оренда площі з ПДВ</span>
-                        </label>
-                        
-
                         <p class="text-xs text-red-500 mt-4" data-i18n="taxes_note">Усі податки (GwSt, ESt) розраховуються на річній основі та сплачуються щоквартальними авансами.</p>
                         <button id="calculate-button" class="mt-4 w-full px-6 py-3 text-lg font-semibold rounded-lg text-white bg-green-600 hover:bg-green-700 transition-colors shadow-md" data-i18n="calculate_button">Перерахувати</button>
                     </div>
@@ -128,7 +106,10 @@
             </div>
 
             <div class="bg-white p-6 rounded-xl shadow-md overflow-hidden">
-                <h3 class="p-0 font-semibold text-lg text-blue-700 mb-4" data-i18n="section_2_title">Детальний Фінансовий Звіт (36 місяців)</h3>
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="p-0 font-semibold text-lg text-blue-700" data-i18n="section_2_title">Детальний Фінансовий Звіт (36 місяців)</h3>
+                    <div id="vat-receivable-badge" class="px-3 py-1 text-sm font-semibold text-white bg-blue-600 rounded-full shadow"></div>
+                </div>
                 <p class="text-sm text-gray-600 mb-4" data-i18n="table_note">Ви можете редагувати **Продажі**, **Куплено** та **Місячні Витрати** безпосередньо в таблиці.</p>
                 <div class="overflow-x-auto">
                     <table id="dataTable" class="min-w-full text-sm text-left text-gray-500 border-collapse">
@@ -137,12 +118,13 @@
                                 <th scope="col" class="px-3 py-2" data-i18n="col_month">Міс.</th>
                                 <th scope="col" class="px-3 py-2 w-20" data-i18n="col_sales">Продажі (шт)</th>
                                 <th scope="col" class="px-3 py-2 w-20" data-i18n="col_purchase">Куплено (шт)</th>
-                                <th scope="col" class="px-3 py-2 w-20" data-i18n="col_rent">Оренда площі (бізнес) €</th>
-                                <th scope="col" class="px-3 py-2 w-20" data-i18n="col_other_fixed">Інші Пост. (€)</th>
+                                <th scope="col" class="px-3 py-2 w-20" data-i18n="col_rent">Оренда (БРУТТО, €)</th>
+                                <th scope="col" class="px-3 py-2 w-20" data-i18n="col_other_fixed">Інші пост. (БРУТТО, €)</th>
                                 <th scope="col" class="px-3 py-2" data-i18n="col_inventory">Запас</th>
                                 <th scope="col" class="px-3 py-2 text-green-700" data-i18n="col_ebit">EBIT (Прибуток)</th>
                                 <th scope="col" class="px-3 py-2 text-blue-700" data-i18n="col_cf_net">Cash Flow (Чистий)</th>
                                 <th scope="col" class="px-3 py-2 text-red-700" data-i18n="col_ust">USt (Сплата)</th>
+                                <th scope="col" class="px-3 py-2 text-blue-700 font-bold" data-i18n="col_ust_receivable">USt-Депозит (борг ФА)</th>
                                 <th scope="col" class="px-3 py-2 font-bold" data-i18n="col_tax_advance">Аванс ESt+GwSt</th>
                                 <th scope="col" class="px-3 py-2" data-i18n="col_gwst_annual">GwSt (Річний)</th>
                                 <th scope="col" class="px-3 py-2" data-i18n="col_est_annual">ESt (Річний)</th>
@@ -150,8 +132,7 @@
                                 <th scope="col" class="px-3 py-2 font-bold" data-i18n="col_balance_final">Залишок (Подуш. безп.)</th>
                             </tr>
                         </thead>
-                        <tbody>
-                            </tbody>
+                        <tbody></tbody>
                     </table>
                 </div>
             </div>
@@ -168,7 +149,6 @@
         
         let processedData;
         
-        // --- TRANSLATIONS ---
         const TRANSLATIONS = {
             uk: {
                 "title": "Інтерактивна Таблиця Ліквідності (3 Роки)",
@@ -183,8 +163,8 @@
                 "group_unit_econ": "Юніт-економіка (на 1 авто)",
                 "input_sale_price": "Середня ціна продажу (БРУТТО, €):",
                 "input_car_purchase": "Ціна закупівлі (БРУТТО, €):",
-                "input_prep_costs": "Витрати на підготовку (€):",
-                "cost_per_car": "Вартість 1 авто (закупка + підготовка) =",
+                "input_prep_costs": "Витрати на підготовку (НЕТТО, €):",
+                "cost_per_car": "Вартість 1 авто (P&L) =",
                 "group_taxes_jc": "Податковий Режим та Jobcenter",
                 "input_vat_regime": "Режим ПДВ:",
                 "option_regular": "Стандартний (Regelbesteuerung)",
@@ -192,27 +172,13 @@
                 "option_ku": "Малий підприємець (§19 UStG)",
                 "jc_coverage_title": "Покриття Jobcenter (Перші 6 міс.)",
                 "jc_covers_housing": "Jobcenter покриває житло",
-                "jc_covers_insurance": "Jobcenter покриває мед/соц",
                 "input_purchase_vat": "Закупівля авто з ПДВ (є Vorsteuer)",
-                "input_rent_vat": "Оренда площі з ПДВ",
                 "taxes_note": "Усі податки (GwSt, ESt) розраховуються на річній основі та сплачуються щоквартальними авансами.",
                 "calculate_button": "Перерахувати",
                 "section_2_title": "Детальний Фінансовий Звіт (36 місяців)",
                 "table_note": "Ви можете редагувати **Продажі**, **Куплено** та **Місячні Витрати** безпосередньо в таблиці.",
-                "col_month": "Міс.",
-                "col_sales": "Продажі (шт)",
-                "col_purchase": "Куплено (шт)",
-                "col_rent": "Оренда площі (бізнес) €",
-                "col_other_fixed": "Інші Пост. (€)",
-                "col_inventory": "Запас",
-                "col_ebit": "EBIT (Прибуток)",
-                "col_cf_net": "Cash Flow (Чистий)",
-                "col_ust": "USt (Сплата)",
-                "col_tax_advance": "Аванс ESt+GwSt",
-                "col_gwst_annual": "GwSt (Річний)",
-                "col_est_annual": "ESt (Річний)",
-                "col_net_profit_final": "Чистий Прибуток (Фінал)",
-                "col_balance_final": "Залишок (Подуш. безп.)",
+                "vat_receivable_badge": "USt-депозит у ФА:",
+                "col_month": "Міс.", "col_sales": "Продажі (шт)", "col_purchase": "Куплено (шт)", "col_rent": "Оренда (БРУТТО, €)", "col_other_fixed": "Інші пост. (БРУТТО, €)", "col_inventory": "Запас", "col_ebit": "EBIT (Прибуток)", "col_cf_net": "Cash Flow (Чистий)", "col_ust": "USt (Сплата)", "col_ust_receivable": "USt-Депозит (борг ФА)", "col_tax_advance": "Аванс ESt+GwSt", "col_gwst_annual": "GwSt (Річний)", "col_est_annual": "ESt (Річний)", "col_net_profit_final": "Чистий Прибуток (Фінал)", "col_balance_final": "Залишок (Подуш. безп.)",
             },
             de: {
                 "title": "Interaktive Liquiditätsplanung (36 Monate)",
@@ -227,8 +193,8 @@
                 "group_unit_econ": "Unit Economics (pro Auto)",
                 "input_sale_price": "Durchschnittlicher Verkaufspreis (BRUTTO, €):",
                 "input_car_purchase": "Einkaufspreis (BRUTTO, €):",
-                "input_prep_costs": "Vorbereitungskosten (€):",
-                "cost_per_car": "Kosten pro Auto (Einkauf + Vorbereitung) =",
+                "input_prep_costs": "Vorbereitungskosten (NETTO, €):",
+                "cost_per_car": "Kosten pro Auto (GuV) =",
                 "group_taxes_jc": "Steuerregime und Jobcenter",
                 "input_vat_regime": "USt-Regime:",
                 "option_regular": "Standard (Regelbesteuerung)",
@@ -236,65 +202,38 @@
                 "option_ku": "Kleinunternehmer (§19 UStG)",
                 "jc_coverage_title": "Jobcenter-Abdeckung (Erste 6 Monate)",
                 "jc_covers_housing": "Jobcenter übernimmt Wohnkosten",
-                "jc_covers_insurance": "Jobcenter übernimmt Kranken-/Sozialversicherung",
                 "input_purchase_vat": "Einkauf Auto mit USt (Vorsteuerabzug)",
-                "input_rent_vat": "Miete der Fläche mit USt",
                 "taxes_note": "Alle Steuern (GwSt, ESt) werden auf Jahresbasis berechnet und vierteljährlich im Voraus bezahlt.",
-                "calculate_button": "Berechnen",
+                "calculate_button": "Neu berechnen",
                 "section_2_title": "Detaillierter Finanzbericht (36 Monate)",
                 "table_note": "Sie können **Verkäufe**, **Einkäufe** und **Monatsausgaben** direkt in der Tabelle bearbeiten.",
-                "col_month": "Monat",
-                "col_sales": "Verkäufe (Stk)",
-                "col_purchase": "Einkäufe (Stk)",
-                "col_rent": "Miete Fläche (Business) €",
-                "col_other_fixed": "Andere Fixkosten (€)",
-                "col_inventory": "Bestand",
-                "col_ebit": "EBIT (Gewinn)",
-                "col_cf_net": "Cash Flow (Netto)",
-                "col_ust": "USt (Zahlung)",
-                "col_tax_advance": "Vorauszahlung ESt+GwSt",
-                "col_gwst_annual": "GwSt (Jährlich)",
-                "col_est_annual": "ESt (Jährlich)",
-                "col_net_profit_final": "Nettogewinn (Final)",
-                "col_balance_final": "Guthaben (Puffer)",
+                "vat_receivable_badge": "USt-Guthaben beim FA:",
+                "col_month": "Monat", "col_sales": "Verkäufe (Stk)", "col_purchase": "Einkäufe (Stk)", "col_rent": "Miete (BRUTTO, €)", "col_other_fixed": "Fixkosten (BRUTTO, €)", "col_inventory": "Bestand", "col_ebit": "EBIT (Gewinn)", "col_cf_net": "Cash Flow (Netto)", "col_ust": "USt-Zahlung", "col_ust_receivable": "USt-Guthaben (beim FA)", "col_tax_advance": "Vorauszahlung ESt+GwSt", "col_gwst_annual": "GwSt (Jährlich)", "col_est_annual": "ESt (Jährlich)", "col_net_profit_final": "Nettogewinn (Final)", "col_balance_final": "Kontostand (Puffer)",
             }
         };
 
-        function calculateESt(taxableIncome, gewStCredit = 0) {
-            let tax = 0;
-            if (taxableIncome < 0) return { tax: 0, finalTax: 0 };
+        function calculateESt(taxableIncome) {
+            if (taxableIncome < GRUNDFREIBETRAG_EST) return 0;
             const Y = (taxableIncome - GRUNDFREIBETRAG_EST) / 10000;
-            if (taxableIncome < GRUNDFREIBETRAG_EST) {
-                tax = 0;
-            } else if (taxableIncome <= 15999) {
-                tax = (980.14 * Y + 1400) * Y;
-            } else if (taxableIncome <= 62809) {
-                tax = (212.02 * (Y - 1.5) + 2397) * (Y - 1.5) + 1400;
-            } else if (taxableIncome <= 277825) {
-                tax = 0.42 * taxableIncome - 9877.94;
-            } else {
-                tax = 0.45 * taxableIncome - 17316.5;
-            }
-            const finalTax = Math.max(0, tax - gewStCredit);
-            return { tax: Math.max(0, tax), finalTax: finalTax };
+            let tax = 0;
+            if (taxableIncome <= 15999) tax = (980.14 * Y + 1400) * Y;
+            else if (taxableIncome <= 62809) tax = (212.02 * (Y - 1.5) + 2397) * (Y - 1.5) + 1400;
+            else if (taxableIncome <= 277825) tax = 0.42 * taxableIncome - 9877.94;
+            else tax = 0.45 * taxableIncome - 17316.5;
+            return Math.max(0, tax);
         }
 
         function formatCurrency(value) {
-            if (value === "TBD" || isNaN(value) || value === null) return "0.00 €";
-            return new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR', minimumFractionDigits: 2 }).format(value);
+            return new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR' }).format(isNaN(value) ? 0 : value);
         }
         
         function setLanguage(lang) {
             document.documentElement.lang = lang;
             document.querySelectorAll('[data-i18n]').forEach(element => {
                 const key = element.getAttribute('data-i18n');
-                if (TRANSLATIONS[lang] && TRANSLATIONS[lang][key]) {
+                if (TRANSLATIONS[lang]?.[key]) {
                     const translation = TRANSLATIONS[lang][key];
-                    
-                    // Handle elements where we need to preserve child elements (like spans)
-                    const costPerCarElement = document.getElementById('costPerCarDisplay');
-                    if (element.id === costPerCarElement?.parentElement?.id) {
-                         // Set text content for the parent, but don't overwrite the span
+                    if (element.querySelector('span')) {
                         element.firstChild.textContent = translation + ' ';
                     } else {
                         element.innerHTML = translation;
@@ -303,278 +242,143 @@
             });
         }
 
-
         function getInputs() {
-            const salesPlan = [];
-            const purchasePlan = [];
-            const rentPlan = []; 
-            const otherFixedPlan = []; 
-            
-            // Collect data directly from the dynamic table inputs
-            for (let i = 0; i < NUM_MONTHS; i++) {
-                const salesInput = document.getElementById(`salesPlan_${i}`);
-                const purchaseInput = document.getElementById(`purchasePlan_${i}`);
-                const rentInput = document.getElementById(`rentPlan_${i}`); 
-                const otherFixedInput = document.getElementById(`otherFixedPlan_${i}`); 
-
-                salesPlan.push(parseInt(salesInput?.value) || 0);
-                purchasePlan.push(parseInt(purchaseInput?.value) || 0);
-                rentPlan.push(parseFloat(rentInput?.value) || 0);
-                otherFixedPlan.push(parseFloat(otherFixedInput?.value) || 0);
-            }
-            
             return {
-                grant: parseFloat(document.getElementById('grant').value) || 0, 
-                savings: parseFloat(document.getElementById('savings').value) || 0, 
+                grant: parseFloat(document.getElementById('grant').value) || 0,
+                savings: parseFloat(document.getElementById('savings').value) || 0,
                 avgSalePrice: parseFloat(document.getElementById('avgSalePrice').value) || 0,
                 carPurchase: parseFloat(document.getElementById('carPurchase').value) || 0,
                 prepCosts: parseFloat(document.getElementById('prepCosts').value) || 0,
-                healthInsurance: parseFloat(document.getElementById('healthInsurance').value) || 0, 
-                personalCosts: parseFloat(document.getElementById('personalCosts').value) || 0, 
+                personalCosts: parseFloat(document.getElementById('personalCosts').value) || 0,
                 ustRegime: document.getElementById('ustRegime').value,
-                purchaseWithVAT: document.getElementById('purchaseWithVAT')?.checked ?? true, 
-                rentHasVAT: document.getElementById('rentHasVAT')?.checked ?? false,
-                jobcenterCoversHousing: document.getElementById('jobcenterCoversHousing')?.checked ?? false, 
-                jobcenterCoversInsurance: document.getElementById('jobcenterCoversInsurance')?.checked ?? false, 
-                salesPlan: salesPlan,
-                purchasePlan: purchasePlan,
-                rentDeposit: parseFloat(document.getElementById('rentDeposit').value) || 0, 
+                purchaseWithVAT: document.getElementById('purchaseWithVAT')?.checked ?? true,
+                jobcenterCoversHousing: document.getElementById('jobcenterCoversHousing')?.checked ?? false,
+                rentDeposit: parseFloat(document.getElementById('rentDeposit').value) || 0,
                 rentDepositSpreadMonths: parseInt(document.getElementById('rentDepositSpreadMonths').value) || 0,
-                rentPlan: rentPlan, 
-                otherFixedPlan: otherFixedPlan 
+                salesPlan: Array.from({ length: NUM_MONTHS }, (_, i) => parseInt(document.getElementById(`salesPlan_${i}`)?.value) || 0),
+                purchasePlan: Array.from({ length: NUM_MONTHS }, (_, i) => parseInt(document.getElementById(`purchasePlan_${i}`)?.value) || 0),
+                rentPlan: Array.from({ length: NUM_MONTHS }, (_, i) => parseFloat(document.getElementById(`rentPlan_${i}`)?.value) || 0),
+                otherFixedPlan: Array.from({ length: NUM_MONTHS }, (_, i) => parseFloat(document.getElementById(`otherFixedPlan_${i}`)?.value) || 0),
             };
         }
         
         function populateInitialSalesPlan() {
-             const initialSalesPlan = [];
-             for (let i = 0; i < NUM_MONTHS; i++) {
-                 if (i < 2) {
-                     initialSalesPlan.push(2); 
-                 } else if (i < 4) {
-                     initialSalesPlan.push(3); 
-                 } else if (i < 6) {
-                     initialSalesPlan.push(4); 
-                 } else if (i < 9) {
-                     initialSalesPlan.push(5); 
-                 } else if (i < 12) {
-                     initialSalesPlan.push(6); 
-                 } else if (i < 24) {
-                     initialSalesPlan.push(8); 
-                 } else {
-                     initialSalesPlan.push(10);
-                 }
-            }
-            return initialSalesPlan;
+             return Array.from({ length: NUM_MONTHS }, (_, i) => {
+                 if (i < 2) return 2; if (i < 4) return 3; if (i < 6) return 4;
+                 if (i < 9) return 5; if (i < 12) return 6; if (i < 24) return 8;
+                 return 10;
+             });
         }
+        function generateInitialPurchasePlan(salesPlan) { return salesPlan.slice(); }
+        function populateInitialRentPlan() { return Array(NUM_MONTHS).fill(560); }
+        function populateInitialOtherFixedPlan() { return Array(NUM_MONTHS).fill(740); }
 
-        function populateInitialRentPlan() {
-            return Array(NUM_MONTHS).fill(560);
-        }
-
-        function populateInitialOtherFixedPlan() {
-            return Array(NUM_MONTHS).fill(740);
-        }
-
-        function generateInitialPurchasePlan(salesPlan) {
-            const initialPurchasePlan = [];
-            
-            for (let i = 0; i < NUM_MONTHS; i++) {
-                const salesTarget = salesPlan[i];
-                let carsToBuy = 0;
-                
-                if (i === 0) {
-                    carsToBuy = 2; 
-                } else {
-                    carsToBuy = salesTarget;
-                }
-                
-                initialPurchasePlan.push(carsToBuy);
-            }
-            
-            return initialPurchasePlan;
-        }
-
-        // ########## START: ВИПРАВЛЕНА ФУНКЦІЯ РОЗРАХУНКІВ ##########
         function processData() {
             const inputs = getInputs();
             const data = [];
-            
             const isRegular = inputs.ustRegime === 'regular';
             const isMargin  = inputs.ustRegime === 'margin';
             const isKU      = inputs.ustRegime === 'kleinunternehmer';
 
-            // --- ЗМІНА ЛОГІКИ: Розраховуємо нетто-ціну закупівлі з брутто ---
-            const carPurchaseNet = inputs.carPurchase / (1 + UST_RATE);
-            const COST_PER_CAR = carPurchaseNet + inputs.prepCosts; // Собівартість для P&L = нетто закупівля + нетто підготовка
-
             let accumulatedCashBalance = inputs.grant + inputs.savings; 
             let currentInventory = 0;
             let yearlyEbit = 0;
-            let yearly_gew_ertrag = 0;
             let last_yearly_tax_data = { Gewerbesteuer: 0, Einkommensteuer: 0, total: 0 };
             let ust_period_due = 0;
-            const PERSONAL_COSTS_HOUSING = inputs.personalCosts;
-            const PERSONAL_COSTS_INSURANCE = inputs.healthInsurance;
+            let vatReceivable = 0;
 
             for (let i = 0; i < NUM_MONTHS; i++) {
+                // --- 1. INVENTORY & ACTUAL SALES (CRITICAL FIX) ---
                 const carsSoldTarget = inputs.salesPlan[i];
                 const carsBought = inputs.purchasePlan[i];
-                
-                const rentCostMonthly = inputs.rentPlan[i]; 
-                const otherFixedCostMonthly = inputs.otherFixedPlan[i]; 
-                
-                const totalFixedCostsPnlNetto = rentCostMonthly + otherFixedCostMonthly;
-                
                 const potentialInventory = currentInventory + carsBought;
                 const carsSold = Math.min(carsSoldTarget, potentialInventory);
                 const inventoryWarning = carsSoldTarget > potentialInventory;
+                currentInventory = potentialInventory - carsSold;
 
-                const expensePnlFactor = isKU ? (1 + UST_RATE) : 1;
-                const cogsPnl = carsSold * COST_PER_CAR * expensePnlFactor;
-                let totalExpensesPnl = totalFixedCostsPnlNetto * expensePnlFactor + cogsPnl;
+                // --- 2. NET/GROSS & P&L (EBIT) ---
+                const carPurchaseNet = inputs.carPurchase / (1 + UST_RATE);
+                const prepCostsNet = inputs.prepCosts;
+                const rentCostMonthlyNet = inputs.rentPlan[i] / (1 + UST_RATE);
+                const otherFixedCostMonthlyNet = inputs.otherFixedPlan[i] / (1 + UST_RATE);
                 
-                const inJobcenterWindow = i < 6;
-                let housingCashOutflow = PERSONAL_COSTS_HOUSING; 
-                let insuranceCashOutflow = PERSONAL_COSTS_INSURANCE; 
-
-                if (inJobcenterWindow && inputs.jobcenterCoversHousing) housingCashOutflow = 0;
-                if (inJobcenterWindow && inputs.jobcenterCoversInsurance) insuranceCashOutflow = 0;
+                const totalFixedCostsPnl = rentCostMonthlyNet + otherFixedCostMonthlyNet;
+                let cogsPnl = 0;
+                if (isRegular) cogsPnl = carsSold * (carPurchaseNet + prepCostsNet);
+                else if (isMargin) cogsPnl = carsSold * (inputs.carPurchase + prepCostsNet);
+                else cogsPnl = carsSold * (inputs.carPurchase + (prepCostsNet * (1 + UST_RATE)));
                 
-                const rentVatFactor = inputs.rentHasVAT ? (1 + UST_RATE) : 1;
-                const operatingRentOutflow = rentCostMonthly * rentVatFactor;
-                const operatingOtherFixedOutflow = otherFixedCostMonthly * (1 + UST_RATE);
-                
-                const operatingFixedOutflow = operatingRentOutflow + operatingOtherFixedOutflow;
-                
-                let rentDepositCashOutflow = 0;
-                if (i === 0 && inputs.rentDepositSpreadMonths === 0) {
-                    rentDepositCashOutflow = inputs.rentDeposit;
-                } else if (i < inputs.rentDepositSpreadMonths && inputs.rentDepositSpreadMonths > 0) {
-                    rentDepositCashOutflow = inputs.rentDeposit / inputs.rentDepositSpreadMonths;
-                }
-                
-                const purchaseWithVAT = inputs.purchaseWithVAT;
-                
-                // --- ЗМІНА ЛОГІКИ: Грошовий відтік на закупівлю тепер = брутто-ціні з поля вводу ---
-                const carPurchaseOutflow = carsBought * inputs.carPurchase;
-                const prepOutflow = carsBought * inputs.prepCosts * (1 + UST_RATE); 
-                const carRelatedCashOutflow = carPurchaseOutflow + prepOutflow;
-
-                let salesRevenueGross = carsSold * inputs.avgSalePrice;
-                let salesRevenuePnl;
+                const salesRevenueGross = carsSold * inputs.avgSalePrice;
+                let salesRevenuePnl = 0;
                 let ustDue = 0;
-                let ustVorsteuer = 0;
-
                 if (isRegular) {
                     salesRevenuePnl = salesRevenueGross / (1 + UST_RATE);
                     ustDue = salesRevenueGross - salesRevenuePnl;
-                    
-                    const rentVorsteuer = inputs.rentHasVAT ? rentCostMonthly * UST_RATE : 0;
-                    const otherFixedVorsteuer = otherFixedCostMonthly * UST_RATE; 
-                    const prepVorsteuer = (carsBought * inputs.prepCosts) * UST_RATE;
-
-                    // --- ЗМІНА ЛОГІКИ: Vorsteuer розраховується з брутто-ціни ---
-                    const carPurchaseVorsteuer = (isRegular && purchaseWithVAT) ? (carsBought * carPurchaseNet * UST_RATE) : 0;
-                    
-                    ustVorsteuer = rentVorsteuer + otherFixedVorsteuer + prepVorsteuer + carPurchaseVorsteuer;
-                    
                 } else if (isMargin) {
-                    // --- ЗМІНА ЛОГІКИ: в режимі Margin закупівля для розрахунку маржі береться нетто ---
-                    const margin = salesRevenueGross - (carsSold * carPurchaseNet);
-                    const ustOnMargin = margin > 0 ? margin * UST_SATZ / (100 + UST_SATZ) : 0;
-                    ustDue = ustOnMargin;
-                    salesRevenuePnl = salesRevenueGross - ustOnMargin;
-                    
-                    const rentVorsteuer = inputs.rentHasVAT ? rentCostMonthly * UST_RATE : 0;
-                    const otherFixedVorsteuer = otherFixedCostMonthly * UST_RATE; 
-                    const prepVorsteuer  = (carsBought * inputs.prepCosts) * UST_RATE;
-                    ustVorsteuer = rentVorsteuer + otherFixedVorsteuer + prepVorsteuer;
-
-                } else { // kleinunternehmer
+                    const marginGross = salesRevenueGross - (carsSold * inputs.carPurchase);
+                    ustDue = marginGross > 0 ? marginGross * UST_SATZ / (100 + UST_SATZ) : 0;
+                    salesRevenuePnl = salesRevenueGross - ustDue;
+                } else { // KU
                     salesRevenuePnl = salesRevenueGross;
-                    ustDue = 0;
-                    ustVorsteuer = 0;
                 }
-
-                const ebit = salesRevenuePnl - totalExpensesPnl; 
-
+                
+                const ebit = salesRevenuePnl - (totalFixedCostsPnl + cogsPnl);
                 yearlyEbit += ebit;
-                yearly_gew_ertrag += ebit;
 
-                currentInventory = potentialInventory - carsSold;
+                // --- 3. VORSTEUER (INPUT TAX) ---
+                let ustVorsteuer = 0;
+                if (isRegular || isMargin) {
+                    const rentVorsteuer = rentCostMonthlyNet * UST_RATE;
+                    const otherFixedVorsteuer = otherFixedCostMonthlyNet * UST_RATE;
+                    const prepVorsteuer = (carsBought * prepCostsNet) * UST_RATE;
+                    let carPurchaseVorsteuer = (isRegular && inputs.purchaseWithVAT) ? (carsBought * carPurchaseNet * UST_RATE) : 0;
+                    ustVorsteuer = rentVorsteuer + otherFixedVorsteuer + prepVorsteuer + carPurchaseVorsteuer;
+                }
+
+                // --- 4. CASH FLOW ---
+                const housingCashOutflow = (i < 6 && inputs.jobcenterCoversHousing) ? 0 : inputs.personalCosts;
+                let rentDepositCashOutflow = (inputs.rentDepositSpreadMonths === 0 && i === 0) ? inputs.rentDeposit : (i < inputs.rentDepositSpreadMonths ? inputs.rentDeposit / inputs.rentDepositSpreadMonths : 0);
+                const carRelatedCashOutflow = (carsBought * inputs.carPurchase) + (carsBought * prepCostsNet * (1 + UST_RATE));
+                const operatingFixedOutflow = inputs.rentPlan[i] + inputs.otherFixedPlan[i];
                 
-                let ustCashFlowMovement = ustDue - ustVorsteuer;
+                ust_period_due += (ustDue - ustVorsteuer);
                 let ustPaidThisMonth = 0;
-                let ustOutflowFinal = 0;
-
-                if (!isKU) {
-                    ust_period_due += ustCashFlowMovement;
-                    if ((i + 1) % 3 === 0) {
-                        ustPaidThisMonth = ust_period_due;
-                        ustOutflowFinal = ustPaidThisMonth;
-                        ust_period_due = 0;
+                if (!isKU && (i + 1) % 3 === 0) {
+                    const netDue = ust_period_due - vatReceivable;
+                    if (netDue > 0) {
+                        ustPaidThisMonth = netDue;
+                        vatReceivable = 0;
+                    } else {
+                        vatReceivable = Math.abs(netDue);
+                        ustPaidThisMonth = 0;
                     }
+                    ust_period_due = 0;
                 }
                 
-                let current_yearly_tax_data = { ...last_yearly_tax_data };
-                let taxesPaidThisMonth = 0;
-
-                if ( (i + 1) % 12 === 0 || i === NUM_MONTHS - 1) {
-                    let taxable_profit = yearlyEbit;
-                    current_yearly_tax_data = { Gewerbesteuer: 0, Einkommensteuer: 0, total: 0, yearly_ebit: yearlyEbit };
-
-                    if (taxable_profit > 0) {
-                        let est_taxable_income = taxable_profit - (PERSONAL_COSTS_INSURANCE * 12); 
-                        let est_tax = calculateESt(est_taxable_income).tax;
-                        
-                        let gewStTaxableBase = Math.max(0, yearly_gew_ertrag - FREIBETRAG_GEWST);
-                        let messbetrag = gewStTaxableBase * 0.035;
-                        let gewSt = messbetrag * (HEBESATZ / 100); 
-                        
-                        let gewSt_credit = Math.min(est_tax, messbetrag * 3.8);
-                        let est_final = Math.max(0, est_tax - gewSt_credit);
-
-                        current_yearly_tax_data.Einkommensteuer = est_final;
-                        current_yearly_tax_data.Gewerbesteuer = gewSt;
-                        current_yearly_tax_data.total = est_final + gewSt;
-                    }
-                    yearlyEbit = 0;
-                    yearly_gew_ertrag = 0;
-                }
+                let taxesPaidThisMonth = (last_yearly_tax_data.total > 0 && (i + 1) % 3 === 0) ? last_yearly_tax_data.total / 4 : 0;
                 
-                if (last_yearly_tax_data.total > 0 && (i + 1) % 3 === 0) {
-                    taxesPaidThisMonth = last_yearly_tax_data.total / 4;
-                }
-                
-                const totalCashOutflow = operatingFixedOutflow + housingCashOutflow + insuranceCashOutflow + rentDepositCashOutflow + carRelatedCashOutflow + ustOutflowFinal + taxesPaidThisMonth;
-                
+                const totalCashOutflow = operatingFixedOutflow + housingCashOutflow + rentDepositCashOutflow + carRelatedCashOutflow + ustPaidThisMonth + taxesPaidThisMonth;
                 const netCashFlow = salesRevenueGross - totalCashOutflow;
-                
                 accumulatedCashBalance += netCashFlow;
-                
+
+                // --- 5. ANNUAL TAXES ---
+                if ((i + 1) % 12 === 0 || i === NUM_MONTHS - 1) {
+                    const est_tax = calculateESt(yearlyEbit);
+                    const gewStTaxableBase = Math.max(0, yearlyEbit - FREIBETRAG_GEWST);
+                    const messbetrag = gewStTaxableBase * 0.035;
+                    const gewSt = messbetrag * (HEBESATZ / 100);
+                    const gewSt_credit = Math.min(est_tax, messbetrag * 4);
+                    const est_final = Math.max(0, est_tax - gewSt_credit);
+                    last_yearly_tax_data = { Gewerbesteuer: gewSt, Einkommensteuer: est_final, total: est_final + gewSt };
+                    yearlyEbit = 0;
+                }
+
                 data.push({
-                    month: `Міс. ${i + 1}`,
-                    carsSoldTarget: carsSoldTarget,
-                    carsSold: carsSold,
-                    carsBought: carsBought,
-                    rentCostMonthly: rentCostMonthly,
-                    otherFixedCostMonthly: otherFixedCostMonthly,
-                    currentInventory: currentInventory,
-                    ebit: ebit,
-                    netCashFlow: netCashFlow,
-                    ustPaidThisMonth: ustPaidThisMonth,
-                    taxesPaidThisMonth: taxesPaidThisMonth,
-                    accumulatedBalance: accumulatedCashBalance,
-                    yearly_tax_data: current_yearly_tax_data,
-                    inventoryWarning: inventoryWarning,
-                    netProfitFinal: ebit - (current_yearly_tax_data.total / 12)
+                    month: i + 1, carsSoldTarget, carsBought, rentCostMonthly: inputs.rentPlan[i], otherFixedCostMonthly: inputs.otherFixedPlan[i], currentInventory, ebit, netCashFlow, ustPaidThisMonth, vatReceivable, taxesPaidThisMonth, accumulatedBalance, yearly_tax_data: { ...last_yearly_tax_data }, inventoryWarning
                 });
-                last_yearly_tax_data = current_yearly_tax_data;
             }
             return data;
         }
-        // ########## END: ВИПРАВЛЕНА ФУНКЦІЯ РОЗРАХУНКІВ ##########
-
 
         function recalculatePlan() {
             processedData = processData();
@@ -584,122 +388,78 @@
         }
 
         function updateCostPerCarDisplay() {
-            const carPurchase = parseFloat(document.getElementById('carPurchase').value) || 0;
-            const prepCosts = parseFloat(document.getElementById('prepCosts').value) || 0;
-            const isKU = document.getElementById('ustRegime').value === 'kleinunternehmer';
-            
-            // P&L Cost for KU is the gross price they pay
-            // P&L Cost for others is the net price
-            const carPurchaseCost = isKU ? carPurchase : carPurchase / (1 + UST_RATE);
-            const prepCost = isKU ? prepCosts * (1 + UST_RATE) : prepCosts;
-
-            const totalCost = carPurchaseCost + prepCost;
-            
-            document.getElementById('costPerCarDisplay').textContent = formatCurrency(totalCost);
+            const inputs = getInputs();
+            const isKU = inputs.ustRegime === 'kleinunternehmer';
+            const carPurchaseCost = isKU ? inputs.carPurchase : inputs.carPurchase / (1 + UST_RATE);
+            const prepCost = isKU ? inputs.prepCosts * (1 + UST_RATE) : inputs.prepCosts;
+            document.getElementById('costPerCarDisplay').textContent = formatCurrency(carPurchaseCost + prepCost);
         }
 
         function updatePurchase25aVisibility() {
-            const purchase25aLabel = document.getElementById('purchaseWithVAT_label');
-            const ustRegime = document.getElementById('ustRegime').value;
-            
-            if (ustRegime === 'regular') {
-                purchase25aLabel.style.display = 'flex';
-            } else {
-                purchase25aLabel.style.display = 'none';
-            }
+            document.getElementById('purchaseWithVAT_label').style.display = document.getElementById('ustRegime').value === 'regular' ? 'flex' : 'none';
         }
         
         function updateDataTable() {
-            const tableBody = document.querySelector('#dataTable tbody');
-            
+            const tableBody = document.querySelector('tbody');
+            const lang = document.documentElement.lang;
             let bodyHtml = '';
-            for(let i = 0; i < NUM_MONTHS; i++) {
-                const data = processedData[i];
-                const yearlyData = data.yearly_tax_data;
+            
+            processedData.forEach((rowData, i) => {
+                const { month, carsSoldTarget, carsBought, rentCostMonthly, otherFixedCostMonthly, currentInventory, ebit, netCashFlow, ustPaidThisMonth, vatReceivable, taxesPaidThisMonth, accumulatedBalance, yearly_tax_data, inventoryWarning } = rowData;
+                const isYearEnd = (i + 1) % 12 === 0 || i === NUM_MONTHS - 1;
+                const netProfitFinal = ebit - (yearly_tax_data.total / 12);
 
-                const gwst_val = (i + 1) % 12 === 0 || i === NUM_MONTHS - 1 ? formatCurrency(yearlyData.Gewerbesteuer) : '0.00 €';
-                const est_val = (i + 1) % 12 === 0 || i === NUM_MONTHS - 1 ? formatCurrency(yearlyData.Einkommensteuer) : '0.00 €';
-                
-                const advance_val = data.taxesPaidThisMonth > 0 && (i + 1) % 3 === 0 ? formatCurrency(data.taxesPaidThisMonth) : '0.00 €';
-
-                const salesInput = `<input type="number" id="salesPlan_${i}" value="${data.carsSoldTarget}" min="0" class="w-16 data-input">`;
-                const purchaseInput = `<input type="number" id="purchasePlan_${i}" value="${data.carsBought}" min="0" class="w-16 data-input">`;
-                const rentInput = `<input type="number" id="rentPlan_${i}" value="${data.rentCostMonthly}" min="0" class="w-20 data-input">`;
-                const otherFixedInput = `<input type="number" id="otherFixedPlan_${i}" value="${data.otherFixedCostMonthly}" min="0" class="w-20 data-input">`;
-
-                let inventoryClass = data.currentInventory < 0 ? 'warning-text' : '';
-                if (data.inventoryWarning) inventoryClass = 'warning-text'; 
-
-                const salesCellClass = data.carsSoldTarget !== data.carsSold ? 'warning-text' : '';
-                
-                let ustClass = 'text-gray-500';
-                if (data.ustPaidThisMonth > 0) {
-                    ustClass = 'text-red-700';
-                } else if (data.ustPaidThisMonth < 0) {
-                    ustClass = 'text-green-600 font-bold';
-                }
-                
-                bodyHtml += `<tr class="bg-white border-b hover:bg-gray-50">
-                    <td class="px-3 py-2 font-medium text-gray-900 whitespace-nowrap">${i + 1}</td>
-                    <td class="px-3 py-2 ${salesCellClass}">${salesInput}</td>
-                    <td class="px-3 py-2">${purchaseInput}</td>
-                    <td class="px-3 py-2">${rentInput}</td>
-                    <td class="px-3 py-2">${otherFixedInput}</td>
-                    <td class="px-3 py-2 ${inventoryClass}">${data.currentInventory}</td>
-                    <td class="px-3 py-2 ${data.ebit < 0 ? 'text-red-500' : 'text-green-600'}">${formatCurrency(data.ebit)}</td>
-                    <td class="px-3 py-2 ${data.netCashFlow < 0 ? 'text-red-500' : ''}">${formatCurrency(data.netCashFlow)}</td>
-                    <td class="px-3 py-2 ${ustClass}">${formatCurrency(data.ustPaidThisMonth)}</td>
-                    <td class="px-3 py-2 font-bold">${advance_val}</td>
-                    <td class="px-3 py-2">${gwst_val}</td>
-                    <td class="px-3 py-2">${est_val}</td>
-                    <td class="px-3 py-2 ${data.netProfitFinal < 0 ? 'text-red-500' : 'text-green-800 font-bold'}">${formatCurrency(data.netProfitFinal)}</td>
-                    <td class="px-3 py-2 ${data.accumulatedBalance < 0 ? 'warning-text' : 'font-bold'}">${formatCurrency(data.accumulatedBalance)}</td>
-                </tr>`;
-            }
+                bodyHtml += `
+                    <tr class="bg-white border-b hover:bg-gray-50">
+                        <td class="px-3 py-2 font-medium text-gray-900">${month}</td>
+                        <td class="px-3 py-2 ${inventoryWarning ? 'warning-text' : ''}"><input type="number" id="salesPlan_${i}" value="${carsSoldTarget}" min="0" class="w-16 data-input"></td>
+                        <td class="px-3 py-2"><input type="number" id="purchasePlan_${i}" value="${carsBought}" min="0" class="w-16 data-input"></td>
+                        <td class="px-3 py-2"><input type="number" id="rentPlan_${i}" value="${rentCostMonthly}" min="0" class="w-20 data-input"></td>
+                        <td class="px-3 py-2"><input type="number" id="otherFixedPlan_${i}" value="${otherFixedCostMonthly}" min="0" class="w-20 data-input"></td>
+                        <td class="px-3 py-2">${currentInventory}</td>
+                        <td class="px-3 py-2 ${ebit < 0 ? 'text-red-500' : 'text-green-600'}">${formatCurrency(ebit)}</td>
+                        <td class="px-3 py-2 ${netCashFlow < 0 ? 'text-red-500' : ''}">${formatCurrency(netCashFlow)}</td>
+                        <td class="px-3 py-2 ${ustPaidThisMonth > 0 ? 'text-red-700' : 'text-gray-500'}">${formatCurrency(ustPaidThisMonth)}</td>
+                        <td class="px-3 py-2 text-blue-700">${formatCurrency(vatReceivable)}</td>
+                        <td class="px-3 py-2 font-bold">${formatCurrency(taxesPaidThisMonth)}</td>
+                        <td class="px-3 py-2">${isYearEnd ? formatCurrency(yearly_tax_data.Gewerbesteuer) : '0.00 €'}</td>
+                        <td class="px-3 py-2">${isYearEnd ? formatCurrency(yearly_tax_data.Einkommensteuer) : '0.00 €'}</td>
+                        <td class="px-3 py-2 ${netProfitFinal < 0 ? 'text-red-500' : 'text-green-800 font-bold'}">${formatCurrency(netProfitFinal)}</td>
+                        <td class="px-3 py-2 ${accumulatedBalance < 0 ? 'warning-text' : 'font-bold'}">${formatCurrency(accumulatedBalance)}</td>
+                    </tr>`;
+            });
             tableBody.innerHTML = bodyHtml;
             
-            document.querySelectorAll('#dataTable input[type="number"]').forEach(input => {
-                input.addEventListener('change', recalculatePlan);
-            });
+            tableBody.querySelectorAll('input[type="number"]').forEach(input => input.addEventListener('change', recalculatePlan));
+
+            const finalVatReceivable = processedData.length > 0 ? processedData[processedData.length - 1].vatReceivable : 0;
+            document.getElementById('vat-receivable-badge').textContent = `${TRANSLATIONS[lang].vat_receivable_badge} ${formatCurrency(finalVatReceivable)}`;
         }
 
         document.addEventListener('DOMContentLoaded', () => {
-            setLanguage('uk'); // Set default language
-            
             const initialSalesPlan = populateInitialSalesPlan();
             const initialPurchasePlan = generateInitialPurchasePlan(initialSalesPlan); 
             const initialRentPlan = populateInitialRentPlan();
             const initialOtherFixedPlan = populateInitialOtherFixedPlan();
             
-            const tableBody = document.querySelector('#dataTable tbody');
             let initialHtml = '';
-            initialSalesPlan.forEach((val, i) => {
-                const initialPurchase = initialPurchasePlan[i]; 
-                const initialRent = initialRentPlan[i];
-                const initialOtherFixed = initialOtherFixedPlan[i];
+            for (let i = 0; i < NUM_MONTHS; i++) {
+                initialHtml += `
+                    <tr class="bg-white border-b hover:bg-gray-50">
+                        <td class="px-3 py-2 font-medium text-gray-900">${i + 1}</td>
+                        <td><input type="number" id="salesPlan_${i}" value="${initialSalesPlan[i]}" class="w-16 data-input"></td>
+                        <td><input type="number" id="purchasePlan_${i}" value="${initialPurchasePlan[i]}" class="w-16 data-input"></td>
+                        <td><input type="number" id="rentPlan_${i}" value="${initialRentPlan[i]}" class="w-20 data-input"></td> 
+                        <td><input type="number" id="otherFixedPlan_${i}" value="${initialOtherFixedPlan[i]}" class="w-20 data-input"></td> 
+                        ${'<td></td>'.repeat(10)}
+                    </tr>`;
+            }
+            document.querySelector('tbody').innerHTML = initialHtml;
 
-                initialHtml += `<tr class="bg-white border-b hover:bg-gray-50">
-                    <td class="px-3 py-2 font-medium text-gray-900 whitespace-nowrap">${i + 1}</td>
-                    <td class="px-3 py-2"><input type="number" id="salesPlan_${i}" value="${val}" min="0" class="w-16 data-input"></td>
-                    <td class="px-3 py-2"><input type="number" id="purchasePlan_${i}" value="${initialPurchase}" min="0" class="w-16 data-input"></td>
-                    <td class="px-3 py-2"><input type="number" id="rentPlan_${i}" value="${initialRent}" min="0" class="w-20 data-input"></td> 
-                    <td class="px-3 py-2"><input type="number" id="otherFixedPlan_${i}" value="${initialOtherFixed}" min="0" class="w-20 data-input"></td> 
-                    <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
-                </tr>`;
-            });
-            tableBody.innerHTML = initialHtml;
-
-            document.querySelectorAll('#grant, #savings, #rentDeposit, #rentDepositSpreadMonths, #healthInsurance, #personalCosts, #avgSalePrice, #carPurchase, #prepCosts').forEach(input => { 
-                input.addEventListener('change', recalculatePlan);
-            });
-            document.getElementById('ustRegime').addEventListener('change', recalculatePlan);
-            document.getElementById('purchaseWithVAT').addEventListener('change', recalculatePlan);
-            document.getElementById('rentHasVAT').addEventListener('change', recalculatePlan);
-            document.getElementById('jobcenterCoversHousing').addEventListener('change', recalculatePlan);
-            document.getElementById('jobcenterCoversInsurance').addEventListener('change', recalculatePlan);
+            document.querySelectorAll('input, select').forEach(el => el.addEventListener('change', recalculatePlan));
             document.getElementById('calculate-button').addEventListener('click', recalculatePlan);
 
-            updatePurchase25aVisibility();
+            setLanguage('uk');
             recalculatePlan();
         });
     </script>
